@@ -1,0 +1,89 @@
+{
+  "output-location": {
+    "output-directory": "data/output/"
+  },
+  "backgrounds": {
+    "insert-background-image": true,
+    "background-images-directory": "data/backgrounds/",
+    "background-image-extension": ".jpg"
+  },
+  "morphable-model-parameters": {
+    "number-of-ids-to-create": 1,
+    "number-of-samples-per-id": 1,
+    "model-filename": "data/bfm2017/model2017-1_bfm_nomouth.h5",
+    "dimension-of-shape-space": 199,
+    "dimension-of-color-space": 199,
+    "dimension-of-expression-space": 100,
+    "add-expressions": false
+  },
+  "background-variation": {
+    "back-range": {
+      "start": 0,
+      "end": 0,
+      "step": 1,
+      "type": "inclusive"
+    }
+  },
+  "illumination-angle": {
+    "illu-range": {
+      "start": 0,
+      "end": 0,
+      "step": 11.25,
+      "type": "inclusive"
+    }
+  },
+  "pose-range": {
+    "yaw-range": {
+      "start": -45,
+      "end": 45,
+      "step": 45,
+      "type": "inclusive"
+    },
+    "roll-range": {
+      "start": 0,
+      "end": 0,
+      "step": 5.625,
+      "type": "inclusive"
+    },
+    "pitch-range": {
+      "start": 0,
+      "end": 0,
+      "step": 5.625,
+      "type": "inclusive"
+    },
+    "center-faces": false
+  },
+  "image-dimensions": {
+    "image-width": 227,
+    "image-height": 227
+  },
+  "default-parameters": {
+    "color-transform": {
+      "gain": [1.0, 1.0, 1.0],
+      "colorContrast": 1.0,
+      "offset": [0.0, 0.0, 0.0]
+    },
+    "pose-transform": {
+      "scaling": 1.0,
+      "roll": 0.0,
+      "pitch": 0.0,
+      "yaw": 0.0,
+      "translation": [0.0, 0.0, -1000.0]
+    },
+    "view-transform": {
+      "translation": [0.0, 0.0, 0.0],
+      "roll": 0.0,
+      "yaw": 0.0,
+      "pitch": 0.0
+    },
+    "camera": {
+      "principalPoint": [0.0, 0.0],
+      "sensorSize": [15.0, 15.0],
+      "far": 1000000.0,
+      "orthographic": false,
+      "near": 10.0,
+      "focalLength": 50.0
+    }
+  },
+  "format-version": "V1.0"
+}
