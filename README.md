@@ -43,6 +43,9 @@ Usage
 - clone repository
 - compile and run using `sbt run -mem 2000`
 
+### Singularity:
+- we provide a singularity container recipe file to run the data generator directly on compute servers
+
 Publications
 ------------
 If you use this software you will need the Basel Face Model 2017, the Basel Illumination Prior 2017 and a dataset of backgrounds. Please cite the following papers:
