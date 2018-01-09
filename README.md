@@ -27,7 +27,7 @@ Usage
 - installed [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) (Version 8.0 or higher recommended)
 - download jar and config file under `release`
 - [download](http://gravis.dmi.unibas.ch/PMM/) Basel Face Model 2017
-- (optional) [request](bernhard.egger@unibas.ch) Basel Illumination Prior 2017
+- [download](http://gravis.dmi.unibas.ch/PMM/)  Basel Illumination Prior 2017
 - get a dataset with backgrounds, e.g. the [Describable Textures Dataset](http://www.robots.ox.ac.uk/~vgg/data/dtd/)
 
 ### Run
@@ -62,8 +62,8 @@ IN: arXiv preprint (2017)
 
 ### Basel Illumination Prior 2017
 - [3] Bernhard Egger, Sandro Schoenborn, Andreas Schneider, Adam Kortylewski, Andreas Morel-Forster, Clemens Blumer and Thomas Vetter 
- Occlusion-aware 3D Morphable Models and an Illumination Prior for Face Image Analysis,
-IN: to appear
+["Occlusion-aware 3D Morphable Models and an Illumination Prior for Face Image Analysis"](http://gravis.dmi.unibas.ch/publications/2018/2018_Egger_IJCV.pdf),
+IN: International Journal of Computer Vision, 2018 
 
 ### Background Dataset
 - A background dataset of your choice
