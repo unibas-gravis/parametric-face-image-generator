@@ -78,7 +78,7 @@ object ControlledFaces extends App {
                 val uncentered = RenderParameter(controlledPose, view, camera, controlledIll, DirectionalLight.off, rndId, ImageSize(imageWidth, imageHeight), colorTransform)
 
                 // move face in the middle of the image
-                val rps = if (faceCenter) helpers.center(uncentered) else uncentered
+                val rps = if (faceCenter) helpers.centerFaceBox(uncentered) else uncentered
 
                 // render image with or without background
                 val img = if(bg) {
