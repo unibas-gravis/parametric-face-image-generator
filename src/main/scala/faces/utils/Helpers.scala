@@ -28,7 +28,7 @@ import scalismo.faces.landmarks.TLMSLandmark2D
 import scalismo.faces.momo.MoMo
 import scalismo.faces.parameters._
 import scalismo.faces.sampling.face.MoMoRenderer
-import scalismo.geometry.{Point2D, Vector2D, Vector3D}
+import scalismo.geometry.{Point, Point2D, Vector2D, Vector3D}
 import scalismo.utils.Random
 
 import scala.reflect.io.Path
@@ -92,9 +92,8 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   }
 
   // center the face around a point between the ears and nose (change here if you want to center another point)
-  def center(rps: RenderParameter): RenderParameter = {
+  def centerLandmark(rps: RenderParameter): RenderParameter = {
     val lmLeftEar: TLMSLandmark2D = renderer.renderLandmark("left.eye.pupil.center", rps).get
-    //ear.tragus.tip", rps).get // get is safe, checked during construction
     val lmRightEar: TLMSLandmark2D = renderer.renderLandmark("right.eye.pupil.center", rps).get
     val lmNose: TLMSLandmark2D = renderer.renderLandmark("center.nose.tip", rps).get
 
@@ -108,6 +107,67 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
       rps.camera.principalPoint.x + 2 * shift.x / rps.imageSize.width,
       rps.camera.principalPoint.y - 2 * shift.y / rps.imageSize.height))
     )
+  }
+
+  // center the face around chin, eyes, nose and ears and crop a face box (change here if you want to center another point)
+  def centerFaceBox(rps: RenderParameter, scaling : Double = 1): RenderParameter = {
+
+    val lmTags = Seq(
+      "left.ear.helix.outer",
+      "right.ear.helix.outer",
+      "center.nose.tip",
+      "center.front.trichion",
+      "center.chin.tip",
+      "left.eyebrow.bend.lower",
+      "right.eyebrow.bend.lower"
+     )
+
+    val lms = lmTags.map(tag => renderer.renderLandmark(tag, rps).get )
+
+
+    val xmax = lms.maxBy( _.point.x ).point.x
+    val xmin = lms.minBy( _.point.x ).point.x
+
+    val ymax = lms.maxBy( _.point.y ).point.y
+    val ymin = lms.minBy( _.point.y ).point.y
+
+    val xcenter = (xmax+xmin)/2.0
+    val ycenter = (ymax+ymin)/2.0
+
+    val maxSide = math.max(xmax-xmin, ymax-ymin) * scaling
+
+    val middleOfFace = Point(xcenter, ycenter)
+
+    val centerOfImage = Point2D(imageWidth / 2, imageHeight / 2)
+
+    val lmLeftEar = lms(0)
+    val lmRightEar = lms(1)
+    val lmNose = lms(2)
+
+    val centerShift= {
+      val centerShiftLEar = (lmLeftEar.point- lmNose.point)
+      val centerShiftREar = (lmRightEar.point- lmNose.point)
+
+      if (centerShiftLEar.norm > centerShiftREar.norm) {
+        centerShiftLEar
+      }
+      else {
+        centerShiftREar
+      }
+
+    }
+    val shift = middleOfFace - centerOfImage - centerShift*0.2
+
+    val f = maxSide.toDouble/rps.imageSize.width.toDouble
+    val g = maxSide.toDouble/rps.imageSize.height.toDouble
+
+    // shifting by moving the principal point (normalized device coordinates [-1, 1], y axis upwards)
+    rps.copy(camera = rps.camera.copy(principalPoint = Point2D(
+      (rps.camera.principalPoint.x - 2 * shift.x / rps.imageSize.width)/f,
+      (rps.camera.principalPoint.y + 2 * shift.y / rps.imageSize.height)/g),
+      sensorSize = Vector2D(rps.camera.sensorSize.x * f, rps.camera.sensorSize.y * g))
+    )
+
   }
 
   // method to write csv file of parameters

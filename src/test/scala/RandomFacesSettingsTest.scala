@@ -72,7 +72,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         xTranslationDistribution = UniformDistribution(-5,5),
         yTranslationDistribution = UniformDistribution(-5,5),
         scalingDistribution = UniformDistribution(1.0,1.2),
-        faceCenter = true)
+        faceCenter = "facebox")
     )
 
 
@@ -222,7 +222,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       ControlledPoseVariation(yawRange = -90 to 90 by 45,
         rollRange = -15 to 15 by 5,
         pitchRange = -15 to 15 by 3,
-        faceCenter = true),
+        faceCenter = "facebox"),
       ControlledBackgroundVariation(0 until 2 by 1)
     )
 

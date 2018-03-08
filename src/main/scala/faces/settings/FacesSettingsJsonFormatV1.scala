@@ -72,7 +72,7 @@ object RandomFacesSettingsJsonFormatV1 {
       val xTranslationDistribution = fields("x-translation-distribution").convertTo[Distribution]
       val yTranslationDistribution = fields("y-translation-distribution").convertTo[Distribution]
       val scalingDistribution = fields("scaling-distribution").convertTo[Distribution]
-      val faceCenter = fields("center-faces").convertTo[Boolean]
+      val faceCenter = fields("center-faces").convertTo[String]
 
       RandomPoseVariation(
         yawDistribution = yawDistribution,
@@ -212,7 +212,7 @@ object ControlledFacesSettingsJsonFormatV1 {
       val yawRange = fields("yaw-range").convertTo[Range]
       val rollRange = fields("roll-range").convertTo[Range]
       val pitchRange = fields("pitch-range").convertTo[Range]
-      val faceCenter = fields("center-faces").convertTo[Boolean]
+      val faceCenter = fields("center-faces").convertTo[String]
 
       ControlledPoseVariation(
         yawRange = yawRange,

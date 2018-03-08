@@ -69,7 +69,7 @@ case class RandomPoseVariation(
                                 xTranslationDistribution: Distribution,
                                 yTranslationDistribution: Distribution,
                                 scalingDistribution: Distribution,
-                                faceCenter: Boolean
+                                faceCenter: String
                               )
 
 case class ControlledIlluminationVariation(
@@ -80,7 +80,7 @@ case class ControlledPoseVariation(
                                     yawRange: Range,
                                     rollRange: Range,
                                     pitchRange: Range,
-                                    faceCenter: Boolean
+                                    faceCenter: String
                                   )
 
 case class ControlledBackgroundVariation(

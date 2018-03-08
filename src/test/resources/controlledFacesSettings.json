@@ -51,7 +51,7 @@
       "step": 3,
       "type": "inclusive"
     },
-    "center-faces": true
+    "center-faces": "facebox"
   },
   "image-dimensions": {
     "image-width": 227,

@@ -85,7 +85,7 @@
       "lower": 1.0,
       "higher": 1.2
     },
-    "center-faces": true
+    "center-faces": "facebox"
   },
   "image-dimensions": {
     "comment" : "The image size of the generated images in pixels.",
