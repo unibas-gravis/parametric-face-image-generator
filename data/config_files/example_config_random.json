@@ -45,7 +45,7 @@
     "__comment-3" : "A distribution for each 3d rotation angle yaw, roll and pitch in degrees.",
     "__comment-4" : "A distribution for each 2d shift along the x- and y-axis in image pixels.",
     "__comment-5" : "The scaling is the distribution of the focal length.",
-    "__comment-6" : "You can decide weather the faces are centered in the image.",
+    "__comment-6" : "Choose the centering of the face in the image from 'none', 'facebox','landmark'.",
     "yaw-distribution": {
       "type": "mixture",
       "components": [[0.6, {

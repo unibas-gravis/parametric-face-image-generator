@@ -81,7 +81,17 @@ object RandomFaces extends App {
         val uncentered = RenderParameter(rndPose, view, rndCamera, rndIll, directionalLight, momoInstance, ImageSize(imageWidth, imageHeight), colorTransform)
 
         // move face in the middle of the image
-        val centered = if (faceCenter) helpers.centerFaceBox(uncentered) else uncentered
+        val centered = if (faceCenter == "facebox")
+        {
+          helpers.centerFaceBox(uncentered)
+        }
+        else if(faceCenter == "landmark")
+        {
+          helpers.centerLandmark(uncentered)
+        }
+        else{
+          uncentered
+        }
 
         // add some controlled random translation
         val rps = centered.copy(camera = centered.camera.copy(

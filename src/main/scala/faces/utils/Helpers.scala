@@ -91,21 +91,38 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     new File(bgPath).listFiles.filter(_.getName.endsWith(bgType)).toIndexedSeq
   }
 
-  // center the face around chin, eyes, nose and ears and crop face box (change here if you want to center another point)
-  def centerFaceBox(rps: RenderParameter, scaling : Double = 1): RenderParameter = {
-    val lmTop: TLMSLandmark2D = renderer.renderLandmark("center.front.trichion", rps).get
-
+  // center the face around a point between the ears and nose (change here if you want to center another point)
+  def centerLandmark(rps: RenderParameter): RenderParameter = {
+    val lmLeftEar: TLMSLandmark2D = renderer.renderLandmark("left.eye.pupil.center", rps).get
+    val lmRightEar: TLMSLandmark2D = renderer.renderLandmark("right.eye.pupil.center", rps).get
     val lmNose: TLMSLandmark2D = renderer.renderLandmark("center.nose.tip", rps).get
 
-    val lmChin: TLMSLandmark2D = renderer.renderLandmark("center.chin.tip", rps).get
 
-    val lmLeftEar: TLMSLandmark2D = renderer.renderLandmark("left.ear.helix.outer", rps).get
-    val lmRightEar: TLMSLandmark2D = renderer.renderLandmark("right.ear.helix.outer", rps).get
+    val middleOfFace = (lmLeftEar.point + lmRightEar.point.toVector + lmNose.point.toVector).toVector / 3
+    val centerOfImage = Point2D(imageWidth / 2, imageHeight / 2)
+    val shift = centerOfImage - middleOfFace
 
-    val lmLeftEyebrow: TLMSLandmark2D = renderer.renderLandmark("left.eyebrow.bend.lower", rps).get
-    val lmRightEyebrow: TLMSLandmark2D = renderer.renderLandmark("right.eyebrow.bend.lower", rps).get
+    // shifting by moving the principal point (normalized device coordinates [-1, 1], y axis upwards)
+    rps.copy(camera = rps.camera.copy(principalPoint = Point2D(
+      rps.camera.principalPoint.x + 2 * shift.x / rps.imageSize.width,
+      rps.camera.principalPoint.y - 2 * shift.y / rps.imageSize.height))
+    )
+  }
 
-    val lms = IndexedSeq(lmTop, lmNose, lmChin, lmLeftEar, lmRightEar, lmLeftEyebrow, lmRightEyebrow)
+  // center the face around chin, eyes, nose and ears and crop a face box (change here if you want to center another point)
+  def centerFaceBox(rps: RenderParameter, scaling : Double = 1): RenderParameter = {
+
+    val lmTags = Seq(
+      "left.ear.helix.outer",
+      "right.ear.helix.outer",
+      "center.nose.tip",
+      "center.front.trichion",
+      "center.chin.tip",
+      "left.eyebrow.bend.lower",
+      "right.eyebrow.bend.lower"
+     )
+
+    val lms = lmTags.map(tag => renderer.renderLandmark(tag, rps).get )
 
 
     val xmax = lms.maxBy( _.point.x ).point.x
@@ -123,17 +140,21 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
 
     val centerOfImage = Point2D(imageWidth / 2, imageHeight / 2)
 
+    val lmLeftEar = lms(0)
+    val lmRightEar = lms(1)
+    val lmNose = lms(2)
+
     val centerShift= {
-      val centerShiftLear = (lmLeftEar.point- lmNose.point)
-      val norm1= centerShiftLear.norm
-      val centerShiftRear = (lmRightEar.point- lmNose.point)
-      val norm2= centerShiftRear.norm
-      if (norm1 > norm2) {
-        centerShiftLear
+      val centerShiftLEar = (lmLeftEar.point- lmNose.point)
+      val centerShiftREar = (lmRightEar.point- lmNose.point)
+
+      if (centerShiftLEar.norm > centerShiftREar.norm) {
+        centerShiftLEar
       }
       else {
-        centerShiftRear
+        centerShiftREar
       }
+
     }
     val shift = middleOfFace - centerOfImage - centerShift*0.2
 

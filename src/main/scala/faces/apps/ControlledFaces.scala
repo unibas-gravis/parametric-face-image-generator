@@ -78,22 +78,32 @@ object ControlledFaces extends App {
                 val uncentered = RenderParameter(controlledPose, view, camera, controlledIll, DirectionalLight.off, rndId, ImageSize(imageWidth, imageHeight), colorTransform)
 
                 // move face in the middle of the image
-                val rps = if (faceCenter) helpers.centerFaceBox(uncentered) else uncentered
+                val centered = if (faceCenter == "facebox")
+                {
+                  helpers.centerFaceBox(uncentered)
+                }
+                else if(faceCenter == "landmark")
+                {
+                  helpers.centerLandmark(uncentered)
+                }
+                else{
+                  uncentered
+                }
 
                 // render image with or without background
                 val img = if(bg) {
                   require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
                   val BG = helpers.loadBgs(b)
                   val controlledBGimg = PixelImageIO.read[RGBA](BG).get.resample(imageWidth, imageHeight)
-                  helpers.renderer.renderImage(rps).zip(controlledBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1 )
+                  helpers.renderer.renderImage(centered).zip(controlledBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1 )
                 }
                 else{
-                  helpers.renderer.renderImage(rps)
+                  helpers.renderer.renderImage(centered)
                 }
 
                 // write images and their parameters
                 println(s"Generating \t ID:$id \t Sample:$n")
-                helpers.write(img, rps, id, n)
+                helpers.write(img, centered, id, n)
 
               }
             }
