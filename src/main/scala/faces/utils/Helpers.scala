@@ -23,7 +23,7 @@ import breeze.linalg.DenseVector
 import faces.settings.FacesSettings
 import scalismo.faces.color.RGBA
 import scalismo.faces.image.PixelImage
-import scalismo.faces.io.{MoMoIO, PixelImageIO, RenderParameterIO}
+import scalismo.faces.io.{MoMoIO, PixelImageIO, RenderParameterIO, TLMSLandmarksIO}
 import scalismo.faces.landmarks.TLMSLandmark2D
 import scalismo.faces.momo.MoMo
 import scalismo.faces.parameters._
@@ -55,6 +55,9 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     if (!Path(outCSVPath).exists) {
       Path(outCSVPath).createDirectory(failIfExists = false)
     }
+    if (!Path(outTLMSPath).exists) {
+      Path(outTLMSPath).createDirectory(failIfExists = false)
+    }
 
 
   // loading model and choosing neutral part if expressions not used
@@ -65,6 +68,28 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
 
   // the renderer for the model
   val renderer: MoMoRenderer = MoMoRenderer(model, RGBA.BlackTransparent).cached(5)
+
+  val aflwLmTags = Seq(
+    "center.chin.tip",
+    "center.lips.lower.inner",
+    "center.nose.tip",
+    "left.ear.lobule.attachement",
+    "right.ear.lobule.attachement",
+    "left.eye.corner_outer",
+    "left.eye.corner_inner",
+    "left.eye.pupil.center",
+    "right.eye.corner_outer",
+    "right.eye.corner_inner",
+    "right.eye.pupil.center",
+    "left.eyebrow.bend.lower",
+    "left.eyebrow.inner_lower",
+    "right.eyebrow.bend.lower",
+    "right.eyebrow.inner_lower",
+    "left.lips.corner",
+    "right.lips.corner",
+    "left.nose.wing.tip",
+    "right.nose.wing.tip"
+  )
 
   // generates a random instance of a Morphable Model following Gaussian distributions
   def rndMoMoInstance: MoMoInstance = {
@@ -89,6 +114,11 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   lazy val loadBgs: IndexedSeq[File] = {
     // search all background files
     new File(bgPath).listFiles.filter(_.getName.endsWith(bgType)).toIndexedSeq
+  }
+
+  def writeLandmarks(rps: RenderParameter, file: File) = {
+    val lms = aflwLmTags.map(tag => renderer.renderLandmark(tag, rps).get).toIndexedSeq
+    TLMSLandmarksIO.write2D(lms, file)
   }
 
   // center the face around a point between the ears and nose (change here if you want to center another point)
@@ -122,14 +152,14 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
       "right.eyebrow.bend.lower"
      )
 
-    val lms = lmTags.map(tag => renderer.renderLandmark(tag, rps).get )
+    val lms = lmTags.map(tag => tag -> renderer.renderLandmark(tag, rps).get ).toMap
 
 
-    val xmax = lms.maxBy( _.point.x ).point.x
-    val xmin = lms.minBy( _.point.x ).point.x
+    val xmax = lms.values.map( _.point.x ).max
+    val xmin = lms.values.map( _.point.x ).min
 
-    val ymax = lms.maxBy( _.point.y ).point.y
-    val ymin = lms.minBy( _.point.y ).point.y
+    val ymax = lms.values.map( _.point.y ).max
+    val ymin = lms.values.map( _.point.y ).min
 
     val xcenter = (xmax+xmin)/2.0
     val ycenter = (ymax+ymin)/2.0
@@ -140,13 +170,9 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
 
     val centerOfImage = Point2D(imageWidth / 2, imageHeight / 2)
 
-    val lmLeftEar = lms(0)
-    val lmRightEar = lms(1)
-    val lmNose = lms(2)
-
     val centerShift= {
-      val centerShiftLEar = (lmLeftEar.point- lmNose.point)
-      val centerShiftREar = (lmRightEar.point- lmNose.point)
+      val centerShiftLEar = (lms("left.ear.helix.outer").point - lms("center.nose.tip").point)
+      val centerShiftREar = (lms("right.ear.helix.outer").point- lms("center.nose.tip").point)
 
       if (centerShiftLEar.norm > centerShiftREar.norm) {
         centerShiftLEar
@@ -210,16 +236,28 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   }
 
   def write(img: PixelImage[RGBA], rps: RenderParameter, id: Int, n: Int): Unit ={
-    if (nSamples > 0){
-      PixelImageIO.write(img.map{f=>f.toRGB}, new File(outImgPath + id + "_" + n + ".jpg"))
-      RenderParameterIO.write(rps, new File(outRpsPath + id + "_" + n + ".rps"))
-      writeCSV(rps, new File(outCSVPath + id + "_" + n + ".csv") )
+
+    val outRpsPathID= outRpsPath + id + "/";
+    if (!Path(outRpsPathID).exists) {
+      Path(outRpsPathID).createDirectory(failIfExists = false)
     }
-    else {
-      PixelImageIO.write(img.map{f=>f.toRGB}, new File(outImgPath + id + ".jpg"))
-      RenderParameterIO.write(rps, new File(outRpsPath + id +  ".rps"))
-      writeCSV(rps, new File(outCSVPath + id + ".csv"))
+    val outImgPathID= outImgPath + id + "/";
+    if (!Path(outImgPathID).exists) {
+      Path(outImgPathID).createDirectory(failIfExists = false)
     }
+    val outCSVPathID= outCSVPath + id + "/";
+    if (!Path(outCSVPathID).exists) {
+      Path(outCSVPathID).createDirectory(failIfExists = false)
+    }
+    val outTLMSPathID= outTLMSPath + id + "/";
+    if (!Path(outTLMSPathID).exists) {
+      Path(outTLMSPathID).createDirectory(failIfExists = false)
+    }
+
+    PixelImageIO.write(img.map{f=>f.toRGB}, new File(outImgPathID + id + "_" + n + ".jpg"))
+    RenderParameterIO.write(rps, new File(outRpsPathID + id + "_" + n + ".rps"))
+    writeCSV(rps, new File(outCSVPathID + id + "_" + n + ".csv") )
+    writeLandmarks(rps, new File(outTLMSPathID + id + "_" + n + ".tlms"))
 
   }
 }

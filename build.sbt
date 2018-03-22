@@ -1,4 +1,4 @@
-name := """data-generator"""
+name := """parametric-image-generator"""
 version       := "1.0"
 
 scalaVersion  := "2.12.1"

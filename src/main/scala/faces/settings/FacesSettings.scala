@@ -33,6 +33,7 @@ case class OutputLocation(
   def outImgPath: String = outPath + "img/"
   def outRpsPath: String = outPath + "rps/"
   def outCSVPath: String = outPath + "csv/"
+  def outTLMSPath: String = outPath + "tlms/"
 
 }
 

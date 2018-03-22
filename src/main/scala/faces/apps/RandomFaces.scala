@@ -21,7 +21,8 @@ import java.io.File
 import faces.settings.RandomFacesSettings
 import faces.utils.{Helpers, InfiniteDataGeneratorOptions}
 import scalismo.faces.color.RGBA
-import scalismo.faces.io.PixelImageIO
+import scalismo.faces.io.{PixelImageIO, TLMSLandmarksIO}
+import scalismo.faces.landmarks.TLMSLandmark2D
 import scalismo.faces.parameters._
 import scalismo.geometry.Point2D
 import scalismo.utils.Random
