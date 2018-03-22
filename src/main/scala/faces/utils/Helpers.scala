@@ -32,6 +32,7 @@ import scalismo.geometry.{Point, Point2D, Vector2D, Vector3D}
 import scalismo.utils.Random
 
 import scala.reflect.io.Path
+import scala.util.Try
 
 case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   import cfg._
@@ -67,7 +68,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   }
 
   // the renderer for the model
-  val renderer: MoMoRenderer = MoMoRenderer(model, RGBA.BlackTransparent).cached(5)
+  val renderer: CorrespondenceMoMoRenderer = CorrespondenceMoMoRenderer(model, RGBA.BlackTransparent).cached(5)
 
   val aflwLmTags = Seq(
     "center.chin.tip",
@@ -116,8 +117,8 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     new File(bgPath).listFiles.filter(_.getName.endsWith(bgType)).toIndexedSeq
   }
 
-  def writeLandmarks(rps: RenderParameter, file: File) = {
-    val lms = aflwLmTags.map(tag => renderer.renderLandmark(tag, rps).get).toIndexedSeq
+  def writeLandmarks(rps: RenderParameter, file: File): Try[Unit] = {
+    val lms = visibilityForLandmarks(renderer, rps, aflwLmTags.map(tag => renderer.renderLandmark(tag, rps).get).toIndexedSeq)
     TLMSLandmarksIO.write2D(lms, file)
   }
 
@@ -137,6 +138,38 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
       rps.camera.principalPoint.x + 2 * shift.x / rps.imageSize.width,
       rps.camera.principalPoint.y - 2 * shift.y / rps.imageSize.height))
     )
+  }
+
+  /** checks visibility for landmarks by rastering the image with the CorrespondenceMoMoRenderer.
+    * Make sure, that you are using a cached CorrespondenceMoMoRenderer */
+  def visibilityForLandmarks(renderer: CorrespondenceMoMoRenderer, param: RenderParameter, landmarks: IndexedSeq[TLMSLandmark2D]): IndexedSeq[TLMSLandmark2D] = {
+    val correspondenceImage = renderer.renderCorrespondenceImage(param)
+
+    def visibilityForLandmark(lm: TLMSLandmark2D): Boolean = {
+      val eps = 2.0
+      val pt2d = lm.point
+      val maybeFrag = correspondenceImage(math.round(pt2d.x).toInt, math.round(pt2d.y).toInt)
+      if(maybeFrag.isDefined) {
+        val frag = maybeFrag.get
+        val modelView = param.modelViewTransform
+        val pos3dOnMesh = modelView(frag.mesh.position(frag.triangleId, frag.worldBCC))
+
+        val ptId = renderer.model.landmarkPointId(lm.id).get
+        val lm3d = modelView(renderer.model.instanceAtPoint(param.momo.coefficients, ptId)._1)
+
+        if(lm3d.z+eps >= pos3dOnMesh.z) {
+          true
+        }else {
+          false
+        }
+      }else {
+        false
+      }
+    }
+
+    for(lm <- landmarks) yield {
+      lm.copy(visible = visibilityForLandmark(lm))
+    }
   }
 
   // center the face around chin, eyes, nose and ears and crop a face box (change here if you want to center another point)
