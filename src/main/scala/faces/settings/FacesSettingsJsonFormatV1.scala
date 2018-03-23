@@ -288,6 +288,7 @@ object RenderingMethodsJsonVormatV1 {
   val RenderingMethodsFormat: RootJsonFormat[RenderingMethods] = new RootJsonFormat[RenderingMethods] {
     override def write(obj: RenderingMethods): JsValue = {
       val contents = Map(
+        "render" -> JsBoolean(obj.render),
         "render-depth" -> JsBoolean(obj.renderDepthMap),
         "render-color-correspondence-image" -> JsBoolean(obj.renderColorCorrespondenceImage)
       )
