@@ -20,14 +20,15 @@ import java.io.File
 import java.net.URI
 
 import breeze.linalg.DenseVector
-import faces.settings.FacesSettings
+import faces.apps.ControlledFaces.helpers
+import faces.settings.{FacesSettings, RenderingMethods}
 import scalismo.faces.color.RGBA
 import scalismo.faces.image.PixelImage
 import scalismo.faces.io.{MoMoIO, PixelImageIO, RenderParameterIO, TLMSLandmarksIO}
 import scalismo.faces.landmarks.TLMSLandmark2D
 import scalismo.faces.momo.MoMo
 import scalismo.faces.parameters._
-import scalismo.faces.sampling.face.MoMoRenderer
+import scalismo.faces.sampling.face.{MoMoRenderer, ParametricImageRenderer}
 import scalismo.geometry.{Point, Point2D, Vector2D, Vector3D}
 import scalismo.utils.Random
 
@@ -69,6 +70,22 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
 
   // the renderer for the model
   val renderer: CorrespondenceMoMoRenderer = CorrespondenceMoMoRenderer(model, RGBA.BlackTransparent).cached(5)
+
+  val renderingMethods = {
+    val depthMapGenerator = new DepthMapRenderer(renderer)
+    val colorCorrespondenceGen = new CorrespondenceColorImageRenderer(renderer)
+    //additional rendering methods
+    val dm = if(cfg.renderingMethods.renderDepthMap) {
+      Some(("_depth", depthMapGenerator))
+    }else None
+    val cm = if(cfg.renderingMethods.renderColorCorrespondenceImage) {
+      Some(("_correspondence", colorCorrespondenceGen))
+    }else None
+    val rn = if(cfg.renderingMethods.render) {
+      Some(("", renderer))
+    }else None
+    IndexedSeq(rn, dm, cm).flatten
+  }
 
   val aflwLmTags = Seq(
     "center.chin.tip",
@@ -144,28 +161,37 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     * Make sure, that you are using a cached CorrespondenceMoMoRenderer */
   def visibilityForLandmarks(renderer: CorrespondenceMoMoRenderer, param: RenderParameter, landmarks: IndexedSeq[TLMSLandmark2D]): IndexedSeq[TLMSLandmark2D] = {
     val correspondenceImage = renderer.renderCorrespondenceImage(param)
+    val w = param.imageSize.width
+    val h = param.imageSize.height
 
     def visibilityForLandmark(lm: TLMSLandmark2D): Boolean = {
       val eps = 2.0
       val pt2d = lm.point
-      val maybeFrag = correspondenceImage(math.round(pt2d.x).toInt, math.round(pt2d.y).toInt)
-      if(maybeFrag.isDefined) {
-        val frag = maybeFrag.get
-        val modelView = param.modelViewTransform
-        val pos3dOnMesh = modelView(frag.mesh.position(frag.triangleId, frag.worldBCC))
+      val x = math.round(pt2d.x).toInt
+      val y = math.round(pt2d.y).toInt
+      if(x >=0 && x < w && y >=0 && y < h) { // within image bounds
+        val maybeFrag = correspondenceImage(x, y)
+        if (maybeFrag.isDefined) {
+          val frag = maybeFrag.get
+          val modelView = param.modelViewTransform
+          val pos3dOnMesh = modelView(frag.mesh.position(frag.triangleId, frag.worldBCC))
 
-        val ptId = renderer.model.landmarkPointId(lm.id).get
-        val lm3d = modelView(renderer.model.instanceAtPoint(param.momo.coefficients, ptId)._1)
+          val ptId = renderer.model.landmarkPointId(lm.id).get
+          val lm3d = modelView(renderer.model.instanceAtPoint(param.momo.coefficients, ptId)._1)
 
-        if(lm3d.z+eps >= pos3dOnMesh.z) {
-          true
-        }else {
+          if (lm3d.z + eps >= pos3dOnMesh.z) {
+            true
+          } else {
+            false
+          }
+        } else {
           false
         }
       }else {
         false
       }
     }
+
 
     for(lm <- landmarks) yield {
       lm.copy(visible = visibilityForLandmark(lm))
@@ -268,29 +294,37 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     withLight
   }
 
-  def write(img: PixelImage[RGBA], rps: RenderParameter, id: Int, n: Int): Unit ={
-
-    val outRpsPathID= outRpsPath + id + "/";
-    if (!Path(outRpsPathID).exists) {
-      Path(outRpsPathID).createDirectory(failIfExists = false)
-    }
-    val outImgPathID= outImgPath + id + "/";
+  def writeImg(img: PixelImage[RGBA], id: Int, n: Int, postfix: String): Unit = {
+    val outImgPathID = outImgPath + id + "/"
     if (!Path(outImgPathID).exists) {
       Path(outImgPathID).createDirectory(failIfExists = false)
     }
-    val outCSVPathID= outCSVPath + id + "/";
+    PixelImageIO.write(img.map { f => f.toRGB }, new File(outImgPathID + id + "_" + n + postfix + ".png"))
+  }
+
+  def writeExceptImage(rps: RenderParameter, id: Int, n: Int): Unit = {
+    val outRpsPathID= outRpsPath + id + "/"
+    if (!Path(outRpsPathID).exists) {
+      Path(outRpsPathID).createDirectory(failIfExists = false)
+    }
+    val outCSVPathID= outCSVPath + id + "/"
     if (!Path(outCSVPathID).exists) {
       Path(outCSVPathID).createDirectory(failIfExists = false)
     }
-    val outTLMSPathID= outTLMSPath + id + "/";
+    val outTLMSPathID= outTLMSPath + id + "/"
     if (!Path(outTLMSPathID).exists) {
       Path(outTLMSPathID).createDirectory(failIfExists = false)
     }
 
-    PixelImageIO.write(img.map{f=>f.toRGB}, new File(outImgPathID + id + "_" + n + ".jpg"))
     RenderParameterIO.write(rps, new File(outRpsPathID + id + "_" + n + ".rps"))
     writeCSV(rps, new File(outCSVPathID + id + "_" + n + ".csv") )
     writeLandmarks(rps, new File(outTLMSPathID + id + "_" + n + ".tlms"))
-
   }
+
+  def write(img: PixelImage[RGBA], rps: RenderParameter, id: Int, n: Int): Unit = {
+    writeExceptImage(rps, id, n)
+    writeImg(img, id, n, "")
+  }
+
+
 }

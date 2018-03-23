@@ -85,6 +85,7 @@ Contributors
 - Bernhard Egger
 - Adam Kortylewski
 - Andreas Morel-Forster
+- Andreas Schneider
 
 Maintainers
 -----------

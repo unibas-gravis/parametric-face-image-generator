@@ -7,6 +7,15 @@
     "background-images-directory": "data/backgrounds/",
     "background-image-extension": ".jpg"
   },
+  "rendering-methods": {
+    "__comment-1" : "You can enable different rendering methods",
+    "__comment-2" : "render is the default rendering method it creates a realistic image",
+    "__comment-3" : "render-depth-map renders a depth map",
+    "__comment-4" : "render-color-correspondnece-image renders the correspondence to the reference mesh as 3d positions as color coded value",
+    "render": true,
+    "render-depth": true,
+    "render-color-correspondence-image": true
+  },
   "morphable-model-parameters": {
     "number-of-ids-to-create": 1,
     "number-of-samples-per-id": 1,

@@ -17,8 +17,9 @@ package faces.utils
  */
 
 import breeze.linalg.DenseVector
-import scalismo.faces.color.RGBA
-import scalismo.faces.image.PixelImage
+import scalismo.common.PointId
+import scalismo.faces.color.{RGB, RGBA}
+import scalismo.faces.image.{PixelImage, PixelImageNormalization}
 import scalismo.faces.landmarks.TLMSLandmark2D
 import scalismo.faces.mesh.VertexColorMesh3D
 import scalismo.faces.momo.MoMo
@@ -26,9 +27,11 @@ import scalismo.faces.parameters.{ParametricRenderer, RenderParameter}
 import scalismo.faces.render.{PixelShader, TriangleRenderer}
 import scalismo.faces.render.TriangleRenderer.TriangleFragment
 import scalismo.faces.sampling.face._
-import scalismo.geometry.Point
-import scalismo.mesh.MeshSurfaceProperty
+import scalismo.geometry.{Point, Vector, _3D}
+import scalismo.mesh.{MeshSurfaceProperty, SurfacePointProperty}
 import scalismo.utils.Memoize
+
+import scala.collection.immutable
 
 /** parametric renderer for a Morphable Model, implements all useful Parameteric*Renderer interfaces */
 class CorrespondenceMoMoRenderer(val model: MoMo, val clearColor: RGBA)
@@ -122,3 +125,64 @@ object CorrespondenceMoMoRenderer {
   def apply(model: MoMo, clearColor: RGBA) = new CorrespondenceMoMoRenderer(model, clearColor)
   def apply(model: MoMo) = new CorrespondenceMoMoRenderer(model, RGBA.BlackTransparent)
 }
+
+abstract class RenderFromCorrespondenceImage[A](correspondenceMoMoRenderer: CorrespondenceMoMoRenderer) extends ParametricImageRenderer[A]{
+  override def renderImage(parameters: RenderParameter): PixelImage[A]
+}
+
+case class DepthMapRenderer(correspondenceMoMoRenderer: CorrespondenceMoMoRenderer) extends RenderFromCorrespondenceImage[RGBA](correspondenceMoMoRenderer: CorrespondenceMoMoRenderer) {
+  override def renderImage(parameters: RenderParameter): PixelImage[RGBA] = {
+    val correspondenceImage = correspondenceMoMoRenderer.renderCorrespondenceImage(parameters)
+    val depthMap = correspondenceImage.map{ px=>
+      if(px.isDefined){
+        val frag = px.get
+        val tId = frag.triangleId
+        val bcc = frag.worldBCC
+        val mesh = frag.mesh
+
+        val posModel = mesh.position(tId, bcc)
+        val posEyeCoordinates = parameters.modelViewTransform(posModel)
+
+        Some((parameters.view.eyePosition-posEyeCoordinates).norm)
+      }else{
+        None
+      }
+    }
+    val values  = depthMap.values.toIndexedSeq.flatten
+    val ma = values.max
+    val mi = values.min
+    val mami = ma-mi
+    depthMap.map{d=>
+      if(d.isEmpty)
+        RGBA(0.0)
+      else {
+        RGBA(1.0 - (d.get - mi)/mami)
+      }
+    }
+  }
+}
+
+case class CorrespondenceColorImageRenderer(correspondenceMoMoRenderer: CorrespondenceMoMoRenderer, backgroundColor: RGBA = RGBA.Black) extends RenderFromCorrespondenceImage[RGBA](correspondenceMoMoRenderer){
+  val reference = correspondenceMoMoRenderer.model.mean
+  val normalizedReference = {
+    val extent = reference.shape.pointSet.boundingBox.extent.toBreezeVector
+    val min = reference.shape.pointSet.boundingBox.origin.toBreezeVector
+    val extV = reference.shape.pointSet.boundingBox.extent
+    val minV = reference.shape.pointSet.boundingBox.origin
+    val normalizedPoints = reference.shape.pointSet.points.map(p => (p.toBreezeVector - min) :/ extent).map(f => Vector[_3D](f.toArray)).toIndexedSeq
+    SurfacePointProperty(reference.shape.triangulation, normalizedPoints.map(d=>RGBA(d.x,d.y, d.z)))
+  }
+
+  override def renderImage(parameters: RenderParameter): PixelImage[RGBA] = {
+    val correspondenceImage = correspondenceMoMoRenderer.renderCorrespondenceImage(parameters)
+    correspondenceImage.map{px =>
+      if(px.isDefined) {
+        val frag = px.get
+        normalizedReference(frag.triangleId, frag.worldBCC)
+      }else {
+        backgroundColor
+      }
+    }
+  }
+}
+

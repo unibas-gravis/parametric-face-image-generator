@@ -19,6 +19,7 @@ import faces.utils._
 import scalismo.faces.parameters._
 import spray.json._
 
+import scala.collection.immutable
 import scala.collection.immutable.ListMap
 
 
@@ -26,6 +27,8 @@ object RandomFacesSettingsJsonFormatV1 {
 
   import FacesSettingsJsonFormatV1._
   import scalismo.faces.io.renderparameters.RenderParameterJSONFormatV4._
+
+  implicit val ReneringMethodsFormat = RenderingMethodsJsonVormatV1.RenderingMethodsFormat
 
   implicit val IlluminationParametersFormat: RootJsonFormat[IlluminationParameters] = new RootJsonFormat[IlluminationParameters] {
     override def write(obj: IlluminationParameters): JsValue = {
@@ -92,6 +95,7 @@ object RandomFacesSettingsJsonFormatV1 {
         ListMap(
           ("output-location", obj.outputLocation.toJson),
           ("backgrounds", obj.backgrounds.toJson),
+          ("rendering-methods", obj.renderingMethods.toJson),
           ("morphable-model-parameters", obj.morphableModelParameters.toJson),
           ("illumination-parameters", obj.illuminationParameters.toJson),
           ("pose-variation", obj.poseVariation.toJson),
@@ -111,6 +115,7 @@ object RandomFacesSettingsJsonFormatV1 {
 
       val outputLocation = fields("output-location").convertTo[OutputLocation]
       val backgrounds = fields("backgrounds").convertTo[Backgrounds]
+      val renderingMethods = fields("rendering-methods").convertTo[RenderingMethods]
       val morphableModelParameters = fields("morphable-model-parameters").convertTo[MorphableModelParameters]
       val illuminationParameters = fields("illumination-parameters").convertTo[IlluminationParameters]
       val poseVariation = fields("pose-variation").convertTo[RandomPoseVariation]
@@ -120,6 +125,7 @@ object RandomFacesSettingsJsonFormatV1 {
       new RandomFacesSettings(
         outputLocation,
         backgrounds,
+        renderingMethods,
         morphableModelParameters,
         imageDimensions,
         defaultParameters,
@@ -179,6 +185,8 @@ object ControlledFacesSettingsJsonFormatV1 {
     }
   }
 
+  implicit val RenderingMethdosFormat = RenderingMethodsJsonVormatV1.RenderingMethodsFormat
+
   implicit val IlluminationParametersFormat: RootJsonFormat[ControlledIlluminationVariation] = new RootJsonFormat[ControlledIlluminationVariation] {
     def write(obj: ControlledIlluminationVariation): JsValue = {
       new JsObjectOrdered( ListMap(
@@ -229,6 +237,7 @@ object ControlledFacesSettingsJsonFormatV1 {
         ListMap(
           ("output-location", obj.outputLocation.toJson),
           ("backgrounds", obj.backgrounds.toJson),
+          ("rendering-methods", obj.renderingMethods.toJson),
           ("morphable-model-parameters", obj.morphableModelParameters.toJson),
           ("background-variation", obj.backgroundVariation.toJson),
           ("illumination-angle", obj.illuminationVariation.toJson),
@@ -249,6 +258,7 @@ object ControlledFacesSettingsJsonFormatV1 {
 
       val outputLocation = fields("output-location").convertTo[OutputLocation]
       val backgrounds = fields("backgrounds").convertTo[Backgrounds]
+      val renderingMethods = fields("rendering-methods").convertTo[RenderingMethods]
       val morphableModelParameters = fields("morphable-model-parameters").convertTo[MorphableModelParameters]
       val backgroundRange = fields("background-variation").convertTo[ControlledBackgroundVariation]
       val illuminationDirectionRange = fields("illumination-angle").convertTo[ControlledIlluminationVariation]
@@ -259,6 +269,7 @@ object ControlledFacesSettingsJsonFormatV1 {
       new ControlledFacesSettings(
         outputLocation,
         backgrounds,
+        renderingMethods,
         morphableModelParameters,
         imageDimensions,
         defaultParameters,
@@ -269,6 +280,29 @@ object ControlledFacesSettingsJsonFormatV1 {
     }
   }
 
+}
+
+object RenderingMethodsJsonVormatV1 {
+  import scalismo.faces.io.renderparameters.RenderParameterJSONFormatV4._
+
+  val RenderingMethodsFormat: RootJsonFormat[RenderingMethods] = new RootJsonFormat[RenderingMethods] {
+    override def write(obj: RenderingMethods): JsValue = {
+      val contents = Map(
+        "render-depth" -> JsBoolean(obj.renderDepthMap),
+        "render-color-correspondence-image" -> JsBoolean(obj.renderColorCorrespondenceImage)
+      )
+      JsObject(contents)
+    }
+
+    override def read(json: JsValue): RenderingMethods = {
+      val fields = json.asJsObject(s"expected RenderingMethods object, got: ${json}").fields
+      RenderingMethods(
+        render = fields("render").convertTo[Boolean],
+        renderDepthMap = fields("render-depth").convertTo[Boolean],
+        renderColorCorrespondenceImage = fields("render-color-correspondence-image").convertTo[Boolean]
+      )
+    }
+  }
 }
 
 object FacesSettingsJsonFormatV1 {
@@ -318,6 +352,7 @@ object FacesSettingsJsonFormatV1 {
       }
     }
 
+    import RenderingMethodsJsonVormatV1.RenderingMethodsFormat
 
     implicit val MorphableModelParametersFormat: RootJsonFormat[MorphableModelParameters] = new RootJsonFormat[MorphableModelParameters] {
       override def write(obj: MorphableModelParameters): JsValue = {

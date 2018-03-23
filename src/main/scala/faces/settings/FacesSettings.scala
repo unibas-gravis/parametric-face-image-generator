@@ -16,11 +16,14 @@
 package faces.settings
 
 import faces.utils.{BaselIlluminationPrior, Distribution}
+import scalismo.faces.color.RGBA
 import scalismo.faces.parameters._
+import scalismo.faces.sampling.face.ParametricImageRenderer
 
 abstract class FacesSettings{
   val outputLocation: OutputLocation
   val backgrounds: Backgrounds
+  val renderingMethods: RenderingMethods
   val morphableModelParameters: MorphableModelParameters
   val imageDimensions: ImageDimensions
   val defaultParameters: DefaultParameters
@@ -100,3 +103,5 @@ case class DefaultParameters(
                               camera: Camera,
                               colorTransform: ColorTransform
                             )
+
+case class RenderingMethods(render: Boolean, renderDepthMap: Boolean, renderColorCorrespondenceImage: Boolean)
