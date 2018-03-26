@@ -39,6 +39,11 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         bgPath = "data/backgrounds/",
         bg = true,
         bgType = ".jpg"),
+      RenderingMethods(
+        render = true,
+        renderDepthMap = true,
+        renderColorCorrespondenceImage = true
+      ),
       MorphableModelParameters(
         nIds = 2,
         nSamples = 5,
@@ -198,6 +203,11 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         bgPath = "data/backgrounds/",
         bg = true,
         bgType = ".jpg"),
+      RenderingMethods(
+        render = true,
+        renderDepthMap = true,
+        renderColorCorrespondenceImage = true
+      ),
       MorphableModelParameters(
         nIds = 2,
         nSamples = 5,

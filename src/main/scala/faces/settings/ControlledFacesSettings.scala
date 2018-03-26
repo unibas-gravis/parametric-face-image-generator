@@ -22,13 +22,15 @@ import scala.io.Source
 case class ControlledFacesSettings(
                                override val outputLocation: OutputLocation,
                                override val backgrounds: Backgrounds,
+                               override val renderingMethods: RenderingMethods,
                                override val morphableModelParameters: MorphableModelParameters,
                                override val imageDimensions: ImageDimensions,
                                override val defaultParameters: DefaultParameters,
                                illuminationVariation: ControlledIlluminationVariation,
                                poseVariation: ControlledPoseVariation,
                                backgroundVariation: ControlledBackgroundVariation
-                             ) extends FacesSettings
+                             ) extends FacesSettings {
+}
 
 
 object ControlledFacesSettings {

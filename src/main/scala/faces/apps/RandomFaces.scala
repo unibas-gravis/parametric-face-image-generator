@@ -18,6 +18,7 @@ package faces.apps
 
 import java.io.File
 
+import faces.apps.ControlledFaces.{cfg, helpers}
 import faces.settings.RandomFacesSettings
 import faces.utils.{Helpers, InfiniteDataGeneratorOptions}
 import scalismo.faces.color.RGBA
@@ -54,10 +55,10 @@ object RandomFaces extends App {
   //****************************************************************************
 
   (0 until nIds).par.foreach( id =>{
-    try{
+    try {
       // generate random model instance (shape and color)
       val rndId = helpers.rndMoMoInstance
-      for(n <- 0 until nSamples){
+      for (n <- 0 until nSamples) {
         // add a random expression if activated
         val momoInstance = if (expressions) helpers.rndExpressions(rndId) else rndId
 
@@ -82,15 +83,13 @@ object RandomFaces extends App {
         val uncentered = RenderParameter(rndPose, view, rndCamera, rndIll, directionalLight, momoInstance, ImageSize(imageWidth, imageHeight), colorTransform)
 
         // move face in the middle of the image
-        val centered = if (faceCenter == "facebox")
-        {
+        val centered = if (faceCenter == "facebox") {
           helpers.centerFaceBox(uncentered)
         }
-        else if(faceCenter == "landmark")
-        {
+        else if (faceCenter == "landmark") {
           helpers.centerLandmark(uncentered)
         }
-        else{
+        else {
           uncentered
         }
 
@@ -101,27 +100,34 @@ object RandomFaces extends App {
             centered.camera.principalPoint.y + (2.0 * yTranslationDistribution()) / imageHeight)
         ))
 
-        // render image with or without background
-        val img = if(bg) {
-          require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
-          val rndBG = helpers.loadBgs(rnd.scalaRandom.nextInt(helpers.loadBgs.length))
-          val rndBGimg = PixelImageIO.read[RGBA](rndBG).get.resample(imageWidth, imageHeight)
-          helpers.renderer.renderImage(rps).zip(rndBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1 )
-        }
-        else{
-          helpers.renderer.renderImage(rps)
-        }
+        val imageData =
+          for ((postfix, currentRenderer) <- helpers.renderingMethods) yield {
+            if (bg && postfix == "") { // only allow different backgrounds for standard renderings
+              require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
+              val rndBG = helpers.loadBgs(rnd.scalaRandom.nextInt(helpers.loadBgs.length))
+              val rndBGimg = PixelImageIO.read[RGBA](rndBG).get.resample(imageWidth, imageHeight)
+              (currentRenderer.renderImage(centered).zip(rndBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1), postfix)
+            }
+            else {
+              (currentRenderer.renderImage(centered), postfix)
+            }
+          }
 
         // write images and their parameters
         println(s"Generating \t ID:$id \t Sample:$n")
-        helpers.write(img, rps, id, n)
-
-      }}
+        //helpers.write(img, rps, id, n)
+        for ((img, postifx) <- imageData) {
+          helpers.writeExceptImage(centered, id, n)
+          helpers.writeImg(img, id, n, postifx)
+        }
+      }
+    }
     catch{
       case e: Throwable =>
         println("Something went wrong with id: " + id)
         println(s"${e.getMessage}")
         println(s"${e.getStackTrace}")
+        e.printStackTrace()
     }
   })
 
