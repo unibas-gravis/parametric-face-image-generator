@@ -16,44 +16,22 @@ package faces.utils
  *  limitations under the License.
  */
 
-import breeze.linalg.DenseVector
-import scalismo.common.PointId
-import scalismo.faces.color.{RGB, RGBA}
-import scalismo.faces.image.{PixelImage, PixelImageNormalization}
+import scalismo.faces.color.RGBA
+import scalismo.faces.image.PixelImage
 import scalismo.faces.landmarks.TLMSLandmark2D
 import scalismo.faces.mesh.VertexColorMesh3D
 import scalismo.faces.momo.MoMo
-import scalismo.faces.parameters.{ParametricRenderer, RenderParameter}
-import scalismo.faces.render.{PixelShader, TriangleRenderer}
+import scalismo.faces.parameters.RenderParameter
 import scalismo.faces.render.TriangleRenderer.TriangleFragment
+import scalismo.faces.render.{PixelShader, TriangleRenderer}
 import scalismo.faces.sampling.face._
-import scalismo.geometry.{Point, Vector, _3D}
+import scalismo.geometry.{Vector, _3D}
 import scalismo.mesh.{MeshSurfaceProperty, SurfacePointProperty}
 import scalismo.utils.Memoize
 
-import scala.collection.immutable
-
-/** parametric renderer for a Morphable Model, implements all useful Parameteric*Renderer interfaces */
-class CorrespondenceMoMoRenderer(val model: MoMo, val clearColor: RGBA)
-  extends ParametricImageRenderer[RGBA]
-    with ParametricLandmarksRenderer
-    with ParametricMaskRenderer
-    with ParametricMeshRenderer
-    with ParametricModel {
-
-  /** pad a coefficient vector if it is too short, basis with single vector */
-  private def padCoefficients(coefficients: DenseVector[Double], rank: Int): DenseVector[Double] = {
-    require(coefficients.length <= rank, "too many coefficients for model")
-    if (coefficients.length == rank)
-      coefficients
-    else
-      DenseVector(coefficients.toArray ++ Array.fill(rank - coefficients.length)(0.0))
-  }
-
-  /** create an instance of the model, in the original model's object coordinates */
-  override def instance(parameters: RenderParameter): VertexColorMesh3D = {
-    model.instance(parameters.momo.coefficients)
-  }
+/** MoMoRenderer that additionally allows to render correspondence images.
+  * The renderImage method gives the same result as a standard MoMoRenderer. */
+class CorrespondenceMoMoRenderer(override val model: MoMo, override val clearColor: RGBA) extends MoMoRenderer(model, clearColor) {
 
   def renderCorrespondenceImage(parameters: RenderParameter): PixelImage[Option[TriangleFragment]] = {
     val inst = instance(parameters)
@@ -68,43 +46,8 @@ class CorrespondenceMoMoRenderer(val model: MoMo, val clearColor: RGBA)
     correspondenceImage.map{ px => if(px.isDefined) shader(px.get) else clearColor }
   }
 
-  /** render the mesh described by the parameters, draws instance from model and places properly in the world (world coordinates) */
-  override def renderMesh(parameters: RenderParameter): VertexColorMesh3D = {
-    val t = parameters.pose.transform
-    val mesh = instance(parameters)
-    VertexColorMesh3D(
-      mesh.shape.transform(p => t(p)),
-      mesh.color
-    )
-  }
-
-  /** render landmark position in the image */
-  override def renderLandmark(lmId: String, parameter: RenderParameter): Option[TLMSLandmark2D] = {
-    val renderer = parameter.renderTransform
-    for {
-      ptId <- model.landmarkPointId(lmId)
-      lm3d <- Some(model.instanceAtPoint(parameter.momo.coefficients, ptId)._1)
-      lmImage <- Some(renderer(lm3d))
-    } yield TLMSLandmark2D(lmId, Point(lmImage.x, lmImage.y), visible = true)
-  }
-
-  /** checks the availability of a named landmark */
-  override def hasLandmarkId(lmId: String): Boolean = model.landmarkPointId(lmId).isDefined
-
-
-  /** get all available landmarks */
-  override def allLandmarkIds: IndexedSeq[String] = model.landmarks.keySet.toIndexedSeq
-
-
-  /** render a mask defined on the model to image space */
-  override def renderMask(parameters: RenderParameter, mask: MeshSurfaceProperty[Int]): PixelImage[Int] = {
-    val inst = instance(parameters)
-    val maskImage = ParametricRenderer.renderPropertyImage(parameters, inst.shape, mask)
-    maskImage.map(_.getOrElse(0)) // 0 - invalid, outside rendering area
-  }
-
   /** get a cached version of this renderer */
-  def cached(cacheSize: Int) = new CorrespondenceMoMoRenderer(model, clearColor) {
+  override def cached(cacheSize: Int) = new CorrespondenceMoMoRenderer(model, clearColor) {
     private val imageRenderer = Memoize(super.renderImage, cacheSize)
     private val correspondenceImageRenderer = Memoize(super.renderCorrespondenceImage, cacheSize)
     private val meshRenderer = Memoize(super.renderMesh, cacheSize)
@@ -163,8 +106,8 @@ case class DepthMapRenderer(correspondenceMoMoRenderer: CorrespondenceMoMoRender
 }
 
 case class CorrespondenceColorImageRenderer(correspondenceMoMoRenderer: CorrespondenceMoMoRenderer, backgroundColor: RGBA = RGBA.Black) extends RenderFromCorrespondenceImage[RGBA](correspondenceMoMoRenderer){
-  val reference = correspondenceMoMoRenderer.model.mean
-  val normalizedReference = {
+  val reference: VertexColorMesh3D = correspondenceMoMoRenderer.model.mean
+  val normalizedReference: SurfacePointProperty[RGBA] = {
     val extent = reference.shape.pointSet.boundingBox.extent.toBreezeVector
     val min = reference.shape.pointSet.boundingBox.origin.toBreezeVector
     val extV = reference.shape.pointSet.boundingBox.extent

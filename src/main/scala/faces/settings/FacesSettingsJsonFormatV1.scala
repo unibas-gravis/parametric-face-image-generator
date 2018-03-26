@@ -19,7 +19,6 @@ import faces.utils._
 import scalismo.faces.parameters._
 import spray.json._
 
-import scala.collection.immutable
 import scala.collection.immutable.ListMap
 
 
@@ -28,7 +27,7 @@ object RandomFacesSettingsJsonFormatV1 {
   import FacesSettingsJsonFormatV1._
   import scalismo.faces.io.renderparameters.RenderParameterJSONFormatV4._
 
-  implicit val ReneringMethodsFormat = RenderingMethodsJsonVormatV1.RenderingMethodsFormat
+  implicit val ReneringMethodsFormat = RenderingMethodsJsonFormatV1.RenderingMethodsFormat
 
   implicit val IlluminationParametersFormat: RootJsonFormat[IlluminationParameters] = new RootJsonFormat[IlluminationParameters] {
     override def write(obj: IlluminationParameters): JsValue = {
@@ -185,7 +184,7 @@ object ControlledFacesSettingsJsonFormatV1 {
     }
   }
 
-  implicit val RenderingMethdosFormat = RenderingMethodsJsonVormatV1.RenderingMethodsFormat
+  implicit val RenderingMethodsFormat = RenderingMethodsJsonFormatV1.RenderingMethodsFormat
 
   implicit val IlluminationParametersFormat: RootJsonFormat[ControlledIlluminationVariation] = new RootJsonFormat[ControlledIlluminationVariation] {
     def write(obj: ControlledIlluminationVariation): JsValue = {
@@ -282,7 +281,7 @@ object ControlledFacesSettingsJsonFormatV1 {
 
 }
 
-object RenderingMethodsJsonVormatV1 {
+object RenderingMethodsJsonFormatV1 {
   import scalismo.faces.io.renderparameters.RenderParameterJSONFormatV4._
 
   val RenderingMethodsFormat: RootJsonFormat[RenderingMethods] = new RootJsonFormat[RenderingMethods] {
@@ -352,8 +351,6 @@ object FacesSettingsJsonFormatV1 {
           bgType = bgType)
       }
     }
-
-    import RenderingMethodsJsonVormatV1.RenderingMethodsFormat
 
     implicit val MorphableModelParametersFormat: RootJsonFormat[MorphableModelParameters] = new RootJsonFormat[MorphableModelParameters] {
       override def write(obj: MorphableModelParameters): JsValue = {
