@@ -59,7 +59,7 @@
       "step": 5.625,
       "type": "inclusive"
     },
-    "center-faces": false
+    "center-faces": "none"
   },
   "image-dimensions": {
     "image-width": 227,
