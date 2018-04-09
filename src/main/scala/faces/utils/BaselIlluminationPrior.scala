@@ -24,10 +24,9 @@ import scalismo.utils.Random
 
 case class BaselIlluminationPrior(dir: String){
   require(new File(dir).exists(), "Illumination Prior path does not exist")
-  require(!files.isEmpty, "Illumination Prior files not found in " + dir)
 
   // search all parameter files to estimate illumination
-  val files = {
+  lazy val files = {
     val listFiles = new File(dir).listFiles.filter(_.getName.endsWith(".rps")).toIndexedSeq
     listFiles
   }
