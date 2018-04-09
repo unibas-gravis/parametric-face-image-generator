@@ -19,7 +19,7 @@ package faces.apps
 import java.io.File
 
 import faces.settings.ControlledFacesSettings
-import faces.utils.{CorrespondenceColorImageRenderer, DepthMapRenderer, Helpers, InfiniteDataGeneratorOptions}
+import faces.utils.{Helpers, InfiniteDataGeneratorOptions}
 import scalismo.faces.color.{RGB, RGBA}
 import scalismo.faces.io.PixelImageIO
 import scalismo.faces.parameters._

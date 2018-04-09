@@ -20,15 +20,15 @@ import java.io.File
 import java.net.URI
 
 import breeze.linalg.DenseVector
-import faces.apps.ControlledFaces.helpers
-import faces.settings.{FacesSettings, RenderingMethods}
+import faces.settings.FacesSettings
 import scalismo.faces.color.RGBA
 import scalismo.faces.image.PixelImage
 import scalismo.faces.io.{MoMoIO, PixelImageIO, RenderParameterIO, TLMSLandmarksIO}
 import scalismo.faces.landmarks.TLMSLandmark2D
 import scalismo.faces.momo.MoMo
 import scalismo.faces.parameters._
-import scalismo.faces.sampling.face.{MoMoRenderer, ParametricImageRenderer}
+import scalismo.faces.sampling.face.ModalityRenderers.{AlbedoRenderer, DepthMapRenderer, IlluminationVisualizationRenderer}
+import scalismo.faces.sampling.face.{CorrespondenceColorImageRenderer, CorrespondenceMoMoRenderer}
 import scalismo.geometry.{Point, Point2D, Vector2D, Vector3D}
 import scalismo.utils.Random
 
@@ -69,11 +69,14 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   }
 
   // the renderer for the model
-  val renderer: CorrespondenceMoMoRenderer = CorrespondenceMoMoRenderer(model, RGBA.BlackTransparent).cached(5)
+  val renderer  = CorrespondenceMoMoRenderer(model, RGBA.BlackTransparent).cached(5)
 
   val renderingMethods = {
-    val depthMapGenerator = new DepthMapRenderer(renderer)
+    val depthMapGenerator = new DepthMapRendererRGBA(renderer)
     val colorCorrespondenceGen = new CorrespondenceColorImageRenderer(renderer)
+    val normalsGenerator = new NormalsRendererRGBA(renderer, RGBA.BlackTransparent)
+    val albedoGenerator = new AlbedoRenderer(renderer, RGBA.BlackTransparent)
+    val illuminationGenerator = new IlluminationVisualizationRenderer(renderer, RGBA.BlackTransparent)
     //additional rendering methods
     val dm = if(cfg.renderingMethods.renderDepthMap) {
       Some(("_depth", depthMapGenerator))
@@ -81,10 +84,19 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     val cm = if(cfg.renderingMethods.renderColorCorrespondenceImage) {
       Some(("_correspondence", colorCorrespondenceGen))
     }else None
+    val nm = if(cfg.renderingMethods.renderColorCorrespondenceImage) {
+      Some(("_normals", normalsGenerator))
+    }else None
+    val am = if(cfg.renderingMethods.renderColorCorrespondenceImage) {
+      Some(("_albedo", albedoGenerator))
+    }else None
+    val im = if(cfg.renderingMethods.renderColorCorrespondenceImage) {
+      Some(("_illumination", illuminationGenerator))
+    }else None
     val rn = if(cfg.renderingMethods.render) {
       Some(("", renderer))
     }else None
-    IndexedSeq(rn, dm, cm).flatten
+    IndexedSeq(rn, dm, cm, nm, am, im).flatten
   }
 
   val aflwLmTags = Seq(
