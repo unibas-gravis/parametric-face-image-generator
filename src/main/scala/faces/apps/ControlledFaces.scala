@@ -103,18 +103,6 @@ object ControlledFaces extends App {
                     }
                   }
 
-
-                // render image with or without background
-                /*val img = if(bg) {
-                  require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
-                  val BG = helpers.loadBgs(b)
-                  val controlledBGimg = PixelImageIO.read[RGBA](BG).get.resample(imageWidth, imageHeight)
-                  helpers.renderer.renderImage(centered).zip(controlledBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1 )
-                }
-                else{
-                  helpers.renderer.renderImage(centered)
-                }*/
-
                 // write images and their parameters
                 println(s"Generating \t ID:$id \t Sample:$n")
                 for((img, postifx) <- imageData) {

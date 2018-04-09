@@ -115,7 +115,6 @@ object RandomFaces extends App {
 
         // write images and their parameters
         println(s"Generating \t ID:$id \t Sample:$n")
-        //helpers.write(img, rps, id, n)
         for ((img, postifx) <- imageData) {
           helpers.writeExceptImage(centered, id, n)
           helpers.writeImg(img, id, n, postifx)
