@@ -33,7 +33,7 @@ In the "random" setup (bottom row), the model parameters are sampled randomly fr
 
 ![1_0](data/example_images/0_1_correspondence.png)![1_1](data/example_images/0_2_correspondence.png)![1_2](data/example_images/0_3_correspondence.png)
 
-You can render different image modalities such as e.g. depth images (top row) and color coded correspondence images (bottom row).
+You can render different image modalities such as e.g. depth images (top row), color coded correspondence images (bottom row), normals, albedo or illumination.
 
 ### Facial Landmarks
 
