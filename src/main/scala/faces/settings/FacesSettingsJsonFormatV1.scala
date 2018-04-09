@@ -290,9 +290,9 @@ object RenderingMethodsJsonFormatV1 {
         "render" -> JsBoolean(obj.render),
         "render-depth" -> JsBoolean(obj.renderDepthMap),
         "render-color-correspondence-image" -> JsBoolean(obj.renderColorCorrespondenceImage),
-        "render-normals-image" -> JsBoolean(obj.renderNormals),
-        "render-albedo-image" -> JsBoolean(obj.renderAlbedo),
-        "render-illumination-image" -> JsBoolean(obj.renderIllumination)
+        "render-normals" -> JsBoolean(obj.renderNormals),
+        "render-albedo" -> JsBoolean(obj.renderAlbedo),
+        "render-illumination" -> JsBoolean(obj.renderIllumination)
       )
       JsObject(contents)
     }
