@@ -42,7 +42,10 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       RenderingMethods(
         render = true,
         renderDepthMap = true,
-        renderColorCorrespondenceImage = true
+        renderColorCorrespondenceImage = true,
+        renderNormals= true,
+        renderAlbedo = true,
+        renderIllumination = true
       ),
       MorphableModelParameters(
         nIds = 2,
@@ -206,7 +209,10 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       RenderingMethods(
         render = true,
         renderDepthMap = true,
-        renderColorCorrespondenceImage = true
+        renderColorCorrespondenceImage = true,
+        renderNormals= true,
+        renderAlbedo = true,
+        renderIllumination = true
       ),
       MorphableModelParameters(
         nIds = 2,

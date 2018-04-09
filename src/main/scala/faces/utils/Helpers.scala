@@ -99,7 +99,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     IndexedSeq(rn, dm, cm, nm, am, im).flatten
   }
 
-  val aflwLmTags = Seq(
+  val landmarkTags = Seq(
     "center.chin.tip",
     "center.lips.lower.inner",
     "center.nose.tip",
@@ -147,7 +147,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   }
 
   def writeLandmarks(rps: RenderParameter, file: File): Try[Unit] = {
-    val lms = visibilityForLandmarks(renderer, rps, aflwLmTags.map(tag => renderer.renderLandmark(tag, rps).get).toIndexedSeq)
+    val lms = visibilityForLandmarks(renderer, rps, landmarkTags.map(tag => renderer.renderLandmark(tag, rps).get).toIndexedSeq)
     TLMSLandmarksIO.write2D(lms, file)
   }
 
