@@ -289,7 +289,10 @@ object RenderingMethodsJsonFormatV1 {
       val contents = Map(
         "render" -> JsBoolean(obj.render),
         "render-depth" -> JsBoolean(obj.renderDepthMap),
-        "render-color-correspondence-image" -> JsBoolean(obj.renderColorCorrespondenceImage)
+        "render-color-correspondence-image" -> JsBoolean(obj.renderColorCorrespondenceImage),
+        "render-normals-image" -> JsBoolean(obj.renderNormals),
+        "render-albedo-image" -> JsBoolean(obj.renderAlbedo),
+        "render-illumination-image" -> JsBoolean(obj.renderIllumination)
       )
       JsObject(contents)
     }
@@ -299,7 +302,10 @@ object RenderingMethodsJsonFormatV1 {
       RenderingMethods(
         render = fields("render").convertTo[Boolean],
         renderDepthMap = fields("render-depth").convertTo[Boolean],
-        renderColorCorrespondenceImage = fields("render-color-correspondence-image").convertTo[Boolean]
+        renderColorCorrespondenceImage = fields("render-color-correspondence-image").convertTo[Boolean],
+        renderNormals = fields("render-normals").convertTo[Boolean],
+        renderAlbedo = fields("render-albedo").convertTo[Boolean],
+        renderIllumination = fields("render-illumination").convertTo[Boolean]
       )
     }
   }
@@ -315,209 +321,209 @@ object FacesSettingsJsonFormatV1 {
   val version = "V1.0"
   val versionFieldName = "format-version"
 
-    implicit val OutputLocationFormat: RootJsonFormat[OutputLocation] = new RootJsonFormat[OutputLocation] {
-      override def write(obj: OutputLocation): JsValue = {
-        JsObject(("output-directory", obj.outPath.toJson))
-      }
+  implicit val OutputLocationFormat: RootJsonFormat[OutputLocation] = new RootJsonFormat[OutputLocation] {
+    override def write(obj: OutputLocation): JsValue = {
+      JsObject(("output-directory", obj.outPath.toJson))
+    }
 
-      override def read(json: JsValue): OutputLocation = {
-        val fields = json.asJsObject(s"expected OutputLocation object, got: $json").fields
+    override def read(json: JsValue): OutputLocation = {
+      val fields = json.asJsObject(s"expected OutputLocation object, got: $json").fields
 
-        val outPath = fields("output-directory").convertTo[String]
+      val outPath = fields("output-directory").convertTo[String]
 
-        OutputLocation(outPath)
+      OutputLocation(outPath)
+    }
+  }
+
+  implicit val BackgroundsFormat: RootJsonFormat[Backgrounds] = new RootJsonFormat[Backgrounds] {
+    override def write(obj: Backgrounds): JsValue = {
+      new JsObjectOrdered(ListMap(
+        ("insert-background-image", obj.bg.toJson),
+        ("background-images-directory", obj.bgPath.toJson),
+        ("background-image-extension", obj.bgType.toJson)
+      ))
+    }
+
+    override def read(json: JsValue): Backgrounds = {
+      val fields = json.asJsObject(s"expected Backgounds object, got: $json").fields
+
+      val bg = fields("insert-background-image").convertTo[Boolean]
+      val bgPath = fields("background-images-directory").convertTo[String]
+      val bgType = fields("background-image-extension").convertTo[String]
+
+      Backgrounds(
+        bgPath = bgPath,
+        bg = bg,
+        bgType = bgType)
+    }
+  }
+
+  implicit val MorphableModelParametersFormat: RootJsonFormat[MorphableModelParameters] = new RootJsonFormat[MorphableModelParameters] {
+    override def write(obj: MorphableModelParameters): JsValue = {
+      new JsObjectOrdered(ListMap(
+        ("number-of-ids-to-create", obj.nIds.toJson),
+        ("number-of-samples-per-id", obj.nSamples.toJson),
+        ("model-filename", obj.modelFn.toJson),
+        ("dimension-of-shape-space", obj.nShape.toJson),
+        ("dimension-of-color-space", obj.nColor.toJson),
+        ("dimension-of-expression-space", obj.nExpression.toJson),
+        ("add-expressions", obj.expressions.toJson)
+      ))
+    }
+
+    override def read(json: JsValue): MorphableModelParameters = {
+      val fields = json.asJsObject(s"expected MorphableModelParameters object, got: $json").fields
+
+      val nIds = fields("number-of-ids-to-create").convertTo[Int]
+      val nSamples = fields("number-of-samples-per-id").convertTo[Int]
+      val nShape = fields("dimension-of-shape-space").convertTo[Int]
+      val nColor = fields("dimension-of-color-space").convertTo[Int]
+      val nExpression = fields("dimension-of-expression-space").convertTo[Int]
+      val expressions = fields("add-expressions").convertTo[Boolean]
+      val modelFn = fields("model-filename").convertTo[String]
+
+      MorphableModelParameters(
+        nIds = nIds,
+        nSamples = nSamples,
+        nShape = nShape,
+        nColor = nColor,
+        nExpression = nExpression,
+        expressions = expressions,
+        modelFn = modelFn
+      )
+    }
+  }
+
+  implicit val ImageDimensionsFormat: RootJsonFormat[ImageDimensions] = new RootJsonFormat[ImageDimensions] {
+    override def write(obj: ImageDimensions): JsValue = {
+      new JsObjectOrdered(ListMap(
+        ("image-width", obj.imageWidth.toJson),
+        ("image-height", obj.imageHeight.toJson)
+      ))
+    }
+
+    override def read(json: JsValue): ImageDimensions = {
+      val fields = json.asJsObject(s"expected ImageDimensions object, got: $json").fields
+
+      val imageWidth = fields("image-width").convertTo[Int]
+      val imageHeight = fields("image-height").convertTo[Int]
+
+      ImageDimensions(
+        imageWidth = imageWidth,
+        imageHeight = imageHeight
+      )
+    }
+  }
+
+
+  implicit val DefaultParametersFormat: RootJsonFormat[DefaultParameters] = new RootJsonFormat[DefaultParameters] {
+    override def write(obj: DefaultParameters): JsValue = {
+      new JsObjectOrdered(ListMap(
+        ("color-transform", obj.colorTransform.toJson),
+        ("pose-transform", obj.pose.toJson),
+        ("view-transform", obj.view.toJson),
+        ("camera", obj.camera.toJson)
+      ))
+    }
+
+    override def read(json: JsValue): DefaultParameters = {
+      val fields = json.asJsObject(s"expected DefaultParameters object, got: $json").fields
+
+      val pose = fields("pose-transform").convertTo[Pose]
+      val view = fields("view-transform").convertTo[ViewParameter]
+      val camera = fields("camera").convertTo[Camera]
+      val colorTransform = fields("color-transform").convertTo[ColorTransform]
+
+      DefaultParameters(
+        pose = pose,
+        view = view,
+        camera = camera,
+        colorTransform = colorTransform
+      )
+    }
+  }
+
+
+  implicit val distributionFormat: RootJsonFormat[Distribution] = new RootJsonFormat[Distribution] {
+    override def write(distribution: Distribution): JsObject = {
+      distribution match {
+        case d: ConstantDistribution =>
+          new JsObjectOrdered(ListMap(("type" -> "constant".toJson) +: d.toJson.asJsObject.fields.toList: _*))
+        case d: GaussianDistribution =>
+          new JsObjectOrdered(ListMap(("type" -> "gaussian".toJson) +: d.toJson.asJsObject.fields.toList: _*))
+        case d: UniformDistribution =>
+          new JsObjectOrdered(ListMap(("type" -> "uniform".toJson) +: d.toJson.asJsObject.fields.toList: _*))
+        case d: MixtureDistribution =>
+          new JsObjectOrdered(ListMap(("type" -> "mixture".toJson) +: d.toJson.asJsObject.fields.toList: _*))
       }
     }
 
-    implicit val BackgroundsFormat: RootJsonFormat[Backgrounds] = new RootJsonFormat[Backgrounds] {
-      override def write(obj: Backgrounds): JsValue = {
-        new JsObjectOrdered(ListMap(
-          ("insert-background-image", obj.bg.toJson),
-          ("background-images-directory", obj.bgPath.toJson),
-          ("background-image-extension", obj.bgType.toJson)
-        ))
-      }
-
-      override def read(json: JsValue): Backgrounds = {
-        val fields = json.asJsObject(s"expected Backgounds object, got: $json").fields
-
-        val bg = fields("insert-background-image").convertTo[Boolean]
-        val bgPath = fields("background-images-directory").convertTo[String]
-        val bgType = fields("background-image-extension").convertTo[String]
-
-        Backgrounds(
-          bgPath = bgPath,
-          bg = bg,
-          bgType = bgType)
+    override def read(json: JsValue): Distribution = {
+      val fields = json.asJsObject(s"expected Distribution object, got: $json").fields
+      fields("type").convertTo[String] match {
+        case "constant" => constantDistributionFormat.read(json)
+        case "gaussian" => gaussianDistributionFormat.read(json)
+        case "uniform" => uniformDistributionFormat.read(json)
+        case "mixture" => mixtureDistributionFormat.read(json)
       }
     }
+  }
 
-    implicit val MorphableModelParametersFormat: RootJsonFormat[MorphableModelParameters] = new RootJsonFormat[MorphableModelParameters] {
-      override def write(obj: MorphableModelParameters): JsValue = {
-        new JsObjectOrdered(ListMap(
-          ("number-of-ids-to-create", obj.nIds.toJson),
-          ("number-of-samples-per-id", obj.nSamples.toJson),
-          ("model-filename", obj.modelFn.toJson),
-          ("dimension-of-shape-space", obj.nShape.toJson),
-          ("dimension-of-color-space", obj.nColor.toJson),
-          ("dimension-of-expression-space", obj.nExpression.toJson),
-          ("add-expressions", obj.expressions.toJson)
-        ))
-      }
-
-      override def read(json: JsValue): MorphableModelParameters = {
-        val fields = json.asJsObject(s"expected MorphableModelParameters object, got: $json").fields
-
-        val nIds = fields("number-of-ids-to-create").convertTo[Int]
-        val nSamples = fields("number-of-samples-per-id").convertTo[Int]
-        val nShape = fields("dimension-of-shape-space").convertTo[Int]
-        val nColor = fields("dimension-of-color-space").convertTo[Int]
-        val nExpression = fields("dimension-of-expression-space").convertTo[Int]
-        val expressions = fields("add-expressions").convertTo[Boolean]
-        val modelFn = fields("model-filename").convertTo[String]
-
-        MorphableModelParameters(
-          nIds = nIds,
-          nSamples = nSamples,
-          nShape = nShape,
-          nColor = nColor,
-          nExpression = nExpression,
-          expressions = expressions,
-          modelFn = modelFn
-        )
-      }
+  implicit val constantDistributionFormat: RootJsonFormat[ConstantDistribution] = new RootJsonFormat[ConstantDistribution] {
+    override def write(distribution: ConstantDistribution): JsObject = {
+      new JsObjectOrdered(ListMap(("value", distribution.value.toJson)))
     }
 
-    implicit val ImageDimensionsFormat: RootJsonFormat[ImageDimensions] = new RootJsonFormat[ImageDimensions] {
-      override def write(obj: ImageDimensions): JsValue = {
-        new JsObjectOrdered(ListMap(
-          ("image-width", obj.imageWidth.toJson),
-          ("image-height", obj.imageHeight.toJson)
-        ))
-      }
+    override def read(json: JsValue): ConstantDistribution = {
+      val fields = json.asJsObject(s"expected ConstantDistribution object, got: $json").fields
+      val value = fields("value").convertTo[Double]
+      ConstantDistribution(value)
+    }
+  }
 
-      override def read(json: JsValue): ImageDimensions = {
-        val fields = json.asJsObject(s"expected ImageDimensions object, got: $json").fields
-
-        val imageWidth = fields("image-width").convertTo[Int]
-        val imageHeight = fields("image-height").convertTo[Int]
-
-        ImageDimensions(
-          imageWidth = imageWidth,
-          imageHeight = imageHeight
-        )
-      }
+  implicit val gaussianDistributionFormat: RootJsonFormat[GaussianDistribution] = new RootJsonFormat[GaussianDistribution] {
+    override def write(distribution: GaussianDistribution): JsObject = {
+      new JsObjectOrdered(ListMap(
+        ("mean", distribution.mean.toJson),
+        ("variance", distribution.variance.toJson)
+      ))
     }
 
+    override def read(json: JsValue): GaussianDistribution = {
+      val fields = json.asJsObject(s"expected GaussianDistribution object, got: $json").fields
+      val mean = fields("mean").convertTo[Double]
+      val variance = fields("variance").convertTo[Double]
+      GaussianDistribution(mean, variance)
+    }
+  }
 
-    implicit val DefaultParametersFormat: RootJsonFormat[DefaultParameters] = new RootJsonFormat[DefaultParameters] {
-      override def write(obj: DefaultParameters): JsValue = {
-        new JsObjectOrdered(ListMap(
-          ("color-transform", obj.colorTransform.toJson),
-          ("pose-transform", obj.pose.toJson),
-          ("view-transform", obj.view.toJson),
-          ("camera", obj.camera.toJson)
-        ))
-      }
-
-      override def read(json: JsValue): DefaultParameters = {
-        val fields = json.asJsObject(s"expected DefaultParameters object, got: $json").fields
-
-        val pose = fields("pose-transform").convertTo[Pose]
-        val view = fields("view-transform").convertTo[ViewParameter]
-        val camera = fields("camera").convertTo[Camera]
-        val colorTransform = fields("color-transform").convertTo[ColorTransform]
-
-        DefaultParameters(
-          pose = pose,
-          view = view,
-          camera = camera,
-          colorTransform = colorTransform
-        )
-      }
+  implicit val uniformDistributionFormat: RootJsonFormat[UniformDistribution] = new RootJsonFormat[UniformDistribution] {
+    override def write(distribution: UniformDistribution): JsObject = {
+      new JsObjectOrdered(ListMap(
+        ("lower", distribution.lower.toJson),
+        ("higher", distribution.higher.toJson)
+      ))
     }
 
+    override def read(json: JsValue): UniformDistribution = {
+      val fields = json.asJsObject(s"expected UniformDistribution object, got: $json").fields
+      val lower = fields("lower").convertTo[Double]
+      val higher = fields("higher").convertTo[Double]
+      UniformDistribution(lower, higher)
+    }
+  }
 
-    implicit val distributionFormat: RootJsonFormat[Distribution] = new RootJsonFormat[Distribution] {
-      override def write(distribution: Distribution): JsObject = {
-        distribution match {
-          case d: ConstantDistribution =>
-            new JsObjectOrdered(ListMap(("type" -> "constant".toJson) +: d.toJson.asJsObject.fields.toList: _*))
-          case d: GaussianDistribution =>
-            new JsObjectOrdered(ListMap(("type" -> "gaussian".toJson) +: d.toJson.asJsObject.fields.toList: _*))
-          case d: UniformDistribution =>
-            new JsObjectOrdered(ListMap(("type" -> "uniform".toJson) +: d.toJson.asJsObject.fields.toList: _*))
-          case d: MixtureDistribution =>
-            new JsObjectOrdered(ListMap(("type" -> "mixture".toJson) +: d.toJson.asJsObject.fields.toList: _*))
-        }
-      }
-
-      override def read(json: JsValue): Distribution = {
-        val fields = json.asJsObject(s"expected Distribution object, got: $json").fields
-        fields("type").convertTo[String] match {
-          case "constant" => constantDistributionFormat.read(json)
-          case "gaussian" => gaussianDistributionFormat.read(json)
-          case "uniform" => uniformDistributionFormat.read(json)
-          case "mixture" => mixtureDistributionFormat.read(json)
-        }
-      }
+  implicit val mixtureDistributionFormat: RootJsonFormat[MixtureDistribution] = new RootJsonFormat[MixtureDistribution] {
+    override def write(distribution: MixtureDistribution): JsObject = {
+      new JsObjectOrdered(ListMap(
+        ("components", distribution.weightedDistributions.toJson)
+      ))
     }
 
-    implicit val constantDistributionFormat: RootJsonFormat[ConstantDistribution] = new RootJsonFormat[ConstantDistribution] {
-      override def write(distribution: ConstantDistribution): JsObject = {
-        new JsObjectOrdered(ListMap(("value", distribution.value.toJson)))
-      }
-
-      override def read(json: JsValue): ConstantDistribution = {
-        val fields = json.asJsObject(s"expected ConstantDistribution object, got: $json").fields
-        val value = fields("value").convertTo[Double]
-        ConstantDistribution(value)
-      }
+    override def read(json: JsValue): MixtureDistribution = {
+      val fields = json.asJsObject(s"expected MixtureDistribution object, got: $json").fields
+      val weightedComponents = fields("components").convertTo[List[(Double, Distribution)]]
+      MixtureDistribution(weightedComponents)
     }
-
-    implicit val gaussianDistributionFormat: RootJsonFormat[GaussianDistribution] = new RootJsonFormat[GaussianDistribution] {
-      override def write(distribution: GaussianDistribution): JsObject = {
-        new JsObjectOrdered(ListMap(
-          ("mean", distribution.mean.toJson),
-          ("variance", distribution.variance.toJson)
-        ))
-      }
-
-      override def read(json: JsValue): GaussianDistribution = {
-        val fields = json.asJsObject(s"expected GaussianDistribution object, got: $json").fields
-        val mean = fields("mean").convertTo[Double]
-        val variance = fields("variance").convertTo[Double]
-        GaussianDistribution(mean, variance)
-      }
-    }
-
-    implicit val uniformDistributionFormat: RootJsonFormat[UniformDistribution] = new RootJsonFormat[UniformDistribution] {
-      override def write(distribution: UniformDistribution): JsObject = {
-        new JsObjectOrdered(ListMap(
-          ("lower", distribution.lower.toJson),
-          ("higher", distribution.higher.toJson)
-        ))
-      }
-
-      override def read(json: JsValue): UniformDistribution = {
-        val fields = json.asJsObject(s"expected UniformDistribution object, got: $json").fields
-        val lower = fields("lower").convertTo[Double]
-        val higher = fields("higher").convertTo[Double]
-        UniformDistribution(lower, higher)
-      }
-    }
-
-    implicit val mixtureDistributionFormat: RootJsonFormat[MixtureDistribution] = new RootJsonFormat[MixtureDistribution] {
-      override def write(distribution: MixtureDistribution): JsObject = {
-        new JsObjectOrdered(ListMap(
-          ("components", distribution.weightedDistributions.toJson)
-        ))
-      }
-
-      override def read(json: JsValue): MixtureDistribution = {
-        val fields = json.asJsObject(s"expected MixtureDistribution object, got: $json").fields
-        val weightedComponents = fields("components").convertTo[List[(Double, Distribution)]]
-        MixtureDistribution(weightedComponents)
-      }
-    }
+  }
 }

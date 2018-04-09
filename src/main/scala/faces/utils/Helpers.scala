@@ -84,13 +84,13 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     val cm = if(cfg.renderingMethods.renderColorCorrespondenceImage) {
       Some(("_correspondence", colorCorrespondenceGen))
     }else None
-    val nm = if(cfg.renderingMethods.renderColorCorrespondenceImage) {
+    val nm = if(cfg.renderingMethods.renderNormals) {
       Some(("_normals", normalsGenerator))
     }else None
-    val am = if(cfg.renderingMethods.renderColorCorrespondenceImage) {
+    val am = if(cfg.renderingMethods.renderAlbedo) {
       Some(("_albedo", albedoGenerator))
     }else None
-    val im = if(cfg.renderingMethods.renderColorCorrespondenceImage) {
+    val im = if(cfg.renderingMethods.renderIllumination) {
       Some(("_illumination", illuminationGenerator))
     }else None
     val rn = if(cfg.renderingMethods.render) {

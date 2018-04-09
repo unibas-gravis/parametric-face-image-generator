@@ -104,4 +104,4 @@ case class DefaultParameters(
                               colorTransform: ColorTransform
                             )
 
-case class RenderingMethods(render: Boolean, renderDepthMap: Boolean, renderColorCorrespondenceImage: Boolean)
+case class RenderingMethods(render: Boolean, renderDepthMap: Boolean, renderColorCorrespondenceImage: Boolean, renderNormals: Boolean, renderAlbedo: Boolean, renderIllumination: Boolean)
