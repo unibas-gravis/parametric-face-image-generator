@@ -90,25 +90,23 @@ object ControlledFaces extends App {
                   uncentered
                 }
 
-                val rps = centered
-
                 val imageData =
                   for((postfix, currentRenderer) <- helpers.renderingMethods) yield {
                     if (bg && postfix == "") {
                       require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
                       val BG = helpers.loadBgs(b)
                       val controlledBGimg = PixelImageIO.read[RGBA](BG).get.resample(imageWidth, imageHeight)
-                      (currentRenderer.renderImage(rps).zip(controlledBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1), postfix)
+                      (currentRenderer.renderImage(centered).zip(controlledBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1), postfix)
                     }
                     else {
-                      (currentRenderer.renderImage(rps), postfix)
+                      (currentRenderer.renderImage(centered), postfix)
                     }
                   }
 
                 // write images and their parameters
                 println(s"Generating \t ID:$id \t Sample:$n")
                 for((img, postifx) <- imageData) {
-                  helpers.writeRenderParametersAndLandmarks(rps, id, n)
+                  helpers.writeRenderParametersAndLandmarks(centered, id, n)
                   helpers.writeImg(img, id, n, postifx)
                 }
 
