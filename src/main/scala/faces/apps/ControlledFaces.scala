@@ -18,6 +18,7 @@ package faces.apps
 
 import java.io.File
 
+import faces.apps.RandomFaces.opt
 import faces.settings.ControlledFacesSettings
 import faces.utils.{Helpers, InfiniteDataGeneratorOptions}
 import scalismo.faces.color.{RGB, RGBA}
@@ -106,7 +107,7 @@ object ControlledFaces extends App {
                 // write images and their parameters
                 println(s"Generating \t ID:$id \t Sample:$n")
                 for((img, postifx) <- imageData) {
-                  helpers.writeRenderParametersAndLandmarks(centered, id, n)
+                  helpers.writeRenderParametersAndLandmarks(centered, id, n, opt.landmarks.toOption)
                   helpers.writeImg(img, id, n, postifx)
                 }
 

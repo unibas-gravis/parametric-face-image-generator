@@ -29,6 +29,7 @@ class InfiniteDataGeneratorOptions(args: Seq[String]) extends ScallopConf(args) 
        |Options:""".stripMargin)
 
   val configurationFile: ScallopOption[String] = opt[String](required = true,descr = "configuration file with the parameters")
+  val landmarks: ScallopOption[List[String]] = opt[List[String]](required = false, default = None, descr = "landmarks tags that replaces the default ones (check in the model.h5 file for available tags)")
 
   footer(
     """""".stripMargin

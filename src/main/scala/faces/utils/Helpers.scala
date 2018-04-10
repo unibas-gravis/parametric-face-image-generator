@@ -148,8 +148,9 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     new File(bgPath).listFiles.filter(_.getName.endsWith(bgType)).toIndexedSeq
   }
 
-  def writeLandmarks(rps: RenderParameter, file: File): Try[Unit] = {
-    val lms = visibilityForLandmarks(renderer, rps, landmarkTags.map(tag => renderer.renderLandmark(tag, rps).get).toIndexedSeq)
+  def writeLandmarks(rps: RenderParameter, file: File, userLandmarks: Option[List[String]]): Try[Unit] = {
+    val landmarks = if(userLandmarks.isDefined && !userLandmarks.get.isEmpty) userLandmarks.get else landmarkTags
+    val lms = visibilityForLandmarks(renderer, rps, landmarks.map(tag => renderer.renderLandmark(tag, rps).get).toIndexedSeq)
     TLMSLandmarksIO.write2D(lms, file)
   }
 
@@ -316,7 +317,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     PixelImageIO.write(img.map { f => f.toRGB }, new File(outImgPathID + id + "_" + n + postfix + ".png"))
   }
 
-  def writeRenderParametersAndLandmarks(rps: RenderParameter, id: Int, n: Int): Unit = {
+  def writeRenderParametersAndLandmarks(rps: RenderParameter, id: Int, n: Int, userLandmarks: Option[List[String]]): Unit = {
     val outRpsPathID= outRpsPath + id + "/"
     if (!Path(outRpsPathID).exists) {
       Path(outRpsPathID).createDirectory(failIfExists = false)
@@ -332,11 +333,11 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
 
     RenderParameterIO.write(rps, new File(outRpsPathID + id + "_" + n + ".rps"))
     writeCSV(rps, new File(outCSVPathID + id + "_" + n + ".csv") )
-    writeLandmarks(rps, new File(outTLMSPathID + id + "_" + n + ".tlms"))
+    writeLandmarks(rps, new File(outTLMSPathID + id + "_" + n + ".tlms"),userLandmarks)
   }
 
-  def write(img: PixelImage[RGBA], rps: RenderParameter, id: Int, n: Int): Unit = {
-    writeRenderParametersAndLandmarks(rps, id, n)
+  def write(img: PixelImage[RGBA], rps: RenderParameter, id: Int, n: Int, userLandmarks: Option[List[String]]): Unit = {
+    writeRenderParametersAndLandmarks(rps, id, n, userLandmarks)
     writeImg(img, id, n, "")
   }
 
