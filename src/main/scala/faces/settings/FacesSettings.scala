@@ -16,9 +16,7 @@
 package faces.settings
 
 import faces.utils.{BaselIlluminationPrior, Distribution}
-import scalismo.faces.color.RGBA
 import scalismo.faces.parameters._
-import scalismo.faces.sampling.face.ParametricImageRenderer
 
 abstract class FacesSettings{
   val outputLocation: OutputLocation

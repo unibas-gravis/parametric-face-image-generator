@@ -27,7 +27,7 @@ import scalismo.faces.io.{MoMoIO, PixelImageIO, RenderParameterIO, TLMSLandmarks
 import scalismo.faces.landmarks.TLMSLandmark2D
 import scalismo.faces.momo.MoMo
 import scalismo.faces.parameters._
-import scalismo.faces.sampling.face.ModalityRenderers.{AlbedoRenderer, DepthMapRenderer, IlluminationVisualizationRenderer}
+import scalismo.faces.sampling.face.ModalityRenderers.{AlbedoRenderer, IlluminationVisualizationRenderer}
 import scalismo.faces.sampling.face.{CorrespondenceColorImageRenderer, CorrespondenceMoMoRenderer}
 import scalismo.geometry.{Point, Point2D, Vector2D, Vector3D}
 import scalismo.utils.Random
