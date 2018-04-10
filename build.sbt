@@ -1,4 +1,4 @@
-name := """data-generator"""
+name := """parametric-image-generator"""
 version       := "1.0"
 
 scalaVersion  := "2.12.1"
@@ -9,7 +9,7 @@ resolvers += Resolver.jcenterRepo
 
 resolvers += Resolver.bintrayRepo("unibas-gravis", "maven")
 
-libraryDependencies += "ch.unibas.cs.gravis" %% "scalismo-faces" % "0.7.0"
+libraryDependencies += "ch.unibas.cs.gravis" %% "scalismo-faces" % "0.9.0"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "test"
 

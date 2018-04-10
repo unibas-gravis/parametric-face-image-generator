@@ -90,20 +90,25 @@ object ControlledFaces extends App {
                   uncentered
                 }
 
-                // render image with or without background
-                val img = if(bg) {
-                  require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
-                  val BG = helpers.loadBgs(b)
-                  val controlledBGimg = PixelImageIO.read[RGBA](BG).get.resample(imageWidth, imageHeight)
-                  helpers.renderer.renderImage(centered).zip(controlledBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1 )
-                }
-                else{
-                  helpers.renderer.renderImage(centered)
-                }
+                val imageData =
+                  for((postfix, currentRenderer) <- helpers.renderingMethods) yield {
+                    if (bg && postfix == "") {
+                      require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
+                      val BG = helpers.loadBgs(b)
+                      val controlledBGimg = PixelImageIO.read[RGBA](BG).get.resample(imageWidth, imageHeight)
+                      (currentRenderer.renderImage(centered).zip(controlledBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1), postfix)
+                    }
+                    else {
+                      (currentRenderer.renderImage(centered), postfix)
+                    }
+                  }
 
                 // write images and their parameters
                 println(s"Generating \t ID:$id \t Sample:$n")
-                helpers.write(img, centered, id, n)
+                for((img, postifx) <- imageData) {
+                  helpers.writeRenderParametersAndLandmarks(centered, id, n)
+                  helpers.writeImg(img, id, n, postifx)
+                }
 
               }
             }

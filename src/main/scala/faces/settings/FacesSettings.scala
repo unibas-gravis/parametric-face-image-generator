@@ -21,6 +21,7 @@ import scalismo.faces.parameters._
 abstract class FacesSettings{
   val outputLocation: OutputLocation
   val backgrounds: Backgrounds
+  val renderingMethods: RenderingMethods
   val morphableModelParameters: MorphableModelParameters
   val imageDimensions: ImageDimensions
   val defaultParameters: DefaultParameters
@@ -33,6 +34,7 @@ case class OutputLocation(
   def outImgPath: String = outPath + "img/"
   def outRpsPath: String = outPath + "rps/"
   def outCSVPath: String = outPath + "csv/"
+  def outTLMSPath: String = outPath + "tlms/"
 
 }
 
@@ -99,3 +101,5 @@ case class DefaultParameters(
                               camera: Camera,
                               colorTransform: ColorTransform
                             )
+
+case class RenderingMethods(render: Boolean, renderDepthMap: Boolean, renderColorCorrespondenceImage: Boolean, renderNormals: Boolean, renderAlbedo: Boolean, renderIllumination: Boolean)

@@ -14,6 +14,21 @@
     "background-images-directory": "data/backgrounds/",
     "background-image-extension": ".jpg"
   },
+  "rendering-methods": {
+    "__comment-1" : "You can enable different rendering methods",
+    "__comment-2" : "render is the default rendering method it creates a realistic image",
+    "__comment-3" : "render-depth-map renders a depth map",
+    "__comment-4" : "render-color-correspondnece-image renders the correspondence to the reference mesh as 3d positions as color coded value",
+    "__comment-5" : "render-normals renders visualization of the vertex normals relative to the camera",
+    "__comment-6" : "render-albedo renders the albedo of the face instance",
+    "__comment-7" : "render-illumination renders a visualization of the illumination",   
+    "render": true,
+    "render-depth": true,
+    "render-color-correspondence-image": true,
+    "render-normals": true,
+    "render-albedo": true,
+    "render-illumination": true
+  },
   "morphable-model-parameters": {
     "__comment-1" : "This block configures how face identities are generated and if they have expressions.",
     "__comment-2" : "You need to download the Basel Face Model and cite the paper in your publication.",
@@ -85,7 +100,7 @@
       "lower": 1.0,
       "higher": 1.2
     },
-    "center-faces": true
+    "center-faces": "facebox"
   },
   "image-dimensions": {
     "comment" : "The image size of the generated images in pixels.",
@@ -105,7 +120,7 @@
       "roll": 0.0,
       "pitch": 0.0,
       "yaw": 0.0,
-      "translation": [0.0, 0.0, -1000.0]
+      "translation": [0.0, 0.0, -3400.0]
     },
     "view-transform": {
       "translation": [0.0, 0.0, 0.0],

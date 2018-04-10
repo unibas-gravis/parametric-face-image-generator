@@ -7,6 +7,14 @@
     "background-images-directory": "data/backgrounds/",
     "background-image-extension": ".jpg"
   },
+  "rendering-methods": {
+    "render": true,
+    "render-depth": true,
+    "render-color-correspondence-image": true,
+    "render-normals": true,
+    "render-albedo": true,
+    "render-illumination": true
+  },
   "morphable-model-parameters": {
     "number-of-ids-to-create": 1,
     "number-of-samples-per-id": 1,
@@ -51,7 +59,7 @@
       "step": 5.625,
       "type": "inclusive"
     },
-    "center-faces": false
+    "center-faces": "none"
   },
   "image-dimensions": {
     "image-width": 227,
@@ -68,7 +76,7 @@
       "roll": 0.0,
       "pitch": 0.0,
       "yaw": 0.0,
-      "translation": [0.0, 0.0, -1000.0]
+      "translation": [0.0, 0.0, -3400.0]
     },
     "view-transform": {
       "translation": [0.0, 0.0, 0.0],

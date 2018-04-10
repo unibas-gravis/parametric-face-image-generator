@@ -23,18 +23,18 @@ import scalismo.statisticalmodel.MultivariateNormalDistribution
 import scalismo.utils.Random
 
 case class BaselIlluminationPrior(dir: String){
+  require(new File(dir).exists(), "Illumination Prior path does not exist")
 
   // search all parameter files to estimate illumination
   lazy val files = {
     val listFiles = new File(dir).listFiles.filter(_.getName.endsWith(".rps")).toIndexedSeq
-    require(listFiles.nonEmpty, "Illumination Prior files not found in " + dir)
     listFiles
   }
 
   // load files holding illumination parameters (empirical distribution)
   lazy val allIllumination = files.map(f => {
     val rps = RenderParameterIO.read(f).get
-        rps.environmentMap
+    rps.environmentMap
   })
 
   // load spherical harmonics into a vectorized representation

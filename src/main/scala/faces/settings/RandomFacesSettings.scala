@@ -21,12 +21,14 @@ import scala.io.Source
 
 case class RandomFacesSettings(  override val outputLocation: OutputLocation,
                                  override val backgrounds: Backgrounds,
+                                 override val renderingMethods: RenderingMethods,
                                  override val morphableModelParameters: MorphableModelParameters,
                                  override val imageDimensions: ImageDimensions,
                                  override val defaultParameters: DefaultParameters,
                                  illuminationParameters: IlluminationParameters,
                                  poseVariation: RandomPoseVariation
-                              ) extends FacesSettings
+                              ) extends FacesSettings {
+}
 
 object RandomFacesSettings  {
   import RandomFacesSettingsJsonFormatV1._
