@@ -314,7 +314,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     PixelImageIO.write(img.map { f => f.toRGB }, new File(outImgPathID + id + "_" + n + postfix + ".png"))
   }
 
-  def writeExceptImage(rps: RenderParameter, id: Int, n: Int): Unit = {
+  def writeRenderParametersAndLandmarks(rps: RenderParameter, id: Int, n: Int): Unit = {
     val outRpsPathID= outRpsPath + id + "/"
     if (!Path(outRpsPathID).exists) {
       Path(outRpsPathID).createDirectory(failIfExists = false)
@@ -334,7 +334,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   }
 
   def write(img: PixelImage[RGBA], rps: RenderParameter, id: Int, n: Int): Unit = {
-    writeExceptImage(rps, id, n)
+    writeRenderParametersAndLandmarks(rps, id, n)
     writeImg(img, id, n, "")
   }
 
