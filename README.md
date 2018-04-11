@@ -67,6 +67,9 @@ Usage
 ### Singularity:
 - we provide a singularity container recipe file to run the data generator directly on compute servers
 
+### Background:
+- Beside the publications listed next, we have also freely available [lectures and tutorials](http://gravis.dmi.unibas.ch/PMM/lectures/overview/) covering shape modeling and model based image analysis online.
+
 Publications
 ------------
 If you use this software you will need the Basel Face Model 2017, the Basel Illumination Prior 2017 and a dataset of backgrounds. Please cite the following papers:
