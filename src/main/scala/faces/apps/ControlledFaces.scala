@@ -18,7 +18,6 @@ package faces.apps
 
 import java.io.File
 
-import faces.apps.RandomFaces.opt
 import faces.settings.ControlledFacesSettings
 import faces.utils.{Helpers, InfiniteDataGeneratorOptions}
 import scalismo.faces.color.{RGB, RGBA}
