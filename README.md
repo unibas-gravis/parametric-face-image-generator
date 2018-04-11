@@ -68,7 +68,7 @@ Usage
 - we provide a singularity container recipe file to run the data generator directly on compute servers
 
 ### Background:
-- Beside the publications listed next, we have also freely available [lectures and tutorials](http://gravis.dmi.unibas.ch/PMM/lectures/overview/) covering shape modeling and model based image analysis online.
+- Beside the publications listed next, we have also freely available [lectures and tutorials](http://gravis.dmi.unibas.ch/PMM/lectures/overview/). Some of the topics covered are shape modeling and model based image analysis as part of our research about [Probabilistic Morphable Model](http://gravis.dmi.unibas.ch/PMM/).
 
 Publications
 ------------
