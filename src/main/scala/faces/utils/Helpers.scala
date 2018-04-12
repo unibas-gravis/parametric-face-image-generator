@@ -124,14 +124,16 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   // generates a random instance of a Morphable Model following Gaussian distributions
   def rndMoMoInstance: MoMoInstance = {
     if (expressions)
-      MoMoInstance(IndexedSeq.fill(nShape)(rnd.scalaRandom.nextGaussian()),
-        IndexedSeq.fill(nColor)(rnd.scalaRandom.nextGaussian()),
-        IndexedSeq.fill(nExpression)(rnd.scalaRandom.nextGaussian()),
+      MoMoInstance(
+        if (nShape == 0) IndexedSeq.fill(1)(0.0) else IndexedSeq.fill(nShape)(rnd.scalaRandom.nextGaussian()),
+        if (nColor == 0) IndexedSeq.fill(1)(0.0) else IndexedSeq.fill(nColor)(rnd.scalaRandom.nextGaussian()),
+        if (nExpression == 0) IndexedSeq.fill(1)(0.0) else IndexedSeq.fill(nExpression)(rnd.scalaRandom.nextGaussian()),
         new URI(""))
     else
-      MoMoInstance(IndexedSeq.fill(nShape)(rnd.scalaRandom.nextGaussian()),
-        IndexedSeq.fill(nColor)(rnd.scalaRandom.nextGaussian()),
-        IndexedSeq.fill(nExpression)(0.0),
+      MoMoInstance(
+        if (nShape == 0) IndexedSeq.fill(1)(0.0) else IndexedSeq.fill(nShape)(rnd.scalaRandom.nextGaussian()),
+        if (nColor == 0) IndexedSeq.fill(1)(0.0) else IndexedSeq.fill(nColor)(rnd.scalaRandom.nextGaussian()),
+        if (nExpression == 0) IndexedSeq.fill(1)(0.0) else IndexedSeq.fill(nExpression)(0.0),
         new URI(""))
   }
 
