@@ -125,15 +125,15 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   def rndMoMoInstance: MoMoInstance = {
     if (expressions)
       MoMoInstance(
-        if (nShape == 0) IndexedSeq.fill(1)(0.0) else IndexedSeq.fill(nShape)(rnd.scalaRandom.nextGaussian()),
-        if (nColor == 0) IndexedSeq.fill(1)(0.0) else IndexedSeq.fill(nColor)(rnd.scalaRandom.nextGaussian()),
-        if (nExpression == 0) IndexedSeq.fill(1)(0.0) else IndexedSeq.fill(nExpression)(rnd.scalaRandom.nextGaussian()),
+        if (nShape == 0) IndexedSeq(0.0) else IndexedSeq.fill(nShape)(rnd.scalaRandom.nextGaussian()),
+        if (nColor == 0) IndexedSeq(0.0) else IndexedSeq.fill(nColor)(rnd.scalaRandom.nextGaussian()),
+        if (nExpression == 0) IndexedSeq(0.0) else IndexedSeq.fill(nExpression)(rnd.scalaRandom.nextGaussian()),
         new URI(""))
     else
       MoMoInstance(
-        if (nShape == 0) IndexedSeq.fill(1)(0.0) else IndexedSeq.fill(nShape)(rnd.scalaRandom.nextGaussian()),
-        if (nColor == 0) IndexedSeq.fill(1)(0.0) else IndexedSeq.fill(nColor)(rnd.scalaRandom.nextGaussian()),
-        if (nExpression == 0) IndexedSeq.fill(1)(0.0) else IndexedSeq.fill(nExpression)(0.0),
+        if (nShape == 0) IndexedSeq(0.0) else IndexedSeq.fill(nShape)(rnd.scalaRandom.nextGaussian()),
+        if (nColor == 0) IndexedSeq(0.0) else IndexedSeq.fill(nColor)(rnd.scalaRandom.nextGaussian()),
+        if (nExpression == 0) IndexedSeq(0.0) else IndexedSeq.fill(nExpression)(0.0),
         new URI(""))
   }
 
