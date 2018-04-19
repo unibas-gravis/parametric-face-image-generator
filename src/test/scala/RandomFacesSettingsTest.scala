@@ -111,7 +111,6 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
 
       val default = Default
       RandomFacesSettings.write(default,f)
-      RandomFacesSettings.write(default,new File("landmarks.txt"))
       val cfg = RandomFacesSettings.read(f)
 
       default.outputLocation.outPath shouldBe cfg.outputLocation.outPath
