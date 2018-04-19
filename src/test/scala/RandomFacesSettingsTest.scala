@@ -155,6 +155,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.poseVariation shouldBe cfg.poseVariation
       default.imageDimensions shouldBe cfg.imageDimensions
       default.defaultParameters shouldBe cfg.defaultParameters
+      default.landmarkTags shouldBe cfg.landmarkTags
 
       cfg shouldBe default
     }
@@ -209,6 +210,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.poseVariation shouldBe cfg.poseVariation
       default.imageDimensions shouldBe cfg.imageDimensions
       default.defaultParameters shouldBe cfg.defaultParameters
+      default.landmarkTags shouldBe cfg.landmarkTags
 
       cfg shouldBe default
     }
@@ -332,6 +334,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.poseVariation shouldBe cfg.poseVariation
       default.imageDimensions shouldBe cfg.imageDimensions
       default.defaultParameters shouldBe cfg.defaultParameters
+      default.landmarkTags shouldBe cfg.landmarkTags
 
       cfg shouldBe default
     }
@@ -383,6 +386,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.poseVariation shouldBe cfg.poseVariation
       default.imageDimensions shouldBe cfg.imageDimensions
       default.defaultParameters shouldBe cfg.defaultParameters
+      default.landmarkTags shouldBe cfg.landmarkTags
 
       cfg shouldBe default
     }
