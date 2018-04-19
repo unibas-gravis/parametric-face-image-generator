@@ -67,6 +67,27 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
           far = 1000e3,
           orthographic = false),
         colorTransform = ColorTransform.neutral),
+      IndexedSeq(
+        "center.chin.tip",
+        "center.lips.lower.inner",
+        "center.nose.tip",
+        "left.ear.lobule.attachement",
+        "right.ear.lobule.attachement",
+        "left.eye.corner_outer",
+        "left.eye.corner_inner",
+        "left.eye.pupil.center",
+        "right.eye.corner_outer",
+        "right.eye.corner_inner",
+        "right.eye.pupil.center",
+        "left.eyebrow.bend.lower",
+        "left.eyebrow.inner_lower",
+        "right.eyebrow.bend.lower",
+        "right.eyebrow.inner_lower",
+        "left.lips.corner",
+        "right.lips.corner",
+        "left.nose.wing.tip",
+        "right.nose.wing.tip"
+      ),
       IlluminationParameters(illumination = "multiVariateNormal",
         illuminationPriorFn = "data/bip/parameters/",
         directionalLight = DirectionalLight.off),
@@ -90,6 +111,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
 
       val default = Default
       RandomFacesSettings.write(default,f)
+      RandomFacesSettings.write(default,new File("landmarks.txt"))
       val cfg = RandomFacesSettings.read(f)
 
       default.outputLocation.outPath shouldBe cfg.outputLocation.outPath
@@ -234,6 +256,27 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
           far = 1000e3,
           orthographic = false),
         colorTransform = ColorTransform.neutral),
+      IndexedSeq(
+        "center.chin.tip",
+        "center.lips.lower.inner",
+        "center.nose.tip",
+        "left.ear.lobule.attachement",
+        "right.ear.lobule.attachement",
+        "left.eye.corner_outer",
+        "left.eye.corner_inner",
+        "left.eye.pupil.center",
+        "right.eye.corner_outer",
+        "right.eye.corner_inner",
+        "right.eye.pupil.center",
+        "left.eyebrow.bend.lower",
+        "left.eyebrow.inner_lower",
+        "right.eyebrow.bend.lower",
+        "right.eyebrow.inner_lower",
+        "left.lips.corner",
+        "right.lips.corner",
+        "left.nose.wing.tip",
+        "right.nose.wing.tip"
+      ),
       ControlledIlluminationVariation(0 until 10 by 1),
       ControlledPoseVariation(yawRange = -90 to 90 by 45,
         rollRange = -15 to 15 by 5,

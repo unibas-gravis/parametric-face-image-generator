@@ -25,6 +25,7 @@ abstract class FacesSettings{
   val morphableModelParameters: MorphableModelParameters
   val imageDimensions: ImageDimensions
   val defaultParameters: DefaultParameters
+  val landmarkTags: IndexedSeq[String]
 }
 
 

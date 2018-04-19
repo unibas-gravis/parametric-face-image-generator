@@ -106,7 +106,7 @@ object ControlledFaces extends App {
                 // write images and their parameters
                 println(s"Generating \t ID:$id \t Sample:$n")
                 for((img, postifx) <- imageData) {
-                  helpers.writeRenderParametersAndLandmarks(centered, id, n, opt.landmarks.toOption)
+                  helpers.writeRenderParametersAndLandmarks(centered, id, n)
                   helpers.writeImg(img, id, n, postifx)
                 }
 

@@ -100,6 +100,7 @@ object RandomFacesSettingsJsonFormatV1 {
           ("pose-variation", obj.poseVariation.toJson),
           ("image-dimensions", obj.imageDimensions.toJson),
           ("default-parameters", obj.defaultParameters.toJson),
+          ("landmark-tags", obj.landmarkTags.toJson),
           (versionFieldName, FacesSettingsJsonFormatV1.version.toJson)
         )
       )
@@ -120,6 +121,7 @@ object RandomFacesSettingsJsonFormatV1 {
       val poseVariation = fields("pose-variation").convertTo[RandomPoseVariation]
       val imageDimensions = fields("image-dimensions").convertTo[ImageDimensions]
       val defaultParameters = fields("default-parameters").convertTo[DefaultParameters]
+      val landmarkTags = fields("landmark-tags").convertTo[IndexedSeq[String]]
 
       new RandomFacesSettings(
         outputLocation,
@@ -128,6 +130,7 @@ object RandomFacesSettingsJsonFormatV1 {
         morphableModelParameters,
         imageDimensions,
         defaultParameters,
+        landmarkTags,
         illuminationParameters,
         poseVariation
       )
@@ -243,6 +246,7 @@ object ControlledFacesSettingsJsonFormatV1 {
           ("pose-range", obj.poseVariation.toJson),
           ("image-dimensions", obj.imageDimensions.toJson),
           ("default-parameters", obj.defaultParameters.toJson),
+          ("landmark-tags", obj.landmarkTags.toJson),
           (versionFieldName, FacesSettingsJsonFormatV1.version.toJson)
         )
       )
@@ -264,6 +268,8 @@ object ControlledFacesSettingsJsonFormatV1 {
       val poseVariation = fields("pose-range").convertTo[ControlledPoseVariation]
       val imageDimensions = fields("image-dimensions").convertTo[ImageDimensions]
       val defaultParameters = fields("default-parameters").convertTo[DefaultParameters]
+      val landmarkTags = fields("landmark-tags").convertTo[IndexedSeq[String]]
+
 
       new ControlledFacesSettings(
         outputLocation,
@@ -272,6 +278,7 @@ object ControlledFacesSettingsJsonFormatV1 {
         morphableModelParameters,
         imageDimensions,
         defaultParameters,
+        landmarkTags,
         illuminationDirectionRange,
         poseVariation,
         backgroundRange
