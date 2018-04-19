@@ -76,7 +76,7 @@
       "roll": 0.0,
       "pitch": 0.0,
       "yaw": 0.0,
-      "translation": [0.0, 0.0, -3400.0]
+      "translation": [0.0, 0.0, -1000.0]
     },
     "view-transform": {
       "translation": [0.0, 0.0, 0.0],
