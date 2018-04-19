@@ -17,11 +17,11 @@ package faces.apps
 
 object ListApplications extends App {
   println(
-    """|Parametric Face Image Generator (PFIG)
+    """|parametric-face-image-generator
        |© University of Basel
        |
-       |You just started the PFIG without specifying the exact application.
-       |This is no longer allowed. Please choose your application explicitly.
+       |You just started the parametric-face-image-generator without specifying the exact application.
+       |Please choose your application explicitly.
        |You can do that by adapting one of the following commands:
        |
        |  java -Xmx2g -cp generator.jar faces.apps.ControlledFaces <OPTIONS>
