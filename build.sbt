@@ -15,6 +15,6 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "test"
 
 libraryDependencies += "org.rogach" %% "scallop" % "2.1.3"
 
-mainClass in assembly := Some("faces.apps.RandomFaces")
+mainClass in assembly := Some("faces.apps.ListApplications")
 
 assemblyJarName in assembly := "generator.jar"
