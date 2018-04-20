@@ -210,6 +210,21 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     }
   }
 
+  /*Find the 3D center point between the left and the right nosewing and transform it to 2D*/
+
+  private def findCenterWithNoseWings(rps: RenderParameter) : Option[Point2D] = {
+
+    for {
+      leftNoseWingId <- model.landmarkPointId("left.nose.wing.tip")
+      rightNoseWingId <- model.landmarkPointId("right.nose.wing.tip")
+      leftNoseWing3D <- Some(model.instanceAtPoint(rps.momo.coefficients,leftNoseWingId)._1)
+      rightNoseWing3D = Some(model.instanceAtPoint(rps.momo.coefficients,rightNoseWingId)._1)
+      centerPoint3D <- Some(leftNoseWing3D + (rightNoseWing3D - leftNoseWing3D) * 0.5)
+      pt <- Some(rps.renderTransform(centerPoint3D))
+    } yield Point(pt.x,pt.y)
+
+  }
+
   // center the face around chin, eyes, nose and ears and crop a face box (change here if you want to center another point)
   def centerFaceBox(rps: RenderParameter, scaling : Double = 1): RenderParameter = {
 
@@ -232,28 +247,13 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     val ymax = lms.values.map( _.point.y ).max
     val ymin = lms.values.map( _.point.y ).min
 
-    val xcenter = (xmax+xmin)/2.0
-    val ycenter = (ymax+ymin)/2.0
-
     val maxSide = math.max(xmax-xmin, ymax-ymin) * scaling
 
-    val middleOfFace = Point(xcenter, ycenter)
+    val middleOfFace = findCenterWithNoseWings(rps).get
 
     val centerOfImage = Point2D(imageWidth / 2, imageHeight / 2)
 
-    val centerShift= {
-      val centerShiftLEar = (lms("left.ear.helix.outer").point - lms("center.nose.tip").point)
-      val centerShiftREar = (lms("right.ear.helix.outer").point- lms("center.nose.tip").point)
-
-      if (centerShiftLEar.norm > centerShiftREar.norm) {
-        centerShiftLEar
-      }
-      else {
-        centerShiftREar
-      }
-
-    }
-    val shift = middleOfFace - centerOfImage - centerShift*0.2
+    val shift = middleOfFace - centerOfImage
 
     val f = maxSide.toDouble/rps.imageSize.width.toDouble
     val g = maxSide.toDouble/rps.imageSize.height.toDouble
