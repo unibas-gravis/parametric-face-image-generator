@@ -19,7 +19,7 @@ package faces.apps
 import java.io.File
 
 import faces.settings.ControlledFacesSettings
-import faces.utils.{Helpers, InfiniteDataGeneratorOptions}
+import faces.utils.{Helpers, ParametricFaceImageGeneratorOptions}
 import scalismo.faces.color.{RGB, RGBA}
 import scalismo.faces.io.PixelImageIO
 import scalismo.faces.parameters._
@@ -35,7 +35,7 @@ object ControlledFaces extends App {
   // SETTINGS
   //****************************************************************************
 
-  val opt = new InfiniteDataGeneratorOptions(args)
+  val opt = new ParametricFaceImageGeneratorOptions(args)
   opt.verify()
 
   val cfg = ControlledFacesSettings.read(new File(opt.configurationFile()))

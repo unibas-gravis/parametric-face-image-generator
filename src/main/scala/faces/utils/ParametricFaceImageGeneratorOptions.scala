@@ -20,9 +20,9 @@ import org.rogach.scallop.{ScallopConf, ScallopOption}
 import org.rogach.scallop.exceptions.ScallopException
 
 
-class InfiniteDataGeneratorOptions(args: Seq[String]) extends ScallopConf(args) {
+class ParametricFaceImageGeneratorOptions(args: Seq[String]) extends ScallopConf(args) {
   banner(
-    """|infinit-data-generator
+    """|parametric-face-image-generator
        |© University of Basel
        |License: http://www.apache.org/licenses/LICENSE-2.0
        |
