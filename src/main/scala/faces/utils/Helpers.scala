@@ -199,7 +199,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
       leftNoseWingId <- model.landmarkPointId("left.nose.wing.tip")
       rightNoseWingId <- model.landmarkPointId("right.nose.wing.tip")
       leftNoseWing3D <- Some(model.instanceAtPoint(rps.momo.coefficients,leftNoseWingId)._1)
-      rightNoseWing3D = Some(model.instanceAtPoint(rps.momo.coefficients,rightNoseWingId)._1)
+      rightNoseWing3D <- Some(model.instanceAtPoint(rps.momo.coefficients,rightNoseWingId)._1)
       centerPoint3D <- Some(leftNoseWing3D + (rightNoseWing3D - leftNoseWing3D) * 0.5)
       pt <- Some(rps.renderTransform(centerPoint3D))
     } yield Point(pt.x,pt.y)
