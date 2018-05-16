@@ -22,26 +22,26 @@ In the file 'example_config_controlled' located in data/config_files/example_con
 ### eyes
 This mode retrieves the location of the eyes from the provided .tlms file and renders black boxes over both eyes on the face.
 
-###random
+### random
 This mode renders real-world occlusions in the image. They are in a random position, randomly scaled and randomly positioned.
 
-###box-whitnoise
+### box-whitnoise
 Creates random rectangles on the face, filled with Gaussian white noise.
 
-###box-<Percentage>
+### box-<Percentage>
 Iteratively creates a box column-by-column that occludes the specified amount of pace pixels. It fills the rectangle with a random color.
 
-###loop
+### loop
 Creates 20 images for each angle. Each with a different amount of occluded face region. Starting from 2%, it goes up to 40% by steps of 2%.
 
 OUTPUT
 ------
 This modified version provides two new folders in the output:
 
-###img_masks
+### img_masks
 These images provide the ground truth segmentation of the image. It distinguishes between face-region, occlusion-region, and background.
 
-###img_occlusion
+### img_occlusion
 The original images overlaid with an occlusion of one of the above modes.
 
 
