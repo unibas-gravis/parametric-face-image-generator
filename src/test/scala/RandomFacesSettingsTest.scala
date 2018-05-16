@@ -88,6 +88,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         "left.nose.wing.tip",
         "right.nose.wing.tip"
       ),
+      "none",
       IlluminationParameters(illumination = "multiVariateNormal",
         illuminationPriorFn = "data/bip/parameters/",
         directionalLight = DirectionalLight.off),
@@ -156,6 +157,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.imageDimensions shouldBe cfg.imageDimensions
       default.defaultParameters shouldBe cfg.defaultParameters
       default.landmarkTags shouldBe cfg.landmarkTags
+      default.occlusionMode shouldBe cfg.occlusionMode
 
       cfg shouldBe default
     }
@@ -211,6 +213,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.imageDimensions shouldBe cfg.imageDimensions
       default.defaultParameters shouldBe cfg.defaultParameters
       default.landmarkTags shouldBe cfg.landmarkTags
+      default.occlusionMode shouldBe cfg.occlusionMode
 
       cfg shouldBe default
     }
@@ -277,7 +280,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         "right.lips.corner",
         "left.nose.wing.tip",
         "right.nose.wing.tip"
-      ),
+      ), "none",
       ControlledIlluminationVariation(0 until 10 by 1),
       ControlledPoseVariation(yawRange = -90 to 90 by 45,
         rollRange = -15 to 15 by 5,
@@ -335,6 +338,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.imageDimensions shouldBe cfg.imageDimensions
       default.defaultParameters shouldBe cfg.defaultParameters
       default.landmarkTags shouldBe cfg.landmarkTags
+      default.occlusionMode shouldBe cfg.occlusionMode
 
       cfg shouldBe default
     }
@@ -387,6 +391,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.imageDimensions shouldBe cfg.imageDimensions
       default.defaultParameters shouldBe cfg.defaultParameters
       default.landmarkTags shouldBe cfg.landmarkTags
+      default.occlusionMode shouldBe cfg.occlusionMode
 
       cfg shouldBe default
     }

@@ -1,0 +1,21 @@
+run
+run --config-files data/config_files/example_config_controlled.json
+run --configuration-file data/config_files/example_config_controlled.json
+run -config-files data/config_files/example_config_controlled.json
+run --config-files data/config_files/example_config_controlled.json
+run --config-file data/config_files/example_config_controlled.json
+run --configuration-file data/config_files/example_config_controlled.json
+run -mem 2000 --configuration-file data/config_files/example_config_controlled.json
+--mem 2000 --configuration-file data/config_files/example_config_controlled.json
+run --mem 2000 --configuration-file data/config_files/example_config_controlled.json
+run --configuration-file data/config_files/example_config_controlled.json
+run --mem 2000 --configuration-file data/config_files/example_config_controlled.json
+run --configuration-file data/config_files/example_config_controlled.json
+exit
+run --configuration-file data/config_files/example_config_controlled.json
+run --configuration-file data/config_files/example_config_random.json
+run --configuration-file data/config_files/example_config_controlled.json
+exit
+run --configuration-file data/config_files/example_config_controlled.json
+exit
+run --configuration-file data/config_files/example_config_controlled.json

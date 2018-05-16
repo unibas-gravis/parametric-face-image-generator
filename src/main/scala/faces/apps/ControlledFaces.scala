@@ -57,14 +57,16 @@ object ControlledFaces extends App {
     try{
       // generate random model instance (shape and color)
       val rndId = helpers.rndMoMoInstance
+      val random = scala.util.Random
       var n = 0
-      for(b <- backgroundRange){
+      var x = 0 // This variable assures that in every picture, the background image is different
+      //for(b <- backgroundRange){
         for(y <- yawRange){
           for(p <- pitchRange){
             for(r <- rollRange){
               for(i <- illuminationDirectionRange){
                 n+=1
-
+                x = Math.max(1,(random.nextInt(cfg.backgroundVariation.backgroundRange.length))%cfg.backgroundVariation.backgroundRange.length) // So each id starts at a diiferent BG-Image
                 val controlledPose = Pose(
                   pose.scaling,
                   pose.translation,
@@ -94,27 +96,27 @@ object ControlledFaces extends App {
                   for((postfix, currentRenderer) <- helpers.renderingMethods) yield {
                     if (bg && postfix == "") {
                       require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
-                      val BG = helpers.loadBgs(b)
+                      val BG = helpers.loadBgs(x)
                       val controlledBGimg = PixelImageIO.read[RGBA](BG).get.resample(imageWidth, imageHeight)
-                      (currentRenderer.renderImage(centered).zip(controlledBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1), postfix)
+                      (currentRenderer.renderImage(centered).zip(controlledBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1), postfix, currentRenderer.renderImage(centered).zip(controlledBGimg).map(p => if (p._1.a < 0.5) RGBA.Black else RGBA.White))
                     }
                     else {
-                      (currentRenderer.renderImage(centered), postfix)
+                      (currentRenderer.renderImage(centered), postfix, currentRenderer.renderImage(centered))
                     }
                   }
 
                 // write images and their parameters
                 println(s"Generating \t ID:$id \t Sample:$n")
-                for((img, postifx) <- imageData) {
+                for((img, postifx, mask) <- imageData) {
                   helpers.writeRenderParametersAndLandmarks(centered, id, n)
-                  helpers.writeImg(img, id, n, postifx)
+                  helpers.writeImg(img, id, n, postifx, cfg.landmarkTags, mask, (x,y,p,r,i))
                 }
 
               }
             }
           }
         }
-      }
+      //}
     } catch{
       case e: Throwable =>
         println("Something went wrong with id: " + id)

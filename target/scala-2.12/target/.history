@@ -1,0 +1,3 @@
+run -mem 2000 --configuration-file data/config_files/example_config_controlled.json
+run -mem 2000 -c data/config_files/example_config_controlled.json
+exit

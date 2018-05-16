@@ -20,6 +20,7 @@ import java.io.File
 import java.net.URI
 
 import breeze.linalg.DenseVector
+import com.sun.xml.internal.bind.v2.TODO
 import faces.settings.FacesSettings
 import scalismo.faces.color.RGBA
 import scalismo.faces.image.PixelImage
@@ -31,7 +32,10 @@ import scalismo.faces.sampling.face.ModalityRenderers.{AlbedoRenderer, Illuminat
 import scalismo.faces.sampling.face.{CorrespondenceColorImageRenderer, CorrespondenceMoMoRenderer}
 import scalismo.geometry.{Point, Point2D, Vector2D, Vector3D}
 import scalismo.utils.Random
+import scala.util.matching.Regex
+import scala.io.Source
 
+import scala.reflect.ClassTag
 import scala.reflect.io.Path
 import scala.util.Try
 
@@ -51,6 +55,12 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     if (!Path(outImgPath).exists) {
       Path(outImgPath).createDirectory(failIfExists = false)
     }
+    if (!Path(outOccPath).exists) {
+      Path(outOccPath).createDirectory(failIfExists = false)
+    }
+    if (!Path(outMaskPath).exists) {
+      Path(outMaskPath).createDirectory(failIfExists = false)
+    }
     if (!Path(outRpsPath).exists) {
       Path(outRpsPath).createDirectory(failIfExists = false)
     }
@@ -60,6 +70,13 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     if (!Path(outTLMSPath).exists) {
       Path(outTLMSPath).createDirectory(failIfExists = false)
     }
+    if (!Path(inOccolusonsPath).exists) {
+      Path(inOccolusonsPath).createDirectory(failIfExists = false)
+    }
+    if (!Path(inBackgroundsPath).exists) {
+      Path(inBackgroundsPath).createDirectory(failIfExists = false)
+    }
+
 
 
   // loading model and choosing neutral part if expressions not used
@@ -199,8 +216,8 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
       leftNoseWingId <- model.landmarkPointId("left.nose.wing.tip")
       rightNoseWingId <- model.landmarkPointId("right.nose.wing.tip")
       leftNoseWing3D <- Some(model.instanceAtPoint(rps.momo.coefficients,leftNoseWingId)._1)
-      rightNoseWing3D <- Some(model.instanceAtPoint(rps.momo.coefficients,rightNoseWingId)._1)
-      centerPoint3D <- Some(leftNoseWing3D + (rightNoseWing3D - leftNoseWing3D) * 0.5)
+      rightNoseWing3D = Some(model.instanceAtPoint(rps.momo.coefficients,rightNoseWingId)._1)
+      centerPoint3D <- Some(leftNoseWing3D + (rightNoseWing3D.get - leftNoseWing3D) * 0.5)
       pt <- Some(rps.renderTransform(centerPoint3D))
     } yield Point(pt.x,pt.y)
 
@@ -287,12 +304,293 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     withLight
   }
 
-  def writeImg(img: PixelImage[RGBA], id: Int, n: Int, postfix: String): Unit = {
+  def getEyeCenters(id:Int, n:Int): Array[Int] = {
+    val asdf = new Array[Int](4)
+    val outTLMSPathID= outTLMSPath + id + "/"
+    if (!Path(outTLMSPathID).exists) {
+      Path(outTLMSPathID).createDirectory(failIfExists = false)
+    }
+    val File_Path= outTLMSPathID + id + "_" + n + ".tlms"
+    val f = scala.io.Source.fromFile(File_Path)
+
+    for (line <- f.getLines()) {
+      if (line.startsWith("right.eye.pupil.center")) {
+        val pattern = new Regex("\\d+[.]\\d+")
+        val right_eye_result = pattern.findAllIn(line).toIndexedSeq
+        if(right_eye_result.length == 2){
+          asdf(0)=Math.floor(right_eye_result(0).toDouble).toInt
+          asdf(1)=Math.floor(right_eye_result(1).toDouble).toInt
+        }
+      }
+      if (line.startsWith("left.eye.pupil.center")) {
+        val pattern = new Regex("\\d+[.]\\d+")
+        val left_eye_result = pattern.findAllIn(line).toIndexedSeq
+        if(left_eye_result.length == 2){
+          asdf(2)=Math.floor(left_eye_result(0).toDouble).toInt
+          asdf(3)=Math.floor(left_eye_result(1).toDouble).toInt
+        }
+      }
+    }
+    f.close()
+
+
+    return asdf
+  }
+
+  def flipImage(image: PixelImage[RGBA], flip: (Boolean,Boolean,Boolean)): PixelImage[RGBA] = {
+    if(flip._3)
+      PixelImage(image.height, image.width, (x,y) => {
+      var x_new = x
+      var y_new = y
+      if(flip._1)
+        x_new = image.height-1-x
+      if(flip._2)
+        y_new = image.width-1-y
+        image(y_new,x_new)
+    })
+    else
+      PixelImage(image.width, image.height, (x,y) => {
+        var x_new = x
+        var y_new = y
+        if(flip._1)
+          x_new = image.width-1-x
+        if(flip._2)
+          y_new = image.height-1-y
+        image(x_new,y_new)
+      })
+  }
+
+  def writeOcclusionToImages(image: PixelImage[RGBA], mask: PixelImage[RGBA], occlusion: PixelImage[RGBA], start: (Int, Int)): (PixelImage[RGBA],PixelImage[RGBA]) = {
+    val return_Image = PixelImage(image.width, image.height, (x, y) => {
+      if (x >= start._1 && x < start._1 + occlusion.width && y >= start._2 && y < start._2 + occlusion.height){
+        val occlusion_rgba = occlusion(x-start._1,y-start._2)
+        if(occlusion_rgba.a > 0.5)
+          occlusion(x-start._1,y-start._2)
+        else
+          image(x,y)
+      }
+      else
+        image(x, y)
+    })
+    val return_Mask = PixelImage(mask.width, mask.height, (x, y) => {
+      if (x >= start._1 && x < start._1 + occlusion.width && y >= start._2 && y < start._2 + occlusion.height){
+        val occlusion_rgba = occlusion(x-start._1,y-start._2)
+        if(occlusion_rgba.a > 0.5)
+          RGBA.apply(1,0,0,0)
+        else
+          mask(x,y)
+      }
+      else
+        mask(x, y)
+    })
+    (return_Image, return_Mask)
+  }
+
+  def gaussian_white_noise(image: PixelImage[RGBA], mask: PixelImage[RGBA], whiteNoiseOnly: Boolean, positions:(Int,Int,Int,Int)*): (PixelImage[RGBA],PixelImage[RGBA]) = {
+    val r = new java.util.Random()
+    var from_x = r.nextInt(image.width-50)
+    var from_y = r.nextInt(image.height-50)
+    var box_width = Math.min(image.width-from_x-10,r.nextInt(image.width/3))
+    var box_height = Math.min(image.height-from_y-10,r.nextInt(image.height/3))
+    if(positions.length > 0){
+      from_x = positions(0)._1
+      from_y = positions(0)._2
+      box_width = positions(0)._3
+      box_height = positions(0)._4
+    }
+    val color = RGBA.apply(r.nextDouble(),r.nextDouble(),r.nextDouble())
+    var whiteNoise = whiteNoiseOnly
+
+    if(!whiteNoiseOnly)
+      whiteNoise = r.nextBoolean()
+
+
+    val return_Image = PixelImage(image.width, image.height, (x, y) => {
+      if (x >= from_x && x < from_x+box_width && y >= from_y && y < from_y+box_height) {
+        if(whiteNoise)
+          RGBA.apply(Math.abs(r.nextGaussian()), Math.abs(r.nextGaussian()), Math.abs(r.nextGaussian()))
+        else
+          color
+      } else {
+        image(x, y)
+      }
+    })
+    val return_Mask = PixelImage(mask.width, mask.height, (x, y) => {
+      if (x >= from_x && x < from_x + box_width && y >= from_y && y < from_y + box_height)
+        RGBA.apply(1, 0, 0, 0)
+      else
+        mask(x, y)
+    })
+    (return_Image, return_Mask)
+  }
+
+  // (start_x,start_y,width,height)
+  def fillBox(img: PixelImage[RGBA], mask: PixelImage[RGBA], positions:(Int, Int, Int, Int)):(PixelImage[RGBA],PixelImage[RGBA]) = {
+    val r = new java.util.Random()
+    val color = RGBA.apply(r.nextDouble(),r.nextDouble(),r.nextDouble())
+    val return_Image = PixelImage(img.width, img.height, (x, y) => {
+      if (x >= positions._1 && x < positions._1+positions._3 && y >= positions._2 && y < positions._2+positions._4) {
+        color
+      } else {
+        img(x, y)
+      }
+    })
+    val return_Mask = PixelImage(mask.width, mask.height, (x, y) => {
+      if (x >= positions._1 && x < positions._1+positions._3 && y >= positions._2 && y < positions._2+positions._4)
+        RGBA.apply(1, 0, 0, 0)
+      else
+        mask(x, y)
+    })
+    (return_Image, return_Mask)
+  }
+
+  def writeImg(img: PixelImage[RGBA], id: Int, n: Int, postfix: String, landmarkTags: IndexedSeq[String], Mask: PixelImage[RGBA], bypri: (Int,Int,Int,Int,Int)*): Unit = {
     val outImgPathID = outImgPath + id + "/"
     if (!Path(outImgPathID).exists) {
       Path(outImgPathID).createDirectory(failIfExists = false)
     }
-    PixelImageIO.write(img.map { f => f.toRGB }, new File(outImgPathID + id + "_" + n + postfix + ".png"))
+    val outOccPathID = outOccPath + id + "/"
+    if (!Path(outOccPathID).exists) {
+      Path(outOccPathID).createDirectory(failIfExists = false)
+    }
+    val outMaskPathID = outMaskPath + id + "/"
+    if (!Path(outMaskPathID).exists) {
+      Path(outMaskPathID).createDirectory(failIfExists = false)
+    }
+
+
+    if(postfix.length() == 0) { // The Output is the image (not a helper (depth, correspondence, ...))
+      var direction = ""
+      if(bypri.length > 0) {
+        direction = "$"+bypri(0)._2+"_"+bypri(0)._3+"_"+bypri(0)._4
+        // $_<yaw>_<pitch>_<roll>
+      }
+
+
+
+      if (cfg.occlusionMode.equals("eyes")) {
+        val img_array = img.toArray
+        val eyeCenters = getEyeCenters(id, n)
+
+        for (i <- -15 to 15) {
+          for (j <- -15 to 15) {
+            val index_right = img.domain.index(eyeCenters(0) + i, eyeCenters(1) + j)
+            img_array(index_right) = RGBA.Black
+
+            val index_left = img.domain.index(eyeCenters(2) + i, eyeCenters(3) + j)
+            img_array(index_left) = RGBA.Black
+          }
+        }
+
+        val newimage = PixelImage(img.width, img.height, (x, y) =>
+          img_array(img.domain.index(x, y))
+        )
+        PixelImageIO.write(newimage.map { f => f.toRGB }, new File(outOccPathID + id + "_" + n + direction + ".png"))
+      } else if (cfg.occlusionMode.equals("random")) {
+        val r = scala.util.Random
+        val magic = getRandImage()
+        val occolusion_File_path = inOccolusonsPath + magic._4
+        var occolusion_image = flipImage(PixelImageIO.read[RGBA](new File(occolusion_File_path)).get, (magic._1, magic._2, magic._3))
+        val resize = Math.min(0.7,r.nextDouble()+0.2)
+        occolusion_image = occolusion_image.resampleNearestNeighbour((resize*occolusion_image.width).toInt,(resize*occolusion_image.height).toInt)
+        val (new_image, new_mask) = writeOcclusionToImages(img, Mask, occolusion_image, (r.nextInt(img.width-occolusion_image.width), r.nextInt(img.height-occolusion_image.height)))
+        PixelImageIO.write(new_image.map { f => f.toRGB }, new File(outOccPathID + id + "_" + n + direction + ".png"))
+        PixelImageIO.write(new_mask.map { f => f.toRGB }, new File(outMaskPathID + id + "_" + n + direction + ".png"))
+      } else if (cfg.occlusionMode.equals("box-whiteNoise")) {
+        val (new_image, new_mask) = gaussian_white_noise(img, Mask, true)
+        PixelImageIO.write(new_image.map { f => f.toRGB }, new File(outOccPathID + id + "_" + n + direction + ".png"))
+        PixelImageIO.write(new_mask.map { f => f.toRGB }, new File(outMaskPathID + id + "_" + n + direction + ".png"))
+      } else if (cfg.occlusionMode.startsWith("box")){
+        var percentage = 0
+        if(cfg.occlusionMode.startsWith("box-")) {
+          val numPattern = "[0-9]+".r
+          val match1 = numPattern.findFirstIn(cfg.occlusionMode)
+          percentage = match1.get.toInt
+          direction += "_OccVal_"+percentage
+        }
+        val test = getBoxDimensions(Mask, percentage)
+        val (new_image, new_mask) = fillBox(img, Mask, test)
+        PixelImageIO.write(new_image.map { f => f.toRGB }, new File(outOccPathID + id + "_" + n + direction + ".png"))
+        PixelImageIO.write(new_mask.map { f => f.toRGB }, new File(outMaskPathID + id + "_" + n + direction + ".png"))
+      } else if(cfg.occlusionMode.equals("loop")){
+        for(percentage <- 2 to 40 by 2){
+          val direction_now = direction + "_occVal_"+percentage
+          val test = getBoxDimensions(Mask, percentage)
+          val (new_image, new_mask) = fillBox(img, Mask, test)
+          PixelImageIO.write(new_image.map { f => f.toRGB }, new File(outOccPathID + id + "_" + n + direction_now + ".png"))
+          PixelImageIO.write(new_mask.map { f => f.toRGB }, new File(outMaskPathID + id + "_" + n + direction_now + ".png"))
+        }
+      }
+      PixelImageIO.write(img.map { f => f.toRGB }, new File(outImgPathID + id + "_" + n + direction + ".png"))
+    }
+    else
+      PixelImageIO.write(img.map { f => f.toRGB }, new File(outImgPathID + id + "_" + n + postfix + ".png"))
+  }
+
+  def getBoxDimensions(mask: PixelImage[RGBA], percentage: Int):(Int,Int,Int,Int) = {
+    var ok = false
+    var start_x = 0
+    var start_y = 0
+    var width = 0
+    var height = 0
+    val face_pixels = countFacePixels(mask)
+    val target_pixels = face_pixels*(percentage.toDouble/100)
+    var current_pixels = 0
+    val r = scala.util.Random
+    while(!ok){
+      start_x = r.nextInt(cfg.imageDimensions.imageWidth-2)+1
+      start_y = r.nextInt(cfg.imageDimensions.imageHeight-2)+1
+      height = r.nextInt(cfg.imageDimensions.imageHeight-1-start_y)
+      current_pixels = 0
+      var current_x = start_x
+      while(current_pixels < target_pixels && current_x < mask.width-1){
+        current_pixels += countFacePixelsInCol(mask, current_x, height)
+        current_x += 1
+      }
+      width = current_x-start_x
+      if(current_pixels >= target_pixels)
+        ok = true
+    }
+    (start_x,start_y,width,height)
+  }
+  def countFacePixelsInCol(mask: PixelImage[RGBA], col: Int, height:Int): Int ={
+    var counter = 0
+    for(i <- 0 to height){
+      if(mask.apply(col,i)==RGBA.White){
+        counter += 1
+      }
+    }
+    counter
+  }
+
+  def countFacePixels(img: PixelImage[RGBA]): Long ={
+    var counter = 0
+    for(i <- 0 to img.width-1){
+      for(j <- 0 to img.height-1){
+        if(img(i,j) == RGBA.White)
+          counter += 1
+      }
+    }
+    counter
+  }
+
+  def getRandImage():(Boolean,Boolean,Boolean,String) ={
+    val r = scala.util.Random
+    val A = Array(
+      "hand_dark.png",
+      "hand_dark_2.png",
+      "hand_dark_3.png",
+      "hand_white.png",
+      "hand_white_1.png",
+      "hand_white_2.png",
+      "hand_white_3.png",
+      "hand_white_4.png",
+      "hand_white_5.png",
+      "hand_white_6.png",
+      "micro_1.png",
+      "micro_2.png",
+      "micro_3.png")
+    return (r.nextBoolean(),r.nextBoolean(),r.nextBoolean(),A(r.nextInt(A.size)))
   }
 
   def writeRenderParametersAndLandmarks(rps: RenderParameter, id: Int, n: Int): Unit = {
@@ -316,9 +614,9 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     }
   }
 
-  def write(img: PixelImage[RGBA], rps: RenderParameter, id: Int, n: Int): Unit = {
+  def write(img: PixelImage[RGBA], rps: RenderParameter, id: Int, n: Int, bypri: (Int,Int,Int,Int,Int)*): Unit = {
     writeRenderParametersAndLandmarks(rps, id, n)
-    writeImg(img, id, n, "")
+    writeImg(img, id, n, "", null, null)
   }
 
 

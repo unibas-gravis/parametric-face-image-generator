@@ -104,18 +104,18 @@ object RandomFaces extends App {
               require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
               val rndBG = helpers.loadBgs(rnd.scalaRandom.nextInt(helpers.loadBgs.length))
               val rndBGimg = PixelImageIO.read[RGBA](rndBG).get.resample(imageWidth, imageHeight)
-              (currentRenderer.renderImage(rps).zip(rndBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1), postfix)
+              (currentRenderer.renderImage(rps).zip(rndBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1), postfix, currentRenderer.renderImage(centered).zip(rndBGimg).map(p => if (p._1.a < 0.5) RGBA.Black else RGBA.White))
             }
             else {
-              (currentRenderer.renderImage(rps), postfix)
+              (currentRenderer.renderImage(rps), postfix, currentRenderer.renderImage(rps))
             }
           }
 
         // write images and their parameters
         println(s"Generating \t ID:$id \t Sample:$n")
-        for ((img, postifx) <- imageData) {
+        for ((img, postifx, mask) <- imageData) {
           helpers.writeRenderParametersAndLandmarks(rps, id, n)
-          helpers.writeImg(img, id, n, postifx)
+          helpers.writeImg(img, id, n, postifx, cfg.landmarkTags, mask)
         }
       }
     }

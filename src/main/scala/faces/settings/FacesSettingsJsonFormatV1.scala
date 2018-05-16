@@ -101,6 +101,7 @@ object RandomFacesSettingsJsonFormatV1 {
           ("image-dimensions", obj.imageDimensions.toJson),
           ("default-parameters", obj.defaultParameters.toJson),
           ("landmark-tags", obj.landmarkTags.toJson),
+          ("occlusionMode", obj.occlusionMode.toJson),
           (versionFieldName, FacesSettingsJsonFormatV1.version.toJson)
         )
       )
@@ -122,6 +123,7 @@ object RandomFacesSettingsJsonFormatV1 {
       val imageDimensions = fields("image-dimensions").convertTo[ImageDimensions]
       val defaultParameters = fields("default-parameters").convertTo[DefaultParameters]
       val landmarkTags = fields("landmark-tags").convertTo[IndexedSeq[String]]
+      val occlusionMode = fields("occlusionMode").convertTo[String]
 
       new RandomFacesSettings(
         outputLocation,
@@ -131,6 +133,7 @@ object RandomFacesSettingsJsonFormatV1 {
         imageDimensions,
         defaultParameters,
         landmarkTags,
+        occlusionMode,
         illuminationParameters,
         poseVariation
       )
@@ -247,6 +250,7 @@ object ControlledFacesSettingsJsonFormatV1 {
           ("image-dimensions", obj.imageDimensions.toJson),
           ("default-parameters", obj.defaultParameters.toJson),
           ("landmark-tags", obj.landmarkTags.toJson),
+          ("occlusionMode", obj.occlusionMode.toJson),
           (versionFieldName, FacesSettingsJsonFormatV1.version.toJson)
         )
       )
@@ -269,6 +273,7 @@ object ControlledFacesSettingsJsonFormatV1 {
       val imageDimensions = fields("image-dimensions").convertTo[ImageDimensions]
       val defaultParameters = fields("default-parameters").convertTo[DefaultParameters]
       val landmarkTags = fields("landmark-tags").convertTo[IndexedSeq[String]]
+      val occlusionMode = fields("occlusionMode").convertTo[String]
 
 
       new ControlledFacesSettings(
@@ -279,6 +284,7 @@ object ControlledFacesSettingsJsonFormatV1 {
         imageDimensions,
         defaultParameters,
         landmarkTags,
+        occlusionMode,
         illuminationDirectionRange,
         poseVariation,
         backgroundRange

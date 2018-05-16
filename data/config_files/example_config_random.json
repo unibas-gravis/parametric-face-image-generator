@@ -145,6 +145,7 @@
     "right.eye.corner_outer", "right.eye.corner_inner", "right.eye.pupil.center", "left.eyebrow.bend.lower",
     "left.eyebrow.inner_lower", "right.eyebrow.bend.lower", "right.eyebrow.inner_lower", "left.lips.corner",
     "right.lips.corner", "left.nose.wing.tip", "right.nose.wing.tip"],
+"occlusionMode": "random",
   "__comment-format-version" : "The version flag is for reproducability in case the software and file-format changes.",
   "format-version": "V1.0"
 }
