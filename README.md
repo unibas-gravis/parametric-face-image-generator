@@ -28,7 +28,7 @@ This mode renders real-world occlusions in the image. They are in a random posit
 ### box-whitnoise
 Creates random rectangles on the face, filled with Gaussian white noise.
 
-### box-<Percentage>
+### box-'<Percentage>'
 Iteratively creates a box column-by-column that occludes the specified amount of pace pixels. It fills the rectangle with a random color.
 
 ### loop
