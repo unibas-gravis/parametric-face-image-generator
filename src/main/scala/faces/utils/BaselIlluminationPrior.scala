@@ -19,10 +19,11 @@ import java.io.File
 
 import scalismo.faces.io.RenderParameterIO
 import scalismo.faces.parameters.SphericalHarmonicsLight
+import scalismo.geometry.Vector3D
 import scalismo.statisticalmodel.MultivariateNormalDistribution
 import scalismo.utils.Random
 
-case class BaselIlluminationPrior(dir: String){
+case class BaselIlluminationPrior(dir: String, nocolor: Boolean = false, setAmbient: Boolean = false, ambient: Vector3D = Vector3D(0.9, 0.9, 0.9)){
   require(new File(dir).exists(), "Illumination Prior path does not exist")
 
   // search all parameter files to estimate illumination
@@ -44,24 +45,44 @@ case class BaselIlluminationPrior(dir: String){
   lazy val mnd = MultivariateNormalDistribution.estimateFromData(allIlluminationData)
 
   // generates a random Illumination condition following the empirical distribution on the Basel Illumination Prior 2017 data
-  def rndEmpirical (implicit rnd: Random) : SphericalHarmonicsLight = {
+  private def rndEmpirical (implicit rnd: Random) : SphericalHarmonicsLight = {
     allIllumination(rnd.scalaRandom.nextInt(allIllumination.length))
   }
 
   // generates a random Illumination condition following the a multivariate normal distribution on the Basel Illumination Prior 2017 data
-  def rndMND (implicit rnd: Random): SphericalHarmonicsLight = {
+  private def rndMND (implicit rnd: Random): SphericalHarmonicsLight = {
     val sample = mnd.sample()
     SphericalHarmonicsLight.fromBreezeVector(sample)
   }
 
   // choose a an illumination based on defined distribution
   def rnd(illumination: String)(implicit rnd: Random): SphericalHarmonicsLight = {
-    illumination match{
-      case "staticFrontal" => SphericalHarmonicsLight.frontal.withNumberOfBands(2)
-      case "empirical" => rndEmpirical
-      case "multiVariateNormal" => rndMND
-      case _ =>  throw new Exception("please choose a valid illumination setting")
+    val colored = {
+      val random = illumination match {
+        case "staticFrontal" => SphericalHarmonicsLight.frontal.withNumberOfBands(2)
+        case "empirical" => rndEmpirical
+        case "multiVariateNormal" => rndMND
+        case _ => throw new Exception("please choose a valid illumination setting")
+      }
+
+      // fixes the ambient part of the illumination if setAmbient is set to true
+      if (setAmbient) {
+        val newCoefficients = random.coefficients.updated(0, ambient)
+        SphericalHarmonicsLight(newCoefficients)
+      }
+        else
+        random
     }
+
+    // removes all color from illumination and takes average intensity over color channels per coefficient instead
+    if (nocolor){
+      val intensities = colored.coefficients.map(f => {
+        val mean = f.toArray.sum / 3.0
+        Vector3D(mean, mean, mean)
+      })
+      SphericalHarmonicsLight(intensities)
+    }
+    else colored
   }
 
 }

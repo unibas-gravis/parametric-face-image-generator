@@ -17,6 +17,7 @@ package faces.settings
 
 import faces.utils.{BaselIlluminationPrior, Distribution}
 import scalismo.faces.parameters._
+import scalismo.geometry.{Vector, _3D}
 
 abstract class FacesSettings{
   val outputLocation: OutputLocation
@@ -58,9 +59,12 @@ case class MorphableModelParameters(
 case class IlluminationParameters(
                                    illumination: String,
                                    illuminationPriorFn: String,
+                                   illuminationPriorNoColor: Boolean,
+                                   illuminationPriorFixAmbient: Boolean,
+                                   illuminationPriorFixAmbientValue: Vector[_3D],
                                    directionalLight: DirectionalLight
                                  ) {
-  def illuminationPrior = BaselIlluminationPrior(illuminationPriorFn)
+  def illuminationPrior = BaselIlluminationPrior(illuminationPriorFn, illuminationPriorNoColor, illuminationPriorFixAmbient, illuminationPriorFixAmbientValue)
 }
 
 

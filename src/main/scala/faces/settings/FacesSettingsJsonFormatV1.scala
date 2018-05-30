@@ -17,6 +17,7 @@ package faces.settings
 
 import faces.utils._
 import scalismo.faces.parameters._
+import scalismo.geometry.{Vector, _3D}
 import spray.json._
 
 import scala.collection.immutable.ListMap
@@ -34,6 +35,9 @@ object RandomFacesSettingsJsonFormatV1 {
       new JsObjectOrdered( ListMap(
         ("illumination-type", obj.illumination.toJson),
         ("illumination-prior-directory", obj.illuminationPriorFn.toJson),
+        ("illumination-prior-no-color", obj.illuminationPriorNoColor.toJson),
+        ("illumination-prior-fix-ambient", obj.illuminationPriorFixAmbient.toJson),
+        ("illumination-prior-fix-ambient-value", obj.illuminationPriorFixAmbientValue.toJson),
         ("directional-light", obj.directionalLight.toJson)
       ))
     }
@@ -42,11 +46,17 @@ object RandomFacesSettingsJsonFormatV1 {
 
       val illumination = fields("illumination-type").convertTo[String]
       val illuminationPriorFn = fields("illumination-prior-directory").convertTo[String]
+      val illuminationPriorNoColor = fields("illumination-prior-no-color").convertTo[Boolean]
+      val illuminationPriorFixAmbient = fields("illumination-prior-fix-ambient").convertTo[Boolean]
+      val illuminationPriorFixAmbientValue = fields("illumination-prior-fix-ambient-value").convertTo[Vector[_3D]]
       val directionalLight = fields("directional-light").convertTo[DirectionalLight]
 
       IlluminationParameters(
         illumination = illumination,
         illuminationPriorFn = illuminationPriorFn,
+        illuminationPriorNoColor = illuminationPriorNoColor,
+        illuminationPriorFixAmbient = illuminationPriorFixAmbient,
+        illuminationPriorFixAmbientValue = illuminationPriorFixAmbientValue,
         directionalLight = directionalLight
       )
     }

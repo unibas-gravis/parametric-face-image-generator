@@ -44,8 +44,13 @@
   "illumination-parameters": {
     "__comment-1" : "Choose illumination distribution from Basel Illumination Prior 2017 from 'empirical', 'multiVariateNormal' or 'staticFrontal'.",
     "__comment-2" : "Download the data into the directory and cite paper in your publication!",
+    "__comment-3" : "no-color removes replaces all illumination components by the mean over all color channels (non-colored illumination)",
+    "__comment-4" : "if fix-ambient is set the value of the ambient term of Spherical Harmonics illumination is set to the value defined by ambient-value",
     "illumination-type": "empirical",
     "illumination-prior-directory": "data/bip/parameters/",
+    "illumination-prior-no-color": false,
+    "illumination-prior-fix-ambient": false,
+    "illumination-prior-fix-ambient-value": [0.7, 0.7, 0.7],
     "directional-light": {
       "direction": [0.0, 0.0, 1.0],
       "diffuse": [0.0, 0.0, 0.0],

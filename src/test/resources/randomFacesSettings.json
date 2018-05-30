@@ -45,7 +45,11 @@
     "__comment-2" : "Download the data into the directory and cite paper in your publication!",
     "illumination-type": "multiVariateNormal",
     "illumination-prior-directory": "data/bip/parameters/",
-    "directional-light": {
+    "illumination-prior-no-color": true,
+    "illumination-prior-fix-ambient": true,
+    "illumination-prior-fix-ambient-value": [0.7, 0.7, 0.7],
+
+"directional-light": {
       "direction": [0.0, 0.0, 1.0],
       "diffuse": [0.0, 0.0, 0.0],
       "specular": [0.0, 0.0, 0.0],
