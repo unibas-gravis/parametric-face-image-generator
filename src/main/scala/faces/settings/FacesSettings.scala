@@ -60,11 +60,11 @@ case class IlluminationParameters(
                                    illumination: String,
                                    illuminationPriorFn: String,
                                    illuminationPriorNoColor: Boolean,
-                                   illuminationPriorFixAmbient: Boolean,
-                                   illuminationPriorFixAmbientValue: Vector[_3D],
+                                   illuminationPriorFixEnergy: Boolean,
+                                   illuminationPriorFixEnergyValue: Double,
                                    directionalLight: DirectionalLight
                                  ) {
-  def illuminationPrior = BaselIlluminationPrior(illuminationPriorFn, illuminationPriorNoColor, illuminationPriorFixAmbient, illuminationPriorFixAmbientValue)
+  def illuminationPrior = BaselIlluminationPrior(illuminationPriorFn, illuminationPriorNoColor, illuminationPriorFixEnergy, illuminationPriorFixEnergyValue)
 }
 
 

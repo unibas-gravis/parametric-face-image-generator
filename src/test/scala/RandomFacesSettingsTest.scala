@@ -91,8 +91,8 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       IlluminationParameters(illumination = "multiVariateNormal",
         illuminationPriorFn = "data/bip/parameters/",
         illuminationPriorNoColor = true,
-        illuminationPriorFixAmbient = true,
-        illuminationPriorFixAmbientValue = Vector3D(0.7, 0.7, 0.7),
+        illuminationPriorFixEnergy = true,
+        illuminationPriorFixEnergyValue = 6.33,
         directionalLight = DirectionalLight.off),
       RandomPoseVariation(yawDistribution = MixtureDistribution(Seq(
         (0.5, UniformDistribution(-90,90)),
@@ -133,8 +133,8 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.illuminationParameters.illumination shouldBe cfg.illuminationParameters.illumination
       default.illuminationParameters.illuminationPriorFn shouldBe cfg.illuminationParameters.illuminationPriorFn
       default.illuminationParameters.illuminationPriorNoColor shouldBe cfg.illuminationParameters.illuminationPriorNoColor
-      default.illuminationParameters.illuminationPriorFixAmbient shouldBe cfg.illuminationParameters.illuminationPriorFixAmbient
-      default.illuminationParameters.illuminationPriorFixAmbientValue shouldBe cfg.illuminationParameters.illuminationPriorFixAmbientValue
+      default.illuminationParameters.illuminationPriorFixEnergy shouldBe cfg.illuminationParameters.illuminationPriorFixEnergy
+      default.illuminationParameters.illuminationPriorFixEnergyValue shouldBe cfg.illuminationParameters.illuminationPriorFixEnergyValue
 
       default.illuminationParameters.directionalLight shouldBe cfg.illuminationParameters.directionalLight
 
