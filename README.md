@@ -67,7 +67,7 @@ Usage
 ### Singularity:
 - we provide a singularity container recipe file to run the data generator directly on compute servers
 
-Hepl needed
+Help needed
 -----------
 There is a [scalismo-faces google group](https://groups.google.com/forum/#!forum/scalismo-faces) for general questions and discussion.
 
