@@ -4,7 +4,7 @@ import faces.settings._
 import faces.utils.{ConstantDistribution, GaussianDistribution, MixtureDistribution, UniformDistribution}
 import org.scalatest.{FunSpec, Matchers}
 import scalismo.faces.parameters._
-import scalismo.geometry.{Point2D, Vector}
+import scalismo.geometry.{Point2D, Vector, Vector3D}
 import scalismo.utils.Random
 
 import scala.io.Source
@@ -90,6 +90,9 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       ),
       IlluminationParameters(illumination = "multiVariateNormal",
         illuminationPriorFn = "data/bip/parameters/",
+        illuminationPriorNoColor = true,
+        illuminationPriorFixEnergy = true,
+        illuminationPriorFixEnergyValue = 6.33,
         directionalLight = DirectionalLight.off),
       RandomPoseVariation(yawDistribution = MixtureDistribution(Seq(
         (0.5, UniformDistribution(-90,90)),
@@ -129,6 +132,10 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
 
       default.illuminationParameters.illumination shouldBe cfg.illuminationParameters.illumination
       default.illuminationParameters.illuminationPriorFn shouldBe cfg.illuminationParameters.illuminationPriorFn
+      default.illuminationParameters.illuminationPriorNoColor shouldBe cfg.illuminationParameters.illuminationPriorNoColor
+      default.illuminationParameters.illuminationPriorFixEnergy shouldBe cfg.illuminationParameters.illuminationPriorFixEnergy
+      default.illuminationParameters.illuminationPriorFixEnergyValue shouldBe cfg.illuminationParameters.illuminationPriorFixEnergyValue
+
       default.illuminationParameters.directionalLight shouldBe cfg.illuminationParameters.directionalLight
 
       default.poseVariation.yawDistribution shouldBe cfg.poseVariation.yawDistribution
