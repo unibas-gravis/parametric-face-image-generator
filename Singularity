@@ -9,5 +9,5 @@ From: ubuntu:16.04
    debconf-set-selections
    echo debconf shared/accepted-oracle-license-v1-1 seen true | \
    debconf-set-selections
-   apt install -y oracle-java9-installer
+   apt install -y oracle-java8-installer
    apt install -y libx11-6 libxxf86vm1 libxrender1 libxtst6 libxi6 libxrandr2 libxcursor1 libgl1-mesa-glx libsm6 libxt6
