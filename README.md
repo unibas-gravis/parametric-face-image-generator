@@ -9,8 +9,8 @@ IN: arXiv preprint (2018)
 
 
 - [2] Adam Kortylewski, Bernhard Egger, Andreas Schneider, Thomas Gerig, Andreas Morel-Forster and Thomas Vetter 
-["Empirically Analyzing the Effect of Dataset Biases on Deep Face Recognition Systems"](https://arxiv.org/abs/1712.01619), 
-IN: arXiv preprint (2017)
+["Empirically Analyzing the Effect of Dataset Biases on Deep Face Recognition Systems"](http://openaccess.thecvf.com/content_cvpr_2018_workshops/papers/w41/Kortylewski_Empirically_Analyzing_the_CVPR_2018_paper.pdf), 
+IN: CVPRW (2018)
 
 You can control the variation of parameters such as pose, shape, color, camera and illumination based on your demand and application.
 This dataset can be used for training and comparing machine learning techniques such as CNNs on a common ground as proposed in [1] by generating fully controlled training and test data.
@@ -86,8 +86,8 @@ IN: arXiv preprint (2018)
 
 ### Data Generator - Controlled Mode
 - [2] Adam Kortylewski, Bernhard Egger, Andreas Schneider, Thomas Gerig, Andreas Morel-Forster and Thomas Vetter 
-["Empirically Analyzing the Effect of Dataset Biases on Deep Face Recognition Systems"](https://arxiv.org/abs/1712.01619), 
-IN: arXiv preprint (2017)
+["Empirically Analyzing the Effect of Dataset Biases on Deep Face Recognition Systems"](http://openaccess.thecvf.com/content_cvpr_2018_workshops/papers/w41/Kortylewski_Empirically_Analyzing_the_CVPR_2018_paper.pdf), 
+IN: CVPRW (2018)
 
 ### Basel Face Model 2017
 - [3] Thomas Gerig, Andreas Morel-Forster, Clemens Blumer, Bernhard Egger, Marcel Luethi, Sandro Schoenborn and Thomas Vetter 
