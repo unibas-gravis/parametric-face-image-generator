@@ -48,7 +48,6 @@ object ControlledFaces extends App {
   import cfg.backgroundVariation._
 
   val helpers = Helpers(cfg)
-
   //****************************************************************************
   // CONTROLLED SAMPLE GENERATOR
   //****************************************************************************

@@ -23,9 +23,9 @@
     "render-illumination": false
   },
   "morphable-model-parameters": {
-    "number-of-ids-to-create": 5,
+    "number-of-ids-to-create": 1,
     "number-of-samples-per-id": 1,
-    "model-filename": "data/bfm2017/model2017-1_bfm_nomouth.h5",
+    "model-filename": "data/bfm2017/model2017-1_face12_nomouth.h5",
     "__comment-1" : "A value of 0 for any dimension will return always the mean for this dimension",
     "dimension-of-shape-space": 199,
     "dimension-of-color-space": 199,
@@ -34,8 +34,8 @@
   },
   "background-variation": {
     "back-range": {
-      "start": 1,
-      "end": 100,
+      "start": 20,
+      "end": 20,
       "step": 1,
       "type": "inclusive"
     }
@@ -50,21 +50,21 @@
   },
   "pose-range": {
     "yaw-range": {
-      "start": 0,
-      "end": 0,
-      "step": 1,
+      "start": -30,
+      "end": 30,
+      "step": 60,
       "type": "inclusive"
     },
     "roll-range": {
-      "start": 0,
-      "end": 0,
-      "step": 1,
+      "start": -30,
+      "end": 30,
+      "step": 60,
       "type": "inclusive"
     },
     "pitch-range": {
-      "start": -90,
-      "end": 90,
-      "step": 10,
+      "start": -30,
+      "end": 30,
+      "step": 60,
       "type": "inclusive"
     },
     "center-faces": "facebox"
@@ -103,11 +103,9 @@
   },
   "__comment-landmark-tags-1" : "The tags specifying which landmarks will be stored in the tlms file.",
   "__comment-landmark-tags-2" : "Each landmark tags needs to be stored in the model .h5 file.",
-  "landmark-tags": ["center.chin.tip", "center.lips.lower.inner", "center.nose.tip", "left.ear.lobule.attachement",
-    "right.ear.lobule.attachement", "left.eye.corner_outer", "left.eye.corner_inner", "left.eye.pupil.center",
-    "right.eye.corner_outer", "right.eye.corner_inner", "right.eye.pupil.center", "left.eyebrow.bend.lower",
-    "left.eyebrow.inner_lower", "right.eyebrow.bend.lower", "right.eyebrow.inner_lower", "left.lips.corner",
+  "landmark-tags": ["center.chin.tip", "center.nose.tip", "left.eye.corner_outer", "left.eye.corner_inner",
+    "right.eye.corner_outer", "right.eye.corner_inner", "left.lips.corner",
     "right.lips.corner", "left.nose.wing.tip", "right.nose.wing.tip"],
-  "occlusionMode": "loop",
+  "occlusionMode": "none",
   "format-version": "V1.0"
 }

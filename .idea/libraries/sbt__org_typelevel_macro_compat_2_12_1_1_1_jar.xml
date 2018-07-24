@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: org.typelevel:macro-compat_2.12:1.1.1:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.typelevel/macro-compat_2.12/jars/macro-compat_2.12-1.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.typelevel/macro-compat_2.12/srcs/macro-compat_2.12-1.1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
