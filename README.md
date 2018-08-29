@@ -92,7 +92,7 @@ IN: CVPRW (2018)
 ### Basel Face Model 2017
 - [3] Thomas Gerig, Andreas Morel-Forster, Clemens Blumer, Bernhard Egger, Marcel Luethi, Sandro Schoenborn and Thomas Vetter 
 [" Morphable Face Models - An Open Framework"](https://arxiv.org/abs/1709.08398), 
-IN: arXiv preprint (2017)
+IN: 13th IEEE Conference on Automatic Face and Gesture Recognition (FG 2018) 
 
 ### Basel Illumination Prior 2017
 - [4] Bernhard Egger, Sandro Schoenborn, Andreas Schneider, Adam Kortylewski, Andreas Morel-Forster, Clemens Blumer and Thomas Vetter 
