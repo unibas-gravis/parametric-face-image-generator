@@ -80,12 +80,12 @@ object RandomFaces extends App {
         // put RenderParameters together of all its randomized parts
         val uncentered = RenderParameter(rndPose, view, rndCamera, rndIll, directionalLight, momoInstance, ImageSize(imageWidth, imageHeight), colorTransform)
 
-        // move face in the middle of the image
+
         val centered = if (faceCenter == "facebox") {
           helpers.centerFaceBox(uncentered)
         }
         else if (faceCenter == "landmark") {
-          helpers.centerLandmark(uncentered)
+          helpers.centerLandmark_face12(uncentered)
         }
         else {
           uncentered
@@ -99,24 +99,38 @@ object RandomFaces extends App {
         ))
 
         val imageData =
-          for ((postfix, currentRenderer) <- helpers.renderingMethods) yield {
-            if (bg && postfix == "") { // only allow different backgrounds for standard renderings
+          for ((postfix, currentRenderer) <- helpers.face12_renderingMethods) yield {
+            if (bg && (postfix == "face12" || postfix == "bfm")) { // only allow different backgrounds for standard renderings
               require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
               val rndBG = helpers.loadBgs(rnd.scalaRandom.nextInt(helpers.loadBgs.length))
               val rndBGimg = PixelImageIO.read[RGBA](rndBG).get.resample(imageWidth, imageHeight)
-              (currentRenderer.renderImage(rps).zip(rndBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1), postfix, currentRenderer.renderImage(centered).zip(rndBGimg).map(p => if (p._1.a < 0.5) RGBA.Black else RGBA.White))
+              val img = currentRenderer.renderImage(rps).zip(rndBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1)
+              val mask = currentRenderer.renderImage(centered).zip(rndBGimg).map(p => if (p._1.a < 0.5) RGBA.Black else RGBA.White)
+              helpers.writeRenderParametersAndLandmarks_face12(rps, id, n, mask, "initial")
+              val mask_with_occlusions_and_path = helpers.writeImg_face12(img, id, n, postfix, cfg.landmarkTags, mask)
+              helpers.writeRenderParametersAndLandmarks_face12(rps, id, n, mask_with_occlusions_and_path._1)
+              // here, we switch to the bfm
+              val bfmFaceImage = helpers.convertFace12ToBfm(mask_with_occlusions_and_path._2)
+              val bfmImage = bfmFaceImage.zip(rndBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1)
+              val bfmMask = bfmFaceImage.zip(rndBGimg).map(p => if (p._1.a < 0.5) RGBA.Black else RGBA.White)
+              helpers.writeRenderParametersAndLandmarks_bfm(rps, id, n, bfmMask)
+              helpers.writeImg_bfm(bfmImage, id, n, postfix, cfg.landmarkTags, bfmMask)
             }
             else {
               (currentRenderer.renderImage(rps), postfix, currentRenderer.renderImage(rps))
             }
           }
 
-        // write images and their parameters
-        println(s"Generating \t ID:$id \t Sample:$n")
-        for ((img, postifx, mask) <- imageData) {
-          helpers.writeRenderParametersAndLandmarks(rps, id, n)
-          helpers.writeImg(img, id, n, postifx, cfg.landmarkTags, mask)
-        }
+//        // write images and their parameters
+//        println(s"Generating \t ID:$id \t Sample:$n")
+//        for ((img, postifx, mask) <- imageData) {
+//          if(postifx.startsWith("bfm")) {
+//            helpers.writeRenderParametersAndLandmarks_bfm(rps, id, n)
+//            helpers.writeImg_bfm(img, id, n, postifx, cfg.landmarkTags, mask)
+//          }
+//        }
+//        println(s"Generating \t ID:$id \t Sample:$n for face12")
+
       }
     }
     catch{

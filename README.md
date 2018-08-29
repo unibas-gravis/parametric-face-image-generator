@@ -15,36 +15,51 @@ IN: arXiv preprint (2017)
 You can control the variation of parameters such as pose, shape, color, camera and illumination based on your demand and application.
 This dataset can be used for training and comparing machine learning techniques such as CNNs on a common ground as proposed in [1] by generating fully controlled training and test data.
 
+SETUP
+-------------------
+1. Add both versions of the Basel Face Model to the `data/bfm2017` folder.
+2. Add some background images to the `data/backgrounds` folder.
+3. Add the Basel Illumination Prior to the `data/bip` folder.
+
 WHAT'S NEW
 ----------
 In the file 'example_config_controlled' located in data/config_files/example_config_controlled.json, you can specify an occlusion mode (third last row in the file). You can choose between:
 
 ### eyes
-This mode retrieves the location of the eyes from the provided .tlms file and renders black boxes over both eyes on the face.
+This mode retrieves the location of the eyes from the provided .tlms file and renders black circles over both eyes on the face.
+
+### random-1
+A hand hides the picture on a random place in a random orientation.
+
+### random-2
+A microphone hides the picture on a random place in a random orientation.
 
 ### random
 This mode renders real-world occlusions in the image. They are in a random position, randomly scaled and randomly positioned.
 
+### box
+A rectangle filled with an arbitrary color hides the image.
+
+### box-skinColor
+Boxes filled with the color at the tip of the chin hide the image.
+
 ### box-whitnoise
 Creates random rectangles on the face, filled with Gaussian white noise.
 
-### box-`Percentage`
+### box-\[0-100\]
 Iteratively creates a box column-by-column that occludes the specified amount of pace pixels. It fills the rectangle with a random color.
 
 ### loop
 Creates 20 images for each angle. Each with a different amount of occluded face region. Starting from 2%, it goes up to 40% by steps of 2%.
 
+### texture
+Fills a randomly placed box with a texture image.
+
 OUTPUT
 ------
-This modified version provides two new folders in the output:
 
-### img_masks
-These images provide the ground truth segmentation of the image. It distinguishes between face-region, occlusion-region, and background.
-
-### img_occlusion
-The original images overlaid with an occlusion of one of the above modes.
-
-
+The software provides csv-files, rps-files, tlms-files, ground truth masks, images with occlusions and images without occlusions for both the `bfm` and the `face12` version of the Basel Face Model. If an occlusion gets rendered over a landmark, it gets disabled.
+ 
 Contributors
 ------------
 

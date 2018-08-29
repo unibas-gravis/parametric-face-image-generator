@@ -33,14 +33,24 @@ abstract class FacesSettings{
 case class OutputLocation(
                            outPath: String
                          ) {
-  def outImgPath: String = outPath + "img_original/"
-  def outOccPath: String = outPath + "img_occlusion/"
-  def outMaskPath: String = outPath + "img_masks/"
-  def outRpsPath: String = outPath + "rps/"
-  def outCSVPath: String = outPath + "csv/"
-  def outTLMSPath: String = outPath + "tlms/"
+  def outImgPath_bfm: String = outPath + "bfm/img_original/"
+  def outOccPath_bfm: String = outPath + "bfm/img_occlusion/"
+  def outMaskPath_bfm: String = outPath + "bfm/img_masks/"
+  def outRpsPath_bfm: String = outPath + "bfm/rps/"
+  def outCSVPath_bfm: String = outPath + "bfm/csv/"
+  def outTLMSPath_bfm: String = outPath + "bfm/tlms/"
+
+  def outImgPath_face12: String = outPath + "face12/img_original/"
+  def outOccPath_face12: String = outPath + "face12/img_occlusion/"
+  def outMaskPath_face12: String = outPath + "face12/img_masks/"
+  def outRpsPath_face12: String = outPath + "face12/rps/"
+  def outCSVPath_face12: String = outPath + "face12/csv/"
+  def outTLMSPath_face12: String = outPath + "face12/tlms/"
+
+
   def inOccolusonsPath: String = outPath + "../occolusions/"
   def inBackgroundsPath: String = outPath + "../backgrounds/"
+  def inTexturesPath: String = outPath + "../textures/"
 }
 
 case class Backgrounds(
