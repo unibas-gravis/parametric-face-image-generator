@@ -52,11 +52,11 @@ Usage
 - get a dataset with backgrounds, e.g. the [Describable Textures Dataset](http://www.robots.ox.ac.uk/~vgg/data/dtd/)
 
 ### Run
-- adapt paths and configuration in data/config_files/example_config_controlled.json
+- adapt paths and configuration in `data/config_files/example_config_controlled.json`
 - For generating images in the controlled setup execute:
- - java -Xmx2g -cp generator.jar faces.apps.ControlledFaces -c data/config_files/example_config_controlled.json
+ - `java -Xmx2g -cp generator.jar faces.apps.ControlledFaces -c data/config_files/example_config_controlled.json`
 - For generating images in the random setup execute:
- - java -Xmx2g -cp generator.jar faces.apps.RandomFaces -c data/config_files/example_config_random.json
+ - `java -Xmx2g -cp generator.jar faces.apps.RandomFaces -c data/config_files/example_config_random.json`
 
 ### For Developers:
 - installed [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) (Version 8.0 or higher recommended)
