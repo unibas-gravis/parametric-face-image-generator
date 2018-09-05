@@ -132,8 +132,25 @@ You can render different image modalities such as e.g. depth images (top row), c
 
 For each face image the location and visibilty of 19 facial landmarks is written in a .tlms file in the following format:
 
-"facial landmark name" "visibility" "x-position" "y-position"   
+"facial landmark name" "visibility" "x-position" "y-position".
+
+
+### Occlusions & Masks
+
+![0_0](data/example_images/ex1.png)![0_1](data/example_images/ex2.png)
  
+![1_0](data/example_images/ex3.png)![1_1](data/example_images/ex4.png)
+ 
+The facial image is overlaid with an occlusion (here: A randomly placed box filled with a texture). If a landmark gets covered, the software disables it. 
+
+In the first row, there are two such images. The same face is rendered with both versions of the Bael Face Model [3] 1. with the tailored face12 version (left) and 2. with the bfm version, which shows more skinparts (right).
+
+The second row shows the corresponding masks. 
+
+It is possible to have other types of masking rendered over the face. The pictures below show the other occlusions:
+
+![0_0](data/example_images/other1.png)![0_1](data/example_images/other2.png)![0_2](data/example_images/other3.png)![0_3](data/example_images/other4.png)
+  
 Usage
 -----
 
