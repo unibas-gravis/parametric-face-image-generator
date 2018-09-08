@@ -33,7 +33,7 @@
     "__comment-1" : "This block configures how face identities are generated and if they have expressions.",
     "__comment-2" : "You need to download the Basel Face Model and cite the paper in your publication.",
     "number-of-ids-to-create": 1,
-    "number-of-samples-per-id": 5,
+    "number-of-samples-per-id": 1,
     "model-filename": "data/bfm2017/model2017-1_face12_nomouth.h5",
     "__comment-1" : "A value of 0 for any dimension will return always the mean for this dimension",
     "dimension-of-shape-space": 50,
@@ -68,33 +68,34 @@
     "__comment-5" : "The scaling is the distribution of the focal length.",
     "__comment-6" : "Choose the centering of the face in the image from 'none', 'facebox','landmark'.",
     "yaw-distribution": {
-      "type": "uniform",
-      "lower": -30,
-      "higher": 30
+      "type": "constant",
+      "value": 0.0
     },
     "roll-distribution": {
-      "type": "uniform",
-      "lower": -30,
-      "higher": 30
+      "type": "constant",
+      "value": 0.0
     },
     "pitch-distribution": {
-      "type": "uniform",
-      "lower": -30,
-      "higher": 30
+      "type": "gaussian",
+      "mean": 0.0,
+      "variance": 30.0
     },
     "x-translation-distribution": {
-      "type": "constant",
-      "value": 0.0
+      "type": "uniform",
+      "lower": 0.0,
+      "higher": 0.0
     },
     "y-translation-distribution": {
-      "type": "constant",
-      "value": 0.0
+      "type": "uniform",
+      "lower": 0.0,
+      "higher": 0.0
     },
     "scaling-distribution": {
-      "type": "constant",
-      "value": 1.0
+      "type": "uniform",
+      "lower": 1.0,
+      "higher": 1.2
     },
-    "center-faces": "landmark"
+    "center-faces": "facebox"
   },
   "image-dimensions": {
     "comment" : "The image size of the generated images in pixels.",
