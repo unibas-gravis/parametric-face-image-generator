@@ -49,7 +49,7 @@ case class OutputLocation(
   def outTLMSPath_face12: String = outPath + "face12/tlms/"
 
 
-  def inOccolusonsPath: String = outPath + "../occolusions/"
+  def inOcclusonsPath: String = outPath + "../occlusions/"
   def inBackgroundsPath: String = outPath + "../backgrounds/"
   def inTexturesPath: String = outPath + "../textures/"
 }

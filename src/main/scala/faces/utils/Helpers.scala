@@ -94,8 +94,8 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     Path(outTLMSPath_face12).createDirectory(failIfExists = false)
   }
 
-  if (!Path(inOccolusonsPath).exists) {
-    Path(inOccolusonsPath).createDirectory(failIfExists = false)
+  if (!Path(inOcclusonsPath).exists) {
+    Path(inOcclusonsPath).createDirectory(failIfExists = false)
   }
   if (!Path(inBackgroundsPath).exists) {
     Path(inBackgroundsPath).createDirectory(failIfExists = false)
@@ -700,11 +700,11 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
         val match1 = numPattern.findFirstIn(cfg.occlusionMode)
         val r = scala.util.Random
         val magic = backup_random_magic
-        val occolusion_File_path = inOccolusonsPath + magic._4
-        var occolusion_image = flipImage(PixelImageIO.read[RGBA](new File(occolusion_File_path)).get, (magic._1, magic._2, magic._3))
+        val occlusion_File_path = inOcclusonsPath + magic._4
+        var occlusion_image = flipImage(PixelImageIO.read[RGBA](new File(occlusion_File_path)).get, (magic._1, magic._2, magic._3))
         val resize = backup_random_resample
-        occolusion_image = occolusion_image.resampleNearestNeighbour((resize * occolusion_image.width).toInt, (resize * occolusion_image.height).toInt)
-        val (new_image, new_mask) = writeOcclusionToImages(img, Mask, occolusion_image,backup_random_pos)
+        occlusion_image = occlusion_image.resampleNearestNeighbour((resize * occlusion_image.width).toInt, (resize * occlusion_image.height).toInt)
+        val (new_image, new_mask) = writeOcclusionToImages(img, Mask, occlusion_image,backup_random_pos)
         PixelImageIO.write(new_image.map { f => f.toRGB }, new File(outOccPathID + id + "_" + n + direction + ".png"))
         PixelImageIO.write(new_mask.map { f => f.toRGB }, new File(outMaskPathID + id + "_" + n + direction + ".png"))
       }
@@ -800,6 +800,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
           // $_<yaw>_<pitch>_<roll>
         }
         val new_mask = null
+        val filename = id + "_" + n + direction + ".png"
 
         // New 'occlusionMode'
         if (cfg.occlusionMode.equals("eyes")) {
@@ -821,14 +822,14 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
           val r = scala.util.Random
           val magic = getRandImage(match1.get.toInt)
           backup_random_magic = magic
-          val occolusion_File_path = inOccolusonsPath + magic._4
-          var occolusion_image = flipImage(PixelImageIO.read[RGBA](new File(occolusion_File_path)).get, (magic._1, magic._2, magic._3))
+          val occlusion_File_path = inOcclusonsPath + magic._4
+          var occlusion_image = flipImage(PixelImageIO.read[RGBA](new File(occlusion_File_path)).get, (magic._1, magic._2, magic._3))
           val resize = Math.min(0.8, r.nextDouble() + 0.2)
           backup_random_resample = resize
-          occolusion_image = occolusion_image.resampleNearestNeighbour((resize * occolusion_image.width).toInt, (resize * occolusion_image.height).toInt)
-          val position = (r.nextInt(img.width - occolusion_image.width),r.nextInt(img.width - occolusion_image.width))
+          occlusion_image = occlusion_image.resampleNearestNeighbour((resize * occlusion_image.width).toInt, (resize * occlusion_image.height).toInt)
+          val position = (r.nextInt(img.width - occlusion_image.width),r.nextInt(img.width - occlusion_image.width))
           backup_random_pos = position
-          val (new_image, new_mask) = writeOcclusionToImages(img, Mask, occolusion_image, position)
+          val (new_image, new_mask) = writeOcclusionToImages(img, Mask, occlusion_image, position)
           PixelImageIO.write(new_image.map { f => f.toRGB }, new File(outOccPathID + id + "_" + n + direction + ".png"))
           PixelImageIO.write(new_mask.map { f => f.toRGB }, new File(outMaskPathID + id + "_" + n + direction + ".png"))
         }
@@ -865,7 +866,6 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
           backup_box_color = color
           PixelImageIO.write(new_image.map { f => f.toRGB }, new File(outOccPathID + id + "_" + n + direction + ".png"))
           PixelImageIO.write(new_mask.map { f => f.toRGB }, new File(outMaskPathID + id + "_" + n + direction + ".png"))
-
         }
 
         // New 'occlusionMode'
@@ -899,13 +899,32 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
           PixelImageIO.write(Mask.map { f => f.toRGB }, new File(outMaskPathID + id + "_" + n + direction + ".png"))
         }
         PixelImageIO.write(img.map { f => f.toRGB }, new File(outImgPathID + id + "_" + n + direction + ".png"))
-        return (new_mask, (id + "_" + n + direction + ".png",id))
+        return (new_mask, (filename,id))
       }
       else {
         PixelImageIO.write(img.map { f => f.toRGB }, new File(outImgPathID + id + "_" + n + postfix + ".png"))
         PixelImageIO.write(Mask.map { f => f.toRGB }, new File(outMaskPathID + id + "_" + n + postfix + ".png"))
       }
       return (Mask, ("return path to .png file",1))
+    }
+
+    def writeImg_controlled(img: PixelImage[RGBA], id: Int, n: Int, postfix: String, landmarkTags: IndexedSeq[String], Mask: PixelImage[RGBA], bypri: (Int, Int, Int, Int, Int)*): Unit = {
+      val outImgPathID = outImgPath_face12 + id + "/"
+      if (!Path(outImgPathID).exists) {
+        Path(outImgPathID).createDirectory(failIfExists = false)
+      }
+
+      PixelImageIO.write(img.map { f => f.toRGB }, new File(outImgPathID + id + "_" + n + postfix + ".png"))
+
+
+      if(postfix.equals("face12")){
+        val outMaskPathID = outMaskPath_face12 + id + "/"
+        if (!Path(outMaskPathID).exists) {
+          Path(outMaskPathID).createDirectory(failIfExists = false)
+        }
+
+        PixelImageIO.write(Mask.map { f => f.toRGB }, new File(outMaskPathID + id + "_" + n + postfix + ".png"))
+      }
     }
 
     def get_color_at(img: PixelImage[RGBA], LMtag: String, id: Int, n: Int): RGBA = {
