@@ -39,17 +39,39 @@ You can render different image modalities such as e.g. depth images (top row), c
 
 For each face image the location and visibilty of 19 facial landmarks is written in a .tlms file in the following format:
 
-"facial landmark name" "visibility" "x-position" "y-position"   
+"facial landmark name" "visibility" "x-position" "y-position".
+
+
+### Occlusions & Masks
+
+![0_0](data/example_images/ex1.png)![0_1](data/example_images/ex2.png)
  
+![1_0](data/example_images/ex3.png)![1_1](data/example_images/ex4.png)
+ 
+The facial image is overlaid with an occlusion (here: A randomly placed box filled with a texture).
+
+In the first row, there are two such images. The same face is rendered with both versions of the Bael Face Model [3] 1. with the tailored face12 version (left) and 2. with the bfm version, which shows more skinparts (right).
+
+The second row shows the corresponding masks. 
+
+It is possible to have other types of masking rendered over the face. The pictures below show the other occlusions:
+
+![0_0](data/example_images/other1.png)![0_1](data/example_images/other2.png)![0_2](data/example_images/other3.png)![0_3](data/example_images/other4.png)
+
+
+### Output
+------
+In addition to the facial images and the masks, the software provides csv-files, rps-files and tlms-files for both the `bfm` and the `face12` version of the Basel Face Model [3]. If an occlusion gets rendered over a landmark, it gets disabled.
+  
 Usage
 -----
 
 ### Setup
 - installed [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) (Version 8.0 or higher recommended)
 - download jar and config file under `release`
-- [download](http://gravis.dmi.unibas.ch/PMM/) Basel Face Model 2017
-- [download](http://gravis.dmi.unibas.ch/PMM/)  Basel Illumination Prior 2017
-- get a dataset with backgrounds, e.g. the [Describable Textures Dataset](http://www.robots.ox.ac.uk/~vgg/data/dtd/)
+- [download](http://gravis.dmi.unibas.ch/PMM/) both versions of the Basel Face Model 2017 to the `data/bfm2017` folder
+- [download](http://gravis.dmi.unibas.ch/PMM/)  Basel Illumination Prior 2017 to the `data/bip` folder
+- get a dataset with backgrounds, e.g. the [Describable Textures Dataset](http://www.robots.ox.ac.uk/~vgg/data/dtd/) and save them in the `data/backgrounds` folder
 
 ### Run
 - adapt paths and configuration in `data/config_files/example_config_controlled.json`
@@ -109,6 +131,7 @@ Contributors
 - Adam Kortylewski
 - Andreas Morel-Forster
 - Andreas Schneider
+- Elias Arnold
 
 Maintainers
 -----------
@@ -134,4 +157,3 @@ License
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-

@@ -18,9 +18,11 @@ package faces.apps
 
 import java.io.File
 
+import faces.apps.RandomFaces.{cfg, helpers}
 import faces.settings.ControlledFacesSettings
 import faces.utils.{Helpers, ParametricFaceImageGeneratorOptions}
 import scalismo.faces.color.{RGB, RGBA}
+import scalismo.faces.image.PixelImage
 import scalismo.faces.io.PixelImageIO
 import scalismo.faces.parameters._
 import scalismo.geometry.Vector
@@ -48,7 +50,6 @@ object ControlledFaces extends App {
   import cfg.backgroundVariation._
 
   val helpers = Helpers(cfg)
-
   //****************************************************************************
   // CONTROLLED SAMPLE GENERATOR
   //****************************************************************************
@@ -84,30 +85,34 @@ object ControlledFaces extends App {
                 }
                 else if(faceCenter == "landmark")
                 {
-                  helpers.centerLandmark(uncentered)
+                  helpers.centerLandmark_face12(uncentered)
                 }
                 else{
                   uncentered
                 }
 
                 val imageData =
-                  for((postfix, currentRenderer) <- helpers.renderingMethods) yield {
+                  for((postfix, currentRenderer) <- helpers.face12_renderingMethods) yield {
                     if (bg && postfix == "") {
                       require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
                       val BG = helpers.loadBgs(b)
                       val controlledBGimg = PixelImageIO.read[RGBA](BG).get.resample(imageWidth, imageHeight)
-                      (currentRenderer.renderImage(centered).zip(controlledBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1), postfix)
+                      (currentRenderer.renderImage(centered).zip(controlledBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1), postfix, currentRenderer.renderImage(centered).zip(controlledBGimg).map(p => if (p._1.a < 0.5) RGBA.Black else RGBA.White))
                     }
                     else {
-                      (currentRenderer.renderImage(centered), postfix)
+                      val rendering = currentRenderer.renderImage(centered)
+                      val dummy = PixelImage(rendering.width, rendering.height, (x, y) => {
+                        RGBA.Black
+                      })
+                      (rendering, postfix, rendering.zip(dummy).map(p => if (p._1.a < 0.5) RGBA.Black else RGBA.White))
                     }
                   }
 
                 // write images and their parameters
                 println(s"Generating \t ID:$id \t Sample:$n")
-                for((img, postifx) <- imageData) {
-                  helpers.writeRenderParametersAndLandmarks(centered, id, n)
-                  helpers.writeImg(img, id, n, postifx)
+                for((img, postfix, mask) <- imageData) {
+                  helpers.writeRenderParametersAndLandmarks_face12(centered, id, n, mask, "initial")
+                  helpers.writeImg_controlled(img, id, n, postfix, cfg.landmarkTags, mask)
                 }
 
               }

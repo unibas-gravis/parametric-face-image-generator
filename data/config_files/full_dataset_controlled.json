@@ -18,7 +18,7 @@
   "morphable-model-parameters": {
     "number-of-ids-to-create": 1,
     "number-of-samples-per-id": 1,
-    "model-filename": "data/bfm2017/model2017-1_bfm_nomouth.h5",
+    "model-filename": "data/bfm2017/model2017-1_face12_nomouth.h5",
     "dimension-of-shape-space": 199,
     "dimension-of-color-space": 199,
     "dimension-of-expression-space": 100,
@@ -93,5 +93,9 @@
       "focalLength": 50.0
     }
   },
+  "landmark-tags": ["center.chin.tip", "center.nose.tip", "left.eye.corner_outer", "left.eye.corner_inner",
+    "right.eye.corner_outer", "right.eye.corner_inner", "left.lips.corner", "left.eyebrow.bend.lower", "right.eyebrow.bend.lower",
+    "left.eyebrow.inner_lower", "right.eyebrow.inner_lower", "right.lips.corner", "left.nose.wing.tip", "right.nose.wing.tip"],
+  "occlusionMode": "none",
   "format-version": "V1.0"
 }
