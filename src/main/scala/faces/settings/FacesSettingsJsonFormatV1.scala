@@ -110,6 +110,7 @@ object RandomFacesSettingsJsonFormatV1 {
           ("pose-variation", obj.poseVariation.toJson),
           ("image-dimensions", obj.imageDimensions.toJson),
           ("default-parameters", obj.defaultParameters.toJson),
+          ("occlusion", obj.occlusion.toJson),
           ("landmark-tags", obj.landmarkTags.toJson),
           (versionFieldName, FacesSettingsJsonFormatV1.version.toJson)
         )
@@ -132,6 +133,7 @@ object RandomFacesSettingsJsonFormatV1 {
       val imageDimensions = fields("image-dimensions").convertTo[ImageDimensions]
       val defaultParameters = fields("default-parameters").convertTo[DefaultParameters]
       val landmarkTags = fields("landmark-tags").convertTo[IndexedSeq[String]]
+      val occlusion = fields("occlusion").convertTo[Occlusion]
 
       new RandomFacesSettings(
         outputLocation,
@@ -141,6 +143,7 @@ object RandomFacesSettingsJsonFormatV1 {
         imageDimensions,
         defaultParameters,
         landmarkTags,
+        occlusion,
         illuminationParameters,
         poseVariation
       )
@@ -256,6 +259,7 @@ object ControlledFacesSettingsJsonFormatV1 {
           ("pose-range", obj.poseVariation.toJson),
           ("image-dimensions", obj.imageDimensions.toJson),
           ("default-parameters", obj.defaultParameters.toJson),
+          ("occlusion", obj.occlusion.toJson),
           ("landmark-tags", obj.landmarkTags.toJson),
           (versionFieldName, FacesSettingsJsonFormatV1.version.toJson)
         )
@@ -279,6 +283,7 @@ object ControlledFacesSettingsJsonFormatV1 {
       val imageDimensions = fields("image-dimensions").convertTo[ImageDimensions]
       val defaultParameters = fields("default-parameters").convertTo[DefaultParameters]
       val landmarkTags = fields("landmark-tags").convertTo[IndexedSeq[String]]
+      val occlusion = fields("occlusion").convertTo[Occlusion]
 
 
       new ControlledFacesSettings(
@@ -288,6 +293,7 @@ object ControlledFacesSettingsJsonFormatV1 {
         morphableModelParameters,
         imageDimensions,
         defaultParameters,
+        occlusion,
         landmarkTags,
         illuminationDirectionRange,
         poseVariation,
@@ -428,6 +434,27 @@ object FacesSettingsJsonFormatV1 {
       ImageDimensions(
         imageWidth = imageWidth,
         imageHeight = imageHeight
+      )
+    }
+  }
+
+  implicit val OcclusionFormat: RootJsonFormat[Occlusion] = new RootJsonFormat[Occlusion] {
+    override def write(obj: Occlusion): JsValue = {
+      new JsObjectOrdered(ListMap(
+        ("render-occlusion", obj.renderOcclusion.toJson),
+        ("occlusion-mode", obj.occlusionMode.toJson)
+      ))
+    }
+
+    override def read(json: JsValue): Occlusion = {
+      val fields = json.asJsObject(s"expected ImageDimensions object, got: $json").fields
+
+      val renderOcclusion = fields("render-occlusion").convertTo[Boolean]
+      val occlusionMode = fields("occlusion-mode").convertTo[String]
+
+      Occlusion(
+        renderOcclusion = renderOcclusion,
+        occlusionMode = occlusionMode
       )
     }
   }

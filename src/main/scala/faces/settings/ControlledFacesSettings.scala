@@ -26,6 +26,7 @@ case class ControlledFacesSettings(
                                override val morphableModelParameters: MorphableModelParameters,
                                override val imageDimensions: ImageDimensions,
                                override val defaultParameters: DefaultParameters,
+                               override val occlusion: Occlusion,
                                override val landmarkTags: IndexedSeq[String],
                                illuminationVariation: ControlledIlluminationVariation,
                                poseVariation: ControlledPoseVariation,

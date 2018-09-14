@@ -106,8 +106,8 @@ object ControlledFaces extends App {
                 // write images and their parameters
                 println(s"Generating \t ID:$id \t Sample:$n")
                 for((img, postifx) <- imageData) {
-                  helpers.writeRenderParametersAndLandmarks(centered, id, n)
-                  helpers.writeImg(img, id, n, postifx)
+                  helpers.writeRenderParametersAndLandmarks(centered, id, n, img)
+                  helpers.writeImg(img, id, n, postifx, img)
                 }
 
               }

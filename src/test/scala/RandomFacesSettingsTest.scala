@@ -88,6 +88,10 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         "left.nose.wing.tip",
         "right.nose.wing.tip"
       ),
+      Occlusion(
+        renderOcclusion = false,
+        occlusionMode = "box"
+      ),
       IlluminationParameters(illumination = "multiVariateNormal",
         illuminationPriorFn = "data/bip/parameters/",
         illuminationPriorNoColor = true,
@@ -264,6 +268,10 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
           far = 1000e3,
           orthographic = false),
         colorTransform = ColorTransform.neutral),
+      Occlusion(
+        renderOcclusion = false,
+        occlusionMode = "box"
+      ),
       IndexedSeq(
         "center.chin.tip",
         "center.lips.lower.inner",

@@ -27,12 +27,17 @@ abstract class FacesSettings{
   val imageDimensions: ImageDimensions
   val defaultParameters: DefaultParameters
   val landmarkTags: IndexedSeq[String]
+  val occlusion: Occlusion
 }
 
 
 case class OutputLocation(
                            outPath: String
                          ) {
+  def inTexturesPath: String = outPath + "../textures/"
+  def inOccPath: String = outPath + "../occlusions/"
+  def outOccPath: String = outPath + "occ/"
+  def outMaskPath: String = outPath + "mask/"
   def outImgPath: String = outPath + "img/"
   def outRpsPath: String = outPath + "rps/"
   def outCSVPath: String = outPath + "csv/"
@@ -89,6 +94,11 @@ case class ControlledPoseVariation(
                                     pitchRange: Range,
                                     faceCenter: String
                                   )
+
+case class Occlusion(
+                        renderOcclusion: Boolean,
+                        occlusionMode: String
+                    )
 
 case class ControlledBackgroundVariation(
                                     backgroundRange: Range

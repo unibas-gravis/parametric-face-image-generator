@@ -94,7 +94,7 @@
     }
   },
   "occlusion":{
-    "render-occlusion": false,
+    "render-occlusion": true,
     "occlusion-mode": "box-25"
   },
   "format-version": "V1.0"

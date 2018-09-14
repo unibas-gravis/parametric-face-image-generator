@@ -104,18 +104,26 @@ object RandomFaces extends App {
               require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
               val rndBG = helpers.loadBgs(rnd.scalaRandom.nextInt(helpers.loadBgs.length))
               val rndBGimg = PixelImageIO.read[RGBA](rndBG).get.resample(imageWidth, imageHeight)
-              (currentRenderer.renderImage(rps).zip(rndBGimg).map(p => if (p._1.a < 0.5) p._2 else p._1), postfix)
+              val MorphableModel = currentRenderer.renderImage(rps)
+              val FaceWithBackground = MorphableModel.zip(rndBGimg)
+              (FaceWithBackground.map(p => if (p._1.a < 0.5) p._2 else p._1), postfix, FaceWithBackground.map(p => if (p._1.a < 0.5) RGBA.Black else RGBA.White))
             }
             else {
-              (currentRenderer.renderImage(rps), postfix)
+              val MorphableModel = currentRenderer.renderImage(rps)
+              (MorphableModel, postfix, MorphableModel)
             }
           }
 
         // write images and their parameters
         println(s"Generating \t ID:$id \t Sample:$n")
-        for ((img, postifx) <- imageData) {
-          helpers.writeRenderParametersAndLandmarks(rps, id, n)
-          helpers.writeImg(img, id, n, postifx)
+        for ((img, postifx, mask) <- imageData) {
+          if(postifx.equals(""))
+            helpers.writeRenderParametersAndLandmarks(rps, id, n, mask)
+
+          val mask_with_occlusion = helpers.writeImg(img, id, n, postifx, mask)
+
+          if(postifx.equals(""))
+            helpers.writeRenderParametersAndLandmarks(rps, id, n, mask_with_occlusion)
         }
       }
     }

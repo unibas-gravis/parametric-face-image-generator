@@ -143,6 +143,19 @@
       "focalLength": 50.0
     }
   },
+  "occlusion":{
+    "render-occlusion": true,
+    "__comment-occlusionMode-1": "The options for the occlusionMode are:",
+    "__comment-occlusionMode-2": "eyes - This mode retrieves the location of the eyes from the provided .tlms file and renders black circles over both eyes on the face.",
+    "__comment-occlusionMode-3": "random-1 - A hand hides the picture on a random place in a random orientation.",
+    "__comment-occlusionMode-4": "random-2 - A microphone hides the picture on a random place in a random orientation.",
+    "__comment-occlusionMode-5": "box - A rectangle filled with an arbitrary color hides the image.",
+    "__comment-occlusionMode-6": "box-skinColor - Boxes filled with the color at the tip of the chin hide the image.",
+    "__comment-occlusionMode-7": "box-whiteNoise - Creates random rectangles on the face, filled with Gaussian white noise.",
+    "__comment-occlusionMode-8": "box-<percentage> - Iteratively creates a box column-by-column that occludes the specified amount of pace pixels. It fills the rectangle with a random color.",
+    "__comment-occlusionMode-10": "texture - Fills a randomly placed box with a texture image.",
+    "occlusion-mode": "box-25"
+  },
   "__comment-landmark-tags-1" : "The tags specifying which landmarks will be stored in the tlms file.",
   "__comment-landmark-tags-2" : "Each landmark tags needs to be stored in the model .h5 file.",
   "landmark-tags": ["center.chin.tip", "center.lips.lower.inner", "center.nose.tip", "left.ear.lobule.attachement",

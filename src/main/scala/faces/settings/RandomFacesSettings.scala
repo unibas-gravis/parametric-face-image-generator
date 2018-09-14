@@ -26,6 +26,7 @@ case class RandomFacesSettings(  override val outputLocation: OutputLocation,
                                  override val imageDimensions: ImageDimensions,
                                  override val defaultParameters: DefaultParameters,
                                  override val landmarkTags: IndexedSeq[String],
+                                 override val occlusion: Occlusion,
                                  illuminationParameters: IlluminationParameters,
                                  poseVariation: RandomPoseVariation
                               ) extends FacesSettings {
