@@ -242,12 +242,13 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     val shift = middleOfFace - centerOfImage
 
     val f = maxSide.toDouble/rps.imageSize.width.toDouble
-
+    val rnd =scala.util.Random.nextFloat()-0.5
     // shifting by moving the principal point (normalized device coordinates [-1, 1], y axis upwards)
     rps.copy(camera = rps.camera.copy(principalPoint = Point2D(
-      (rps.camera.principalPoint.x - 2 * shift.x / rps.imageSize.width)/f,
-      (rps.camera.principalPoint.y + 2 * shift.y / rps.imageSize.height)/f),
-      sensorSize = Vector2D(rps.camera.sensorSize.x * f, rps.camera.sensorSize.y * f))
+      (rps.camera.principalPoint.x - 1.5 * shift.x / rps.imageSize.width)/f,
+      (rps.camera.principalPoint.y + 1.5 * shift.y / rps.imageSize.height)/f),
+      sensorSize = Vector2D(9.2+rnd, 9.2+rnd))
+
     )
 
   }

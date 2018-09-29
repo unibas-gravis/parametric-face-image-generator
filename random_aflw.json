@@ -5,7 +5,7 @@
     "__comment-2" : "./img/ for the generated images",
     "__comment-3" : "./rps/ for the file containing the parameters",
     "__comment-4" : "./csv/ for the file containing",
-    "output-directory": "data/100K_fewparams125_crop/"
+    "output-directory": "data/100K_fewparams50_crop/"
   },
   "backgrounds": {
     "__comment-1" : "You can turn the background images off and on",
@@ -36,8 +36,8 @@
     "number-of-samples-per-id": 5,
     "model-filename": "data/bfm2017/model2017-1_bfm_nomouth_aflw.h5",
     "__comment-1" : "A value of 0 for any dimension will return always the mean for this dimension",
-    "dimension-of-shape-space": 125,
-    "dimension-of-color-space": 125,
+    "dimension-of-shape-space": 50,
+    "dimension-of-color-space": 50,
     "dimension-of-expression-space": 30,
     "add-expressions": false
   },
@@ -74,8 +74,8 @@
     },
     "pitch-distribution": {
       "type": "uniform",
-      "lower": -40.0,
-      "higher": 40.0
+      "lower": -30.0,
+      "higher": 30.0
     },
     "x-translation-distribution": {
       "type": "uniform",
