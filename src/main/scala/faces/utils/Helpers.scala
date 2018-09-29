@@ -207,6 +207,51 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   }
 
   // center the face around chin, eyes, nose and ears and crop a face box (change here if you want to center another point)
+  def centerFaceBox2D(rps: RenderParameter, scaling : Double = 2): RenderParameter = {
+
+    val lmTags = Seq(
+      "center.nose.tip",
+      "left.eye.corner_outer",
+      "left.lips.corner",
+      "right.lips.corner",
+      "right.eye.corner_outer"
+    )
+
+    val lmTagsNoseWIng = Seq(
+      "left.nose.wing.tip",
+      "right.nose.wing.tip"
+    )
+
+    val lms = lmTags.map(tag => tag -> renderer.renderLandmark(tag, rps).get ).toMap
+    val nlms = lmTagsNoseWIng.map(tag => tag -> renderer.renderLandmark(tag, rps).get ).toMap
+
+
+    val xmax = lms.values.map( _.point.x ).max
+    val xmin = lms.values.map( _.point.x ).min
+
+    val ymax = lms.values.map( _.point.y ).max
+    val ymin = lms.values.map( _.point.y ).min
+
+    val maxSide = math.max(xmax-xmin, ymax-ymin) * scaling
+
+    //val middleOfFace = findCenterWithNoseWings(rps).get
+    val middleOfFace = (nlms("left.nose.wing.tip").point.toVector+(nlms("right.nose.wing.tip").point.toVector - nlms("left.nose.wing.tip").point.toVector)*0.5).toPoint
+
+    val centerOfImage = Point2D(imageWidth / 2, imageHeight / 2)
+
+    val shift = middleOfFace - centerOfImage
+
+    val f = maxSide.toDouble/rps.imageSize.width.toDouble
+
+    // shifting by moving the principal point (normalized device coordinates [-1, 1], y axis upwards)
+    rps.copy(camera = rps.camera.copy(principalPoint = Point2D(
+      (rps.camera.principalPoint.x - 2 * shift.x / rps.imageSize.width)/f,
+      (rps.camera.principalPoint.y + 2 * shift.y / rps.imageSize.height)/f),
+      sensorSize = Vector2D(rps.camera.sensorSize.x * f, rps.camera.sensorSize.y * f))
+    )
+
+  }
+
   def centerFaceBox(rps: RenderParameter, scaling : Double = 1): RenderParameter = {
 
     val lmTags = Seq(
@@ -217,7 +262,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
       "center.chin.tip",
       "left.eyebrow.bend.lower",
       "right.eyebrow.bend.lower"
-     )
+    )
 
     val lms = lmTags.map(tag => tag -> renderer.renderLandmark(tag, rps).get ).toMap
 
@@ -245,6 +290,68 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
       (rps.camera.principalPoint.y + 2 * shift.y / rps.imageSize.height)/g),
       sensorSize = Vector2D(rps.camera.sensorSize.x * f, rps.camera.sensorSize.y * g))
     )
+
+  }
+
+  // center the face around chin, eyes, nose and ears and crop a face box (change here if you want to center another point)
+  def centerFaceBoxPose(rps: RenderParameter, scaling : Double = 1): RenderParameter = {
+
+    val lmTags = Seq(
+      "left.ear.helix.outer",
+      "right.ear.helix.outer",
+      "center.nose.tip",
+      "center.front.trichion",
+      "center.chin.tip",
+      "left.eyebrow.bend.lower",
+      "right.eyebrow.bend.lower"
+    )
+
+    val lms = lmTags.map(tag => tag -> renderer.renderLandmark(tag, rps).get ).toMap
+
+
+    val xmax = lms.values.map( _.point.x ).max
+    val xmin = lms.values.map( _.point.x ).min
+
+    val ymax = lms.values.map( _.point.y ).max
+    val ymin = lms.values.map( _.point.y ).min
+
+    val maxSide = math.max(ymax-ymin, ymax-ymin) * scaling //
+
+    val middleOfFace = findCenterWithNoseWings(rps).get
+
+    val centerOfImage = Point2D(imageWidth / 2, imageHeight / 2)
+
+    val shift = middleOfFace - centerOfImage
+
+    val f = maxSide.toDouble/rps.imageSize.width.toDouble
+    val g = maxSide.toDouble/rps.imageSize.height.toDouble
+    val z_scale_fixed = 0.9
+    val z_scaling = (z_scale_fixed * rps.imageSize.height.toDouble)/maxSide.toDouble
+    // shifting by moving the principal point (normalized device coordinates [-1, 1], y axis upwards)
+
+    rps.copy(pose = rps.pose.copy(translation = Vector3D(
+      (rps.pose.translation(0) - shift.x ),
+      (rps.pose.translation(1) + shift.y ),
+      rps.pose.translation(2) / z_scaling)
+    ))
+
+
+    /*val middleOfFace2 = findCenterWithNoseWings(rps).get
+
+    val shift2 = middleOfFace - centerOfImage
+
+    rps.copy(pose = rps.pose.copy(translation = Vector3D(
+      (rps.pose.translation(0) - shift.x - shift2.x ),
+      (rps.pose.translation(1) + shift.y + shift2.y ),
+      rps.pose.translation(2)))
+    )
+  */
+    /*
+    rps.copy(pose = rps.pose.copy(translation = Vector3D(
+      (rps.pose.translation(0) - 2 * shift.x / rps.imageSize.width)/f,
+      (rps.camera.principalPoint.y + 2 * shift.y / rps.imageSize.height)/g),
+      (rps.camera.principalPoint.y + 2 * shift.y / rps.imageSize.height)/g))
+    )*/
 
   }
 

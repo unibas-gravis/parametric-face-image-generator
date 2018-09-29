@@ -29,7 +29,7 @@ import scalismo.utils.Random
 object RandomFaces extends App {
 
   scalismo.initialize()
-  implicit val rnd: Random = Random(1986) // use random seed to reproduce your results
+  implicit val rnd: Random = Random(1950) // use random seed to reproduce your results
 
   //****************************************************************************
   // SETTINGS
@@ -82,7 +82,7 @@ object RandomFaces extends App {
 
         // move face in the middle of the image
         val centered = if (faceCenter == "facebox") {
-          helpers.centerFaceBox(uncentered)
+          helpers.centerFaceBox2D(uncentered)
         }
         else if (faceCenter == "landmark") {
           helpers.centerLandmark(uncentered)
@@ -101,6 +101,7 @@ object RandomFaces extends App {
         val imageData =
           for ((postfix, currentRenderer) <- helpers.renderingMethods) yield {
             if (bg && postfix == "") { // only allow different backgrounds for standard renderings
+              currentRenderer.renderImage(rps)
               require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
               val rndBG = helpers.loadBgs(rnd.scalaRandom.nextInt(helpers.loadBgs.length))
               val rndBGimg = PixelImageIO.read[RGBA](rndBG).get.resample(imageWidth, imageHeight)
