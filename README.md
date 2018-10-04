@@ -46,7 +46,7 @@ Usage
 
 ### Setup
 - installed [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) (Version 8.0 or higher recommended)
-- download jar and config file under `release`
+- download jar and config file under [`release`](https://github.com/unibas-gravis/parametric-face-image-generator/releases)
 - [download](http://gravis.dmi.unibas.ch/PMM/) Basel Face Model 2017
 - [download](http://gravis.dmi.unibas.ch/PMM/)  Basel Illumination Prior 2017
 - get a dataset with backgrounds, e.g. the [Describable Textures Dataset](http://www.robots.ox.ac.uk/~vgg/data/dtd/)
