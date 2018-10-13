@@ -1,0 +1,148 @@
+{
+  "__comment_on_comments__" : "Fields starting with '__comment*' are comments only and can be deleted without changing the functionality.",
+  "output-location": {
+    "__comment-1" : "The directory where output files are written in subdirectories.",
+    "__comment-2" : "./img/ for the generated images",
+    "__comment-3" : "./rps/ for the file containing the parameters",
+    "__comment-4" : "./csv/ for the file containing",
+    "output-directory": "data/100K_fewparams50_crop_noSensor/"
+  },
+  "backgrounds": {
+    "__comment-1" : "You can turn the background images off and on",
+    "__comment-2" : "All files are selected from a directory with a given filename extension.",
+    "insert-background-image": true,
+    "background-images-directory": "data/backgrounds/",
+    "background-image-extension": ".jpg"
+  },
+  "rendering-methods": {
+    "__comment-1" : "You can enable different rendering methods",
+    "__comment-2" : "render is the default rendering method it creates a realistic image",
+    "__comment-3" : "render-depth-map renders a depth map",
+    "__comment-4" : "render-color-correspondnece-image renders the correspondence to the reference mesh as 3d positions as color coded value",
+    "__comment-5" : "render-normals renders visualization of the vertex normals relative to the camera",
+    "__comment-6" : "render-albedo renders the albedo of the face instance",
+    "__comment-7" : "render-illumination renders a visualization of the illumination",   
+    "render": true,
+    "render-depth": false,
+    "render-color-correspondence-image": false,
+    "render-normals": false,
+    "render-albedo": false,
+    "render-illumination": false
+  },
+  "morphable-model-parameters": {
+    "__comment-1" : "This block configures how face identities are generated and if they have expressions.",
+    "__comment-2" : "You need to download the Basel Face Model and cite the paper in your publication.",
+    "number-of-ids-to-create": 1,
+    "number-of-samples-per-id": 5,
+    "model-filename": "data/bfm2017/model2017-1_bfm_nomouth_aflw.h5",
+    "__comment-1" : "A value of 0 for any dimension will return always the mean for this dimension",
+    "dimension-of-shape-space": 50,
+    "dimension-of-color-space": 50,
+    "dimension-of-expression-space": 30,
+    "add-expressions": false
+  },
+  "illumination-parameters": {
+    "__comment-1" : "Choose illumination distribution from Basel Illumination Prior 2017 from 'empirical', 'multiVariateNormal' or 'staticFrontal'.",
+    "__comment-2" : "Download the data into the directory and cite paper in your publication!",
+    "illumination-type": "empirical",
+    "illumination-prior-directory": "data/bip/parameters/",
+    "directional-light": {
+      "direction": [0.0, 0.0, 1.0],
+      "diffuse": [0.0, 0.0, 0.0],
+      "specular": [0.0, 0.0, 0.0],
+      "@type": "DirectionalLight",
+      "ambient": [0.0, 0.0, 0.0],
+      "shininess": 10.0
+    }
+  },
+  "pose-variation": {
+    "__comment-1" : "Distribution for the 3d- and 2d-pose of the face.",
+    "__comment-2" : "Each distribution is either a 'gaussian', a 'constant', a 'uniform' or a 'mixture' with weighted components.",
+    "__comment-3" : "A distribution for each 3d rotation angle yaw, roll and pitch in degrees.",
+    "__comment-4" : "A distribution for each 2d shift along the x- and y-axis in image pixels.",
+    "__comment-5" : "The scaling is the distribution of the focal length.",
+    "__comment-6" : "Choose the centering of the face in the image from 'none', 'facebox','landmark'.",
+    "yaw-distribution": {
+      "type": "uniform",
+      "lower": -40.0,
+      "higher": 40.0
+    },
+    "roll-distribution": {
+      "type": "uniform",
+      "lower": -15.0,
+      "higher": 15.0
+    },
+    "pitch-distribution": {
+      "type": "uniform",
+      "lower": -30.0,
+      "higher": 30.0
+    },
+    "x-translation-distribution": {
+      "type": "uniform",
+      "lower": 0.0,
+      "higher": 0.0
+    },
+    "y-translation-distribution": {
+      "type": "uniform",
+      "lower": 0.0,
+      "higher": 0.0
+    },
+    "scaling-distribution": {
+      "type": "uniform",
+      "lower": 1.0,
+      "higher": 1.0
+    },
+    "center-faces": "facebox"
+  },
+  "image-dimensions": {
+    "comment" : "The image size of the generated images in pixels.",
+    "image-width": 227,
+    "image-height": 227
+  },
+  "default-parameters": {
+    "__comment-1" : "Default parameters for the rendering process.",
+    "__comment-2" : "Please change these values only if you know what the code of the image-generator does.",
+    "color-transform": {
+      "gain": [1.0, 1.0, 1.0],
+      "colorContrast": 1.0,
+      "offset": [0.0, 0.0, 0.0]
+    },
+    "pose-transform": {
+      "scaling": 1.0,
+      "roll": 0.0,
+      "pitch": 0.0,
+      "yaw": 0.0,
+      "translation": [0.0, 0.0, -1000.0]
+    },
+    "view-transform": {
+      "translation": [0.0, 0.0, 0.0],
+      "roll": 0.0,
+      "yaw": 0.0,
+      "pitch": 0.0
+    },
+    "camera": {
+      "principalPoint": [0.0, 0.0],
+      "sensorSize": [15.0, 15.0],
+      "far": 1000000.0,
+      "orthographic": false,
+      "near": 10.0,
+      "focalLength": 50.0
+    }
+  },
+  "__comment-landmark-tags-1" : "The tags specifying which landmarks will be stored in the tlms file.",
+  "__comment-landmark-tags-2" : "Each landmark tags needs to be stored in the model .h5 file.",
+  "landmark-tags": ["right.nose.wing.outer", "right.eye.corner_inner", "right.nose.wing.tip", "right.ear.lobule.tip", "left.brow.center",
+    "left.eye.corner_outer", "center.lips.lower.inner", "center.chin.tip", "left.brow.outer", "right.nasolabial_fold.center", "left.lips.philtrum_ridge",
+    "left.eyebrow.inner_lower", "right.ear.helix.outer", "right.lips.philtrum_ridge", "left.ear.lobule.tip", "right.ear.antihelix.center",
+    "center.front.trichion", "left.ear.helix.top", "left.ear.helix.attachement", "right.ear.tragus.tip", "left.ear.tragus.tip", "right.brow.center",
+    "left.ear.antihelix.center", "right.ear.lobule.center", "center.lips.lower.outer", "right.ear.helix.center", "center.lips.upper.inner",
+    "left.nasolabial_fold.center", "right.nasolabial_fold.bottom", "left.eye.top", "left.ear.helix.center", "right.eye.top", "right.eyebrow.bend.upper",
+    "right.eyebrow.inner_lower", "left.nose.hole.center", "right.eyebrow.bend.lower", "left.ear.helix.outer", "center.nose.attachement_to_philtrum",
+    "left.eyebrow.inner_upper", "left.ear.lobule.attachement", "left.eyebrow.bend.upper", "left.eyebrow.bend.lower", "left.ear.antihelix.tip",
+    "right.ear.helix.top", "right.brow.outer", "left.eye.pupil.center", "right.nose.hole.center", "right.ear.helix.attachement",
+    "left.nasolabial_fold.bottom", "right.eye.bottom", "left.ear.lobule.center", "right.ear.antihelix.tip", "left.brow.inner", "right.eyebrow.inner_upper",
+    "center.lips.upper.outer", "left.nose.wing.outer", "left.nose.wing.tip", "right.brow.inner", "right.ear.lobule.attachement", "right.eye.pupil.center",
+    "left.eye.bottom", "left.lips.corner", "right.lips.corner", "right.eye.corner_outer", "left.eye.corner_inner", "center.nose.tip" ],
+  "__comment-format-version" : "The version flag is for reproducability in case the software and file-format changes.",
+  "format-version": "V1.0"
+}
