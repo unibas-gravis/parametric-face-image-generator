@@ -21,6 +21,7 @@ import java.io.File
 import faces.settings.ControlledFacesSettings
 import faces.utils.{Helpers, ParametricFaceImageGeneratorOptions}
 import scalismo.faces.color.{RGB, RGBA}
+import scalismo.faces.image.PixelImage
 import scalismo.faces.io.PixelImageIO
 import scalismo.faces.parameters._
 import scalismo.geometry.Vector
@@ -106,8 +107,11 @@ object ControlledFaces extends App {
                 // write images and their parameters
                 println(s"Generating \t ID:$id \t Sample:$n")
                 for((img, postifx) <- imageData) {
+                  val defaultMask = PixelImage(img.width, img.height, (x, y) => {
+                    RGBA.Black
+                  })
                   helpers.writeRenderParametersAndLandmarks(centered, id, n, img)
-                  helpers.writeImg(img, id, n, postifx, img)
+                  helpers.writeImg(img, id, n, postifx, defaultMask)
                 }
 
               }

@@ -56,6 +56,7 @@ It is possible to have other types of masking rendered over the face. The pictur
 
 ![0_0](data/example_images/other1.png)![0_1](data/example_images/other2.png)![0_2](data/example_images/other3.png)![0_3](data/example_images/other4.png)
 
+**Note, occlusions are only supported in random mode!**
 
 ### Output
 In addition to the facial images and the masks, the software provides csv-files, rps-files and tlms-files. If an occlusion gets rendered over a landmark, it gets disabled.

@@ -296,6 +296,9 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   }
 
   def writeImg(img: PixelImage[RGBA], id: Int, n: Int, postfix: String, mask: PixelImage[RGBA]): PixelImage[RGBA] = {
+
+
+
     val outImgPathID = outImgPath + id + "/"
     if (!Path(outImgPathID).exists) {
       Path(outImgPathID).createDirectory(failIfExists = false)
