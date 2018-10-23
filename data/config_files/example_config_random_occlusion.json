@@ -144,7 +144,7 @@
     }
   },
   "occlusion":{
-    "render-occlusion": false,
+    "render-occlusion": true,
     "__comment-occlusionMode-1": "The options for the occlusionMode are:",
     "__comment-occlusionMode-2": "eyes - This mode retrieves the location of the eyes from the internally generated tlms file and renders black circles over both eyes on the face.",
     "__comment-occlusionMode-3": "random-1 - A hand hides the picture on a random place in a random orientation.",

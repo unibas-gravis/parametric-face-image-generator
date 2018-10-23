@@ -104,9 +104,9 @@ object RandomFaces extends App {
               require(helpers.loadBgs.nonEmpty, "no Background files with type " + cfg.backgrounds.bgType + " found in " + cfg.backgrounds.bgPath)
               val rndBG = helpers.loadBgs(rnd.scalaRandom.nextInt(helpers.loadBgs.length))
               val rndBGimg = PixelImageIO.read[RGBA](rndBG).get.resample(imageWidth, imageHeight)
-              val MorphableModel = currentRenderer.renderImage(rps)
-              val FaceWithBackground = MorphableModel.zip(rndBGimg)
-              (FaceWithBackground.map(p => if (p._1.a < 0.5) p._2 else p._1), postfix, FaceWithBackground.map(p => if (p._1.a < 0.5) RGBA.Black else RGBA.White))
+              val renderedFace = currentRenderer.renderImage(rps)
+              val faceWithBackground = renderedFace.zip(rndBGimg)
+              (faceWithBackground.map(p => if (p._1.a < 0.5) p._2 else p._1), postfix, faceWithBackground.map(p => if (p._1.a < 0.5) RGBA.Black else RGBA.White))
             }
             else {
               val MorphableModel = currentRenderer.renderImage(rps)
