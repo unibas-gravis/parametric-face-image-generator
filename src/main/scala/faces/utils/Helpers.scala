@@ -20,6 +20,7 @@ import java.io.File
 import java.net.URI
 
 import breeze.linalg.DenseVector
+import faces.renderer.ColorMapRenderer
 import faces.settings.FacesSettings
 import scalismo.faces.color.RGBA
 import scalismo.faces.image.PixelImage
@@ -77,26 +78,33 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     val normalsGenerator = new NormalsRendererRGBA(renderer, RGBA.BlackTransparent)
     val albedoGenerator = new AlbedoRenderer(renderer, RGBA.BlackTransparent)
     val illuminationGenerator = new IlluminationVisualizationRenderer(renderer, RGBA.BlackTransparent)
+
     //additional rendering methods
     val dm = if(cfg.renderingMethods.renderDepthMap) {
       Some(("_depth", depthMapGenerator))
-    }else None
+    } else None
     val cm = if(cfg.renderingMethods.renderColorCorrespondenceImage) {
       Some(("_correspondence", colorCorrespondenceGen))
-    }else None
+    } else None
     val nm = if(cfg.renderingMethods.renderNormals) {
       Some(("_normals", normalsGenerator))
-    }else None
+    } else None
     val am = if(cfg.renderingMethods.renderAlbedo) {
       Some(("_albedo", albedoGenerator))
-    }else None
+    } else None
     val im = if(cfg.renderingMethods.renderIllumination) {
       Some(("_illumination", illuminationGenerator))
-    }else None
+    } else None
     val rn = if(cfg.renderingMethods.render) {
       Some(("", renderer))
-    }else None
-    IndexedSeq(rn, dm, cm, nm, am, im).flatten
+    } else None
+    val rm = if(cfg.renderingMethods.renderRegionMaps) {
+      cfg.regionMaps.map{ regm =>
+        val regionMap = TextureMappedPropertyIO.read[RGBA](regm.mapping,regm.map)
+        Some((s"_${regm.name}", new ColorMapRenderer(regionMap,renderer)))
+      }
+    } else Seq(None)
+    (IndexedSeq(rn, dm, cm, nm, am, im) ++ rm).flatten
   }
 
   // generates a random instance of a Morphable Model following Gaussian distributions
