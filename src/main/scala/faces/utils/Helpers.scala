@@ -100,7 +100,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     } else None
     val rm = if(cfg.renderingMethods.renderRegionMaps) {
       cfg.regionMaps.map{ regm =>
-        val regionMap = TextureMappedPropertyIO.read[RGBA](regm.mapping,regm.map)
+        val regionMap = TextureMappedPropertyIO.read[RGBA](new File(regm.mapping), new File(regm.map))
         Some((s"_${regm.name}", new ColorMapRenderer(regionMap,renderer)))
       }
     } else Seq(None)

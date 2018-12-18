@@ -13,7 +13,8 @@
     "render-color-correspondence-image": true,
     "render-normals": true,
     "render-albedo": true,
-    "render-illumination": true
+    "render-illumination": true,
+    "render-region-maps": true
   },
   "morphable-model-parameters": {
     "number-of-ids-to-create": 1,
@@ -93,5 +94,12 @@
       "focalLength": 50.0
     }
   },
+  "region-maps": [
+    {
+      "name": "default",
+      "mapping": "data/regions/default.json",
+      "region-map": "data/regions/default.png"
+    }
+  ],
   "format-version": "V1.0"
 }
