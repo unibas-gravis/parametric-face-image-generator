@@ -15,7 +15,7 @@
     "__comment-5" : "render-normals renders visualization of the vertex normals relative to the camera",
     "__comment-6" : "render-albedo renders the albedo of the face instance",
     "__comment-7" : "render-illumination renders a visualization of the illumination",    
-    "__comment-8" : "render-region-maps renders a visualization of the illumination",
+    "__comment-8" : "render-region-maps renders a specified texture mapped on each face without illumination",
     "render": true,
     "render-depth": true,
     "render-color-correspondence-image": true,
@@ -23,9 +23,6 @@
     "render-albedo": true,
     "render-illumination": true,
     "render-region-maps": true
-  },
-  "correspondence-maps": {
-    "segmantic-regions": ""
   },
   "morphable-model-parameters": {
     "number-of-ids-to-create": 1,
@@ -116,7 +113,7 @@
   "region-maps": [
     {
       "name": "default",
-      "mapping": "data/regions/default.json",
+      "mapping": "data/regions/bfm.json",
       "region-map": "data/regions/default.png"
     }
   ],

@@ -101,7 +101,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     val rm = if(cfg.renderingMethods.renderRegionMaps) {
       cfg.regionMaps.map{ regm =>
         val regionMap = TextureMappedPropertyIO.read[RGBA](new File(regm.mapping), new File(regm.map))
-        Some((s"_${regm.name}", new ColorMapRenderer(regionMap,renderer)))
+        Some((s"_${regm.name}", new ColorMapRenderer(regionMap,renderer, RGBA.BlackTransparent)))
       }
     } else Seq(None)
     (IndexedSeq(rn, dm, cm, nm, am, im) ++ rm).flatten

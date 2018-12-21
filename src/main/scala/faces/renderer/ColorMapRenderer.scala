@@ -21,11 +21,16 @@ import scalismo.faces.mesh.TextureMappedProperty
 import scalismo.faces.parameters.{ParametricRenderer, RenderParameter}
 import scalismo.faces.sampling.face.{CorrespondenceColorImageRenderer, CorrespondenceMoMoRenderer, RenderFromCorrespondenceImage}
 
-case class ColorMapRenderer(colorMap: TextureMappedProperty[RGBA], correspondenceMoMoRenderer: CorrespondenceMoMoRenderer) extends RenderFromCorrespondenceImage[RGBA](correspondenceMoMoRenderer){
+case class ColorMapRenderer(colorMap: TextureMappedProperty[RGBA], correspondenceMoMoRenderer: CorrespondenceMoMoRenderer, clearColor: RGBA = RGBA.BlackTransparent) extends RenderFromCorrespondenceImage[RGBA](correspondenceMoMoRenderer){
 
   override def renderImage(parameters: RenderParameter): PixelImage[RGBA] = {
     val face = correspondenceMoMoRenderer.instance(parameters)
-    ParametricRenderer.renderPropertyImage(parameters,face.shape,colorMap).map(_.getOrElse(RGBA.BlackTransparent))
+    val correspondenceImage = correspondenceMoMoRenderer.renderCorrespondenceImage(parameters)
+    correspondenceImage.map { optFrag =>
+      optFrag.map { fragment =>
+        colorMap(fragment.triangleId, fragment.worldBCC)
+      }.getOrElse(clearColor)
+    }
   }
 
 }

@@ -67,10 +67,4 @@ object TextureMappedPropertyIO extends App {
     writeASTToStream(mapping, os)
   }
 
-//
-//  val refWithTextureMapping = MeshIO.read(new File("/export/faces/model/model2012.2/reference/mean2012_l7_bfm_pascaltex.msh.gz")).get.texturedMesh3D.get
-//  write(refWithTextureMapping.texture,"/tmp/","pascal")
-//  val tm = read[RGBA]("/tmp","pascal")
-//
-//  MeshIO.write(ColorNormalMesh3D(refWithTextureMapping.shape,tm,refWithTextureMapping.shape.vertexNormals),new File("/tmp/pascal.ply"))
 }
