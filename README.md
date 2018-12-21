@@ -42,7 +42,7 @@ You can render different image modalities such as e.g. depth images (top row), c
 ![0_0](data/example_images/0_1_region_mask_bfm09.png)![0_1](data/example_images/0_2_region_mask_bfm09.png)![0_2](data/example_images/0_3_region_mask_bfm09.png)
 
 
-You can render different region maps, while we provide a default one.
+You can render different region maps, while we provide two default ones.
 
 
 ### Facial Landmarks
