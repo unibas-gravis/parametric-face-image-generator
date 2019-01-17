@@ -35,6 +35,16 @@ In the "random" setup (bottom row), the model parameters are sampled randomly fr
 
 You can render different image modalities such as e.g. depth images (top row), color coded correspondence images (bottom row), normals, albedo or illumination.
 
+### Rendering Face Regions
+
+![0_0](data/example_images/0_1_region_mask.png)![0_1](data/example_images/0_2_region_mask.png)![0_2](data/example_images/0_3_region_mask.png)
+
+![0_0](data/example_images/0_1_region_mask_bfm09.png)![0_1](data/example_images/0_2_region_mask_bfm09.png)![0_2](data/example_images/0_3_region_mask_bfm09.png)
+
+
+You can render different region maps, while we provide two default ones.
+
+
 ### Facial Landmarks
 
 For each face image the location and visibilty of 19 facial landmarks is written in a .tlms file in the following format:

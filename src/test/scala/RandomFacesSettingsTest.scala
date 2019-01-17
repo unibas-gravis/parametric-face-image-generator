@@ -45,7 +45,8 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         renderColorCorrespondenceImage = true,
         renderNormals= true,
         renderAlbedo = true,
-        renderIllumination = true
+        renderIllumination = true,
+        renderRegionMaps = true
       ),
       MorphableModelParameters(
         nIds = 2,
@@ -87,6 +88,9 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         "right.lips.corner",
         "left.nose.wing.tip",
         "right.nose.wing.tip"
+      ),
+      IndexedSeq[TextureMappedPropertyDescription](
+        TextureMappedPropertyDescription("default","data/regions/default.json","data/regions/default.png")
       ),
       IlluminationParameters(illumination = "multiVariateNormal",
         illuminationPriorFn = "data/bip/parameters/",
@@ -242,7 +246,8 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         renderColorCorrespondenceImage = true,
         renderNormals= true,
         renderAlbedo = true,
-        renderIllumination = true
+        renderIllumination = true,
+        renderRegionMaps = true
       ),
       MorphableModelParameters(
         nIds = 2,
@@ -284,6 +289,9 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         "right.lips.corner",
         "left.nose.wing.tip",
         "right.nose.wing.tip"
+      ),
+      IndexedSeq[TextureMappedPropertyDescription](
+        TextureMappedPropertyDescription("default","data/regions/default.json","data/regions/default.png")
       ),
       ControlledIlluminationVariation(0 until 10 by 1),
       ControlledPoseVariation(yawRange = -90 to 90 by 45,

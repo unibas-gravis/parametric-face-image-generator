@@ -111,6 +111,7 @@ object RandomFacesSettingsJsonFormatV1 {
           ("image-dimensions", obj.imageDimensions.toJson),
           ("default-parameters", obj.defaultParameters.toJson),
           ("landmark-tags", obj.landmarkTags.toJson),
+          ("region-maps", obj.regionMaps.toJson),
           (versionFieldName, FacesSettingsJsonFormatV1.version.toJson)
         )
       )
@@ -132,6 +133,7 @@ object RandomFacesSettingsJsonFormatV1 {
       val imageDimensions = fields("image-dimensions").convertTo[ImageDimensions]
       val defaultParameters = fields("default-parameters").convertTo[DefaultParameters]
       val landmarkTags = fields("landmark-tags").convertTo[IndexedSeq[String]]
+      val regionMaps = fields("region-maps").convertTo[IndexedSeq[TextureMappedPropertyDescription]]
 
       new RandomFacesSettings(
         outputLocation,
@@ -141,6 +143,7 @@ object RandomFacesSettingsJsonFormatV1 {
         imageDimensions,
         defaultParameters,
         landmarkTags,
+        regionMaps,
         illuminationParameters,
         poseVariation
       )
@@ -257,6 +260,7 @@ object ControlledFacesSettingsJsonFormatV1 {
           ("image-dimensions", obj.imageDimensions.toJson),
           ("default-parameters", obj.defaultParameters.toJson),
           ("landmark-tags", obj.landmarkTags.toJson),
+          ("region-maps", obj.regionMaps.toJson),
           (versionFieldName, FacesSettingsJsonFormatV1.version.toJson)
         )
       )
@@ -279,6 +283,7 @@ object ControlledFacesSettingsJsonFormatV1 {
       val imageDimensions = fields("image-dimensions").convertTo[ImageDimensions]
       val defaultParameters = fields("default-parameters").convertTo[DefaultParameters]
       val landmarkTags = fields("landmark-tags").convertTo[IndexedSeq[String]]
+      val regionMaps = fields("region-maps").convertTo[IndexedSeq[TextureMappedPropertyDescription]]
 
 
       new ControlledFacesSettings(
@@ -289,6 +294,7 @@ object ControlledFacesSettingsJsonFormatV1 {
         imageDimensions,
         defaultParameters,
         landmarkTags,
+        regionMaps,
         illuminationDirectionRange,
         poseVariation,
         backgroundRange
@@ -309,7 +315,8 @@ object RenderingMethodsJsonFormatV1 {
         "render-color-correspondence-image" -> JsBoolean(obj.renderColorCorrespondenceImage),
         "render-normals" -> JsBoolean(obj.renderNormals),
         "render-albedo" -> JsBoolean(obj.renderAlbedo),
-        "render-illumination" -> JsBoolean(obj.renderIllumination)
+        "render-illumination" -> JsBoolean(obj.renderIllumination),
+        "render-region-maps" -> JsBoolean(obj.renderRegionMaps)
       )
       JsObject(contents)
     }
@@ -322,7 +329,8 @@ object RenderingMethodsJsonFormatV1 {
         renderColorCorrespondenceImage = fields("render-color-correspondence-image").convertTo[Boolean],
         renderNormals = fields("render-normals").convertTo[Boolean],
         renderAlbedo = fields("render-albedo").convertTo[Boolean],
-        renderIllumination = fields("render-illumination").convertTo[Boolean]
+        renderIllumination = fields("render-illumination").convertTo[Boolean],
+        renderRegionMaps= fields("render-region-maps").convertTo[Boolean]
       )
     }
   }
@@ -349,6 +357,26 @@ object FacesSettingsJsonFormatV1 {
       val outPath = fields("output-directory").convertTo[String]
 
       OutputLocation(outPath)
+    }
+  }
+
+  implicit val TextureMappedPropertyDescriptionFormat: RootJsonFormat[TextureMappedPropertyDescription] = new RootJsonFormat[TextureMappedPropertyDescription] {
+    override def write(obj: TextureMappedPropertyDescription): JsValue = {
+      new JsObjectOrdered(ListMap(
+        ("name", obj.name.toJson),
+        ("mapping", obj.mapping.toJson),
+        ("region-map", obj.map.toJson)
+      ))
+    }
+
+    override def read(json: JsValue): TextureMappedPropertyDescription = {
+      val fields = json.asJsObject(s"expected Backgounds object, got: $json").fields
+
+      val name = fields("name").convertTo[String]
+      val mapping = fields("mapping").convertTo[String]
+      val regionMap = fields("region-map").convertTo[String]
+
+      TextureMappedPropertyDescription(name,mapping,regionMap)
     }
   }
 

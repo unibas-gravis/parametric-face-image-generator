@@ -27,6 +27,7 @@ case class ControlledFacesSettings(
                                override val imageDimensions: ImageDimensions,
                                override val defaultParameters: DefaultParameters,
                                override val landmarkTags: IndexedSeq[String],
+                               override val regionMaps: IndexedSeq[TextureMappedPropertyDescription],
                                illuminationVariation: ControlledIlluminationVariation,
                                poseVariation: ControlledPoseVariation,
                                backgroundVariation: ControlledBackgroundVariation

@@ -21,13 +21,15 @@
     "__comment-4" : "render-color-correspondnece-image renders the correspondence to the reference mesh as 3d positions as color coded value",
     "__comment-5" : "render-normals renders visualization of the vertex normals relative to the camera",
     "__comment-6" : "render-albedo renders the albedo of the face instance",
-    "__comment-7" : "render-illumination renders a visualization of the illumination",    
+    "__comment-7" : "render-illumination renders a visualization of the illumination",
+    "__comment-8" : "render-region-maps renders a specified texture mapped on each face without illumination",
     "render": true,
     "render-depth": true,
     "render-color-correspondence-image": true,
     "render-normals": true,
     "render-albedo": true,
-    "render-illumination": true
+    "render-illumination": true,
+    "render-region-maps": true
   },
   "morphable-model-parameters": {
     "__comment-1" : "This block configures how face identities are generated and if they have expressions.",
@@ -149,6 +151,13 @@
     "right.eye.corner_outer", "right.eye.corner_inner", "right.eye.pupil.center", "left.eyebrow.bend.lower",
     "left.eyebrow.inner_lower", "right.eyebrow.bend.lower", "right.eyebrow.inner_lower", "left.lips.corner",
     "right.lips.corner", "left.nose.wing.tip", "right.nose.wing.tip"],
+  "region-maps": [
+    {
+      "name": "default",
+      "mapping": "data/regions/face12.json",
+      "region-map": "data/regions/default.png"
+    }
+  ],
   "__comment-format-version" : "The version flag is for reproducability in case the software and file-format changes.",
   "format-version": "V1.0"
 }

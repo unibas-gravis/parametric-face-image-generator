@@ -16,6 +16,8 @@
 package faces.settings
 
 import faces.utils.{BaselIlluminationPrior, Distribution}
+import scalismo.faces.color.RGBA
+import scalismo.faces.mesh.TextureMappedProperty
 import scalismo.faces.parameters._
 import scalismo.geometry.{Vector, _3D}
 
@@ -27,8 +29,15 @@ abstract class FacesSettings{
   val imageDimensions: ImageDimensions
   val defaultParameters: DefaultParameters
   val landmarkTags: IndexedSeq[String]
+  val regionMaps: IndexedSeq[TextureMappedPropertyDescription]
 }
 
+
+case class TextureMappedPropertyDescription(
+  name: String,
+  mapping: String,
+  map: String
+)
 
 case class OutputLocation(
                            outPath: String
@@ -107,4 +116,4 @@ case class DefaultParameters(
                               colorTransform: ColorTransform
                             )
 
-case class RenderingMethods(render: Boolean, renderDepthMap: Boolean, renderColorCorrespondenceImage: Boolean, renderNormals: Boolean, renderAlbedo: Boolean, renderIllumination: Boolean)
+case class RenderingMethods(render: Boolean, renderDepthMap: Boolean, renderColorCorrespondenceImage: Boolean, renderNormals: Boolean, renderAlbedo: Boolean, renderIllumination: Boolean, renderRegionMaps: Boolean)
