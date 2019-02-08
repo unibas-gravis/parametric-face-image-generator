@@ -84,6 +84,9 @@ object RandomFaces extends App {
         val centered = if (faceCenter == "facebox") {
           helpers.centerFaceBox(uncentered)
         }
+        else if (faceCenter == "faceboxDL") {
+          helpers.centerFaceBoxDeepLearning(uncentered)
+        }
         else if (faceCenter == "landmark") {
           helpers.centerLandmark(uncentered)
         }

@@ -214,6 +214,54 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
 
   }
 
+  // center the face in a way that simulates a face detection result (including uncertainty);
+  // mostly suited for deep learning applications
+  def centerFaceBoxDeepLearning(rps: RenderParameter, scaling : Double = 2): RenderParameter = {
+
+    val lmTags = Seq(
+      "center.nose.tip",
+      "left.eye.corner_outer",
+      "left.lips.corner",
+      "right.lips.corner",
+      "right.eye.corner_outer"
+    )
+
+    val lmTagsNoseWIng = Seq(
+      "left.nose.wing.tip",
+      "right.nose.wing.tip"
+    )
+
+    val lms = lmTags.map(tag => tag -> renderer.renderLandmark(tag, rps).get ).toMap
+    val nlms = lmTagsNoseWIng.map(tag => tag -> renderer.renderLandmark(tag, rps).get ).toMap
+
+
+    val xmax = lms.values.map( _.point.x ).max
+    val xmin = lms.values.map( _.point.x ).min
+
+    val ymax = lms.values.map( _.point.y ).max
+    val ymin = lms.values.map( _.point.y ).min
+
+    val maxSide = math.max(xmax-xmin, ymax-ymin) * scaling
+
+    //val middleOfFace = findCenterWithNoseWings(rps).get
+    val middleOfFace = (nlms("left.nose.wing.tip").point.toVector+(nlms("right.nose.wing.tip").point.toVector - nlms("left.nose.wing.tip").point.toVector)*0.5).toPoint
+
+    val centerOfImage = Point2D(imageWidth / 2, imageHeight / 2)
+
+    val shift = middleOfFace - centerOfImage
+
+    val f = maxSide.toDouble/rps.imageSize.width.toDouble
+    val rnd =scala.util.Random.nextFloat()-0.5
+    // shifting by moving the principal point (normalized device coordinates [-1, 1], y axis upwards)
+    rps.copy(camera = rps.camera.copy(principalPoint = Point2D(
+      (rps.camera.principalPoint.x - 1.5 * shift.x / rps.imageSize.width)/f,
+      (rps.camera.principalPoint.y + 1.5 * shift.y / rps.imageSize.height)/f),
+      sensorSize = Vector2D(9.2+rnd, 9.2+rnd))
+
+    )
+
+  }
+
   // center the face around chin, eyes, nose and ears and crop a face box (change here if you want to center another point)
   def centerFaceBox(rps: RenderParameter, scaling : Double = 1): RenderParameter = {
 
