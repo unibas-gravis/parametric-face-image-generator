@@ -5,7 +5,7 @@
     "__comment-2" : "./img/ for the generated images",
     "__comment-3" : "./rps/ for the file containing the parameters",
     "__comment-4" : "./csv/ for the file containing",
-    "output-directory": "data/100K_fewparams50_crop/"
+    "output-directory": "data/AFLW_frontal/"
   },
   "backgrounds": {
     "__comment-1" : "You can turn the background images off and on",
@@ -32,12 +32,12 @@
   "morphable-model-parameters": {
     "__comment-1" : "This block configures how face identities are generated and if they have expressions.",
     "__comment-2" : "You need to download the Basel Face Model and cite the paper in your publication.",
-    "number-of-ids-to-create": 20000,
+    "number-of-ids-to-create": 10000,
     "number-of-samples-per-id": 5,
     "model-filename": "data/bfm2017/model2017-1_bfm_nomouth_aflw.h5",
     "__comment-1" : "A value of 0 for any dimension will return always the mean for this dimension",
-    "dimension-of-shape-space": 50,
-    "dimension-of-color-space": 50,
+    "dimension-of-shape-space": 199,
+    "dimension-of-color-space": 199,
     "dimension-of-expression-space": 30,
     "add-expressions": false
   },
@@ -64,8 +64,8 @@
     "__comment-6" : "Choose the centering of the face in the image from 'none', 'facebox','landmark'.",
     "yaw-distribution": {
       "type": "uniform",
-      "lower": -40.0,
-      "higher": 40.0
+      "lower": -25.0,
+      "higher": 25.0
     },
     "roll-distribution": {
       "type": "uniform",
