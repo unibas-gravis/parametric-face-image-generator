@@ -90,7 +90,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         "right.nose.wing.tip"
       ),
       IndexedSeq[TextureMappedPropertyDescription](
-        TextureMappedPropertyDescription("default","data/regions/default.json","data/regions/default.png")
+        TextureMappedPropertyDescription("default","data/regions/face12.json","data/regions/default.png")
       ),
       IlluminationParameters(illumination = "multiVariateNormal",
         illuminationPriorFn = "data/bip/parameters/",
@@ -291,7 +291,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         "right.nose.wing.tip"
       ),
       IndexedSeq[TextureMappedPropertyDescription](
-        TextureMappedPropertyDescription("default","data/regions/default.json","data/regions/default.png")
+        TextureMappedPropertyDescription("default","data/regions/face12.json","data/regions/default.png")
       ),
       ControlledIlluminationVariation(0 until 10 by 1),
       ControlledPoseVariation(yawRange = -90 to 90 by 45,
