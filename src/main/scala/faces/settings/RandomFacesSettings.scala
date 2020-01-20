@@ -19,7 +19,8 @@ import java.io.{File, PrintWriter}
 
 import scala.io.Source
 
-case class RandomFacesSettings(  override val outputLocation: OutputLocation,
+case class RandomFacesSettings(  override val general: General,
+                                 override val outputLocation: OutputLocation,
                                  override val backgrounds: Backgrounds,
                                  override val renderingMethods: RenderingMethods,
                                  override val morphableModelParameters: MorphableModelParameters,

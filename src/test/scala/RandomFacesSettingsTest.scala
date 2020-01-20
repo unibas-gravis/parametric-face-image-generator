@@ -34,6 +34,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
 
 
     val Default = RandomFacesSettings(
+      General(seed = 1986),
       OutputLocation(outPath = "data/output/"),
       Backgrounds(
         bgPath = "data/backgrounds/",
@@ -55,6 +56,9 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         nColor = 199,
         expressions = true,
         nExpression = 100,
+        colorDistribution = GaussianDistribution(0,1),
+        shapeDistribution = GaussianDistribution(0,1),
+        expressionDistribution = GaussianDistribution(0,1),
         modelFn = "data/bfm2017/model2017-1_face12_nomouth.h5"),
       ImageDimensions(imageWidth = 227,
         imageHeight = 227),
@@ -120,6 +124,8 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       RandomFacesSettings.write(default,f)
       val cfg = RandomFacesSettings.read(f)
 
+      default.general.seed shouldBe cfg.general.seed
+
       default.outputLocation.outPath shouldBe cfg.outputLocation.outPath
 
       default.backgrounds.bg shouldBe cfg.backgrounds.bg
@@ -132,6 +138,9 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.morphableModelParameters.nShape shouldBe cfg.morphableModelParameters.nShape
       default.morphableModelParameters.nColor shouldBe cfg.morphableModelParameters.nColor
       default.morphableModelParameters.nExpression shouldBe cfg.morphableModelParameters.nExpression
+      default.morphableModelParameters.colorDistribution shouldBe cfg.morphableModelParameters.colorDistribution
+      default.morphableModelParameters.shapeDistribution shouldBe cfg.morphableModelParameters.shapeDistribution
+      default.morphableModelParameters.expressionDistribution shouldBe cfg.morphableModelParameters.expressionDistribution
       default.morphableModelParameters.expressions shouldBe cfg.morphableModelParameters.expressions
 
       default.illuminationParameters.illumination shouldBe cfg.illuminationParameters.illumination
@@ -159,6 +168,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.defaultParameters.colorTransform shouldBe cfg.defaultParameters.colorTransform
 
 
+      default.general shouldBe cfg.general
       default.outputLocation shouldBe cfg.outputLocation
       default.backgrounds shouldBe cfg.backgrounds
       default.morphableModelParameters shouldBe cfg.morphableModelParameters
@@ -179,6 +189,8 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
 
       val default = Default
 
+      default.general.seed shouldBe cfg.general.seed
+
       default.outputLocation.outPath shouldBe cfg.outputLocation.outPath
 
       default.backgrounds.bg shouldBe cfg.backgrounds.bg
@@ -191,6 +203,9 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.morphableModelParameters.nShape shouldBe cfg.morphableModelParameters.nShape
       default.morphableModelParameters.nColor shouldBe cfg.morphableModelParameters.nColor
       default.morphableModelParameters.nExpression shouldBe cfg.morphableModelParameters.nExpression
+      default.morphableModelParameters.colorDistribution shouldBe cfg.morphableModelParameters.colorDistribution
+      default.morphableModelParameters.shapeDistribution shouldBe cfg.morphableModelParameters.shapeDistribution
+      default.morphableModelParameters.expressionDistribution shouldBe cfg.morphableModelParameters.expressionDistribution
       default.morphableModelParameters.expressions shouldBe cfg.morphableModelParameters.expressions
 
       default.illuminationParameters.illumination shouldBe cfg.illuminationParameters.illumination
@@ -213,7 +228,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.defaultParameters.camera shouldBe cfg.defaultParameters.camera
       default.defaultParameters.colorTransform shouldBe cfg.defaultParameters.colorTransform
 
-
+      default.general shouldBe cfg.general
       default.outputLocation shouldBe cfg.outputLocation
       default.backgrounds shouldBe cfg.backgrounds
       default.morphableModelParameters shouldBe cfg.morphableModelParameters
@@ -235,6 +250,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
 
 
     val Default = ControlledFacesSettings(
+      General(seed=1986),
       OutputLocation(outPath = "data/output/"),
       Backgrounds(
         bgPath = "data/backgrounds/",
@@ -256,6 +272,9 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         nColor = 199,
         expressions = true,
         nExpression = 100,
+        colorDistribution = GaussianDistribution(0,1),
+        shapeDistribution = GaussianDistribution(0,1),
+        expressionDistribution = GaussianDistribution(0,1),
         modelFn = "data/bfm2017/model2017-1_face12_nomouth.h5"),
       ImageDimensions(imageWidth = 227,
         imageHeight = 227),
@@ -310,6 +329,8 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       ControlledFacesSettings.write(default,f)
       val cfg = ControlledFacesSettings.read(f)
 
+      default.general.seed shouldBe cfg.general.seed
+
       default.outputLocation.outPath shouldBe cfg.outputLocation.outPath
 
       default.backgrounds.bg shouldBe cfg.backgrounds.bg
@@ -322,6 +343,9 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.morphableModelParameters.nShape shouldBe cfg.morphableModelParameters.nShape
       default.morphableModelParameters.nColor shouldBe cfg.morphableModelParameters.nColor
       default.morphableModelParameters.nExpression shouldBe cfg.morphableModelParameters.nExpression
+      default.morphableModelParameters.colorDistribution shouldBe cfg.morphableModelParameters.colorDistribution
+      default.morphableModelParameters.shapeDistribution shouldBe cfg.morphableModelParameters.shapeDistribution
+      default.morphableModelParameters.expressionDistribution shouldBe cfg.morphableModelParameters.expressionDistribution
       default.morphableModelParameters.expressions shouldBe cfg.morphableModelParameters.expressions
 
       default.illuminationVariation.illuminationDirectionRange shouldBe cfg.illuminationVariation.illuminationDirectionRange
@@ -340,7 +364,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.defaultParameters.camera shouldBe cfg.defaultParameters.camera
       default.defaultParameters.colorTransform shouldBe cfg.defaultParameters.colorTransform
 
-
+      default.general shouldBe cfg.general
       default.outputLocation shouldBe cfg.outputLocation
       default.backgrounds shouldBe cfg.backgrounds
       default.morphableModelParameters shouldBe cfg.morphableModelParameters
@@ -362,6 +386,8 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
 
       val default = Default
 
+      default.general.seed shouldBe cfg.general.seed
+
       default.outputLocation.outPath shouldBe cfg.outputLocation.outPath
 
       default.backgrounds.bg shouldBe cfg.backgrounds.bg
@@ -374,6 +400,9 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.morphableModelParameters.nShape shouldBe cfg.morphableModelParameters.nShape
       default.morphableModelParameters.nColor shouldBe cfg.morphableModelParameters.nColor
       default.morphableModelParameters.nExpression shouldBe cfg.morphableModelParameters.nExpression
+      default.morphableModelParameters.colorDistribution shouldBe cfg.morphableModelParameters.colorDistribution
+      default.morphableModelParameters.shapeDistribution shouldBe cfg.morphableModelParameters.shapeDistribution
+      default.morphableModelParameters.expressionDistribution shouldBe cfg.morphableModelParameters.expressionDistribution
       default.morphableModelParameters.expressions shouldBe cfg.morphableModelParameters.expressions
 
       default.illuminationVariation.illuminationDirectionRange shouldBe cfg.illuminationVariation.illuminationDirectionRange
@@ -393,6 +422,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
       default.defaultParameters.colorTransform shouldBe cfg.defaultParameters.colorTransform
 
 
+      default.general shouldBe cfg.general
       default.outputLocation shouldBe cfg.outputLocation
       default.backgrounds shouldBe cfg.backgrounds
       default.morphableModelParameters shouldBe cfg.morphableModelParameters

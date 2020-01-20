@@ -20,18 +20,19 @@ import java.io.{File, PrintWriter}
 import scala.io.Source
 
 case class ControlledFacesSettings(
-                               override val outputLocation: OutputLocation,
-                               override val backgrounds: Backgrounds,
-                               override val renderingMethods: RenderingMethods,
-                               override val morphableModelParameters: MorphableModelParameters,
-                               override val imageDimensions: ImageDimensions,
-                               override val defaultParameters: DefaultParameters,
-                               override val landmarkTags: IndexedSeq[String],
-                               override val regionMaps: IndexedSeq[TextureMappedPropertyDescription],
-                               illuminationVariation: ControlledIlluminationVariation,
-                               poseVariation: ControlledPoseVariation,
-                               backgroundVariation: ControlledBackgroundVariation
-                             ) extends FacesSettings {
+                                    override val general: General,
+                                    override val outputLocation: OutputLocation,
+                                    override val backgrounds: Backgrounds,
+                                    override val renderingMethods: RenderingMethods,
+                                    override val morphableModelParameters: MorphableModelParameters,
+                                    override val imageDimensions: ImageDimensions,
+                                    override val defaultParameters: DefaultParameters,
+                                    override val landmarkTags: IndexedSeq[String],
+                                    override val regionMaps: IndexedSeq[TextureMappedPropertyDescription],
+                                    illuminationVariation: ControlledIlluminationVariation,
+                                    poseVariation: ControlledPoseVariation,
+                                    backgroundVariation: ControlledBackgroundVariation
+                                  ) extends FacesSettings {
 }
 
 

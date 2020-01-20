@@ -107,26 +107,26 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     (IndexedSeq(rn, dm, cm, nm, am, im) ++ rm).flatten
   }
 
-  // generates a random instance of a Morphable Model following Gaussian distributions
+  // generates a random instance of a Morphable Model
   def rndMoMoInstance: MoMoInstance = {
     if (expressions)
       MoMoInstance(
-        if (nShape == 0) IndexedSeq(0.0) else IndexedSeq.fill(nShape)(rnd.scalaRandom.nextGaussian()),
-        if (nColor == 0) IndexedSeq(0.0) else IndexedSeq.fill(nColor)(rnd.scalaRandom.nextGaussian()),
-        if (nExpression == 0) IndexedSeq(0.0) else IndexedSeq.fill(nExpression)(rnd.scalaRandom.nextGaussian()),
+        if (nShape == 0) IndexedSeq(0.0) else IndexedSeq.fill(nShape)(shapeDistribution()),
+        if (nColor == 0) IndexedSeq(0.0) else IndexedSeq.fill(nColor)(colorDistribution()),
+        if (nExpression == 0) IndexedSeq(0.0) else IndexedSeq.fill(nExpression)(expressionDistribution()),
         new URI(""))
     else
       MoMoInstance(
-        if (nShape == 0) IndexedSeq(0.0) else IndexedSeq.fill(nShape)(rnd.scalaRandom.nextGaussian()),
-        if (nColor == 0) IndexedSeq(0.0) else IndexedSeq.fill(nColor)(rnd.scalaRandom.nextGaussian()),
+        if (nShape == 0) IndexedSeq(0.0) else IndexedSeq.fill(nShape)(shapeDistribution()),
+        if (nColor == 0) IndexedSeq(0.0) else IndexedSeq.fill(nColor)(colorDistribution()),
         if (nExpression == 0) IndexedSeq(0.0) else IndexedSeq.fill(nExpression)(0.0),
         new URI(""))
   }
 
 
-  // adds a random expression to a neutral morphable model instance
+  // adds a random expression to a neutral morphable model instance following Gaussian Distribution
   def rndExpressions(id: MoMoInstance): MoMoInstance = {
-    id.copy(expression = IndexedSeq.fill(nExpression)(rnd.scalaRandom.nextGaussian()))
+    id.copy(expression = IndexedSeq.fill(nExpression)(expressionDistribution()))
   }
 
   lazy val loadBgs: IndexedSeq[File] = {

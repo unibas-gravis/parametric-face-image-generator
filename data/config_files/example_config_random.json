@@ -1,4 +1,7 @@
 {
+  "general": {
+    "random-seed": 1986
+  },
   "__comment_on_comments__" : "Fields starting with '__comment*' are comments only and can be deleted without changing the functionality.",
   "output-location": {
     "__comment-1" : "The directory where output files are written in subdirectories.",
@@ -41,6 +44,21 @@
     "dimension-of-shape-space": 199,
     "dimension-of-color-space": 199,
     "dimension-of-expression-space": 100,
+    "color-distribution": {
+      "type": "gaussian",
+      "mean": 0.0,
+      "variance": 1.0
+    },
+    "shape-distribution": {
+      "type": "gaussian",
+      "mean": 0.0,
+      "variance": 1.0
+    },
+    "expression-distribution": {
+      "type": "gaussian",
+      "mean": 0.0,
+      "variance": 1.0
+    },
     "add-expressions": true
   },
   "illumination-parameters": {

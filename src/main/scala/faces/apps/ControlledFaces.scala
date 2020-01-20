@@ -29,7 +29,7 @@ import scalismo.utils.Random
 object ControlledFaces extends App {
 
   scalismo.initialize()
-  implicit val rnd: Random = Random(1986) // use random seed to reproduce your results
+
 
   //****************************************************************************
   // SETTINGS
@@ -39,6 +39,7 @@ object ControlledFaces extends App {
   opt.verify()
 
   val cfg = ControlledFacesSettings.read(new File(opt.configurationFile()))
+  import cfg.general._
   import cfg.backgrounds._
   import cfg.morphableModelParameters._
   import cfg.imageDimensions._
@@ -48,6 +49,8 @@ object ControlledFaces extends App {
   import cfg.backgroundVariation._
 
   val helpers = Helpers(cfg)
+
+  implicit val rnd: Random = Random(seed) // use random seed to reproduce your results
 
   //****************************************************************************
   // CONTROLLED SAMPLE GENERATOR
