@@ -108,7 +108,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   }
 
   // generates a random instance of a Morphable Model
-  def rndMoMoInstance: MoMoInstance = {
+  def rndMoMoInstance(implicit rnd: Random): MoMoInstance = {
     if (expressions)
       MoMoInstance(
         if (nShape == 0) IndexedSeq(0.0) else IndexedSeq.fill(nShape)(shapeDistribution()),
@@ -125,7 +125,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
 
 
   // adds a random expression to a neutral morphable model instance following Gaussian Distribution
-  def rndExpressions(id: MoMoInstance): MoMoInstance = {
+  def rndExpressions(id: MoMoInstance)(implicit rnd: Random): MoMoInstance = {
     id.copy(expression = IndexedSeq.fill(nExpression)(expressionDistribution()))
   }
 

@@ -122,7 +122,7 @@ object ControlledFaces extends App {
       case e: Throwable =>
         println("Something went wrong with id: " + id)
         println(s"${e.getMessage}")
-        println(s"${e.getStackTrace}")
+        println(s"${e.getStackTrace.mkString("\n")}")
     }
   })
 
