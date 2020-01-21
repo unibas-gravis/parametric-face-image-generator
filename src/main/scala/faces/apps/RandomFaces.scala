@@ -29,7 +29,7 @@ import scalismo.utils.Random
 object RandomFaces extends App {
 
   scalismo.initialize()
-  implicit val rnd: Random = Random(1986) // use random seed to reproduce your results
+
 
   //****************************************************************************
   // SETTINGS
@@ -39,6 +39,7 @@ object RandomFaces extends App {
   opt.verify()
 
   val cfg = RandomFacesSettings.read(new File(opt.configurationFile()))
+  import cfg.general._
   import cfg.backgrounds._
   import cfg.defaultParameters._
   import cfg.illuminationParameters._
@@ -47,6 +48,7 @@ object RandomFaces extends App {
   import cfg.poseVariation._
 
   val helpers = Helpers(cfg)
+  implicit val rnd: Random = Random(seed) // use random seed to reproduce your results
 
   //****************************************************************************
   // RANDOM GENERATOR
@@ -123,7 +125,7 @@ object RandomFaces extends App {
       case e: Throwable =>
         println("Something went wrong with id: " + id)
         println(s"${e.getMessage}")
-        println(s"${e.getStackTrace}")
+        println(s"${e.getStackTrace.mkString("\n")}")
         e.printStackTrace()
     }
   })

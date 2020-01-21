@@ -22,6 +22,7 @@ import scalismo.faces.parameters._
 import scalismo.geometry.{Vector, _3D}
 
 abstract class FacesSettings{
+  val general : General
   val outputLocation: OutputLocation
   val backgrounds: Backgrounds
   val renderingMethods: RenderingMethods
@@ -34,10 +35,13 @@ abstract class FacesSettings{
 
 
 case class TextureMappedPropertyDescription(
-  name: String,
-  mapping: String,
-  map: String
-)
+                                             name: String,
+                                             mapping: String,
+                                             map: String
+                                           )
+case class General(
+                    seed : Int
+                  )
 
 case class OutputLocation(
                            outPath: String
@@ -62,6 +66,9 @@ case class MorphableModelParameters(
                                      nColor: Int,
                                      expressions: Boolean,
                                      nExpression: Int,
+                                     colorDistribution: Distribution,
+                                     shapeDistribution: Distribution,
+                                     expressionDistribution: Distribution,
                                      modelFn: String
                                    )
 
@@ -100,8 +107,8 @@ case class ControlledPoseVariation(
                                   )
 
 case class ControlledBackgroundVariation(
-                                    backgroundRange: Range
-                                  )
+                                          backgroundRange: Range
+                                        )
 
 case class ImageDimensions(
                             imageWidth: Int,

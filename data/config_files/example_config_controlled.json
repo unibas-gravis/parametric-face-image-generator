@@ -1,4 +1,7 @@
 {
+  "general": {
+    "random-seed": 1986
+  },
   "output-location": {
     "output-directory": "data/output/"
   },
@@ -32,6 +35,21 @@
     "dimension-of-shape-space": 199,
     "dimension-of-color-space": 199,
     "dimension-of-expression-space": 100,
+    "color-distribution": {
+      "type": "gaussian",
+      "mean": 0.0,
+      "variance": 1.0
+    },
+    "shape-distribution": {
+      "type": "gaussian",
+      "mean": 0.0,
+      "variance": 1.0
+    },
+    "expression-distribution": {
+      "type": "gaussian",
+      "mean": 0.0,
+      "variance": 1.0
+    },
     "add-expressions": false
   },
   "background-variation": {

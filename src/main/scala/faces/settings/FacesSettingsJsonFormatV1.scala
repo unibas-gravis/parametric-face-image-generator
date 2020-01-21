@@ -28,7 +28,7 @@ object RandomFacesSettingsJsonFormatV1 {
   import FacesSettingsJsonFormatV1._
   import scalismo.faces.io.renderparameters.RenderParameterJSONFormatV4._
 
-  implicit val ReneringMethodsFormat = RenderingMethodsJsonFormatV1.RenderingMethodsFormat
+  implicit val RenderingMethodsFormat = RenderingMethodsJsonFormatV1.RenderingMethodsFormat
 
   implicit val IlluminationParametersFormat: RootJsonFormat[IlluminationParameters] = new RootJsonFormat[IlluminationParameters] {
     override def write(obj: IlluminationParameters): JsValue = {
@@ -102,6 +102,7 @@ object RandomFacesSettingsJsonFormatV1 {
     def write(obj: RandomFacesSettings): JsValue = {
       new JsObjectOrdered(
         ListMap(
+          ("general", obj.general.toJson),
           ("output-location", obj.outputLocation.toJson),
           ("backgrounds", obj.backgrounds.toJson),
           ("rendering-methods", obj.renderingMethods.toJson),
@@ -124,6 +125,7 @@ object RandomFacesSettingsJsonFormatV1 {
       if (fileVersion != FacesSettingsJsonFormatV1.version)
         throw DeserializationException(s"V1 json reader expects ${FacesSettingsJsonFormatV1.version} json file, got: $fileVersion")
 
+      val general = fields("general").convertTo[General]
       val outputLocation = fields("output-location").convertTo[OutputLocation]
       val backgrounds = fields("backgrounds").convertTo[Backgrounds]
       val renderingMethods = fields("rendering-methods").convertTo[RenderingMethods]
@@ -136,6 +138,7 @@ object RandomFacesSettingsJsonFormatV1 {
       val regionMaps = fields("region-maps").convertTo[IndexedSeq[TextureMappedPropertyDescription]]
 
       new RandomFacesSettings(
+        general,
         outputLocation,
         backgrounds,
         renderingMethods,
@@ -155,6 +158,7 @@ object RandomFacesSettingsJsonFormatV1 {
 object ControlledFacesSettingsJsonFormatV1 {
   import FacesSettingsJsonFormatV1._
   import scalismo.faces.io.renderparameters.RenderParameterJSONFormatV4._
+
 
   implicit val RangeFormat: RootJsonFormat[Range] = new RootJsonFormat[Range] {
     def write(obj: Range): JsValue = {
@@ -220,6 +224,7 @@ object ControlledFacesSettingsJsonFormatV1 {
   }
 
 
+
   implicit val PoseVariationFormat: RootJsonFormat[ControlledPoseVariation] = new RootJsonFormat[ControlledPoseVariation] {
     override def write(obj: ControlledPoseVariation): JsValue = {
       new JsObjectOrdered( ListMap(
@@ -250,6 +255,7 @@ object ControlledFacesSettingsJsonFormatV1 {
     def write(obj: ControlledFacesSettings): JsValue = {
       new JsObjectOrdered(
         ListMap(
+          ("general", obj.general.toJson),
           ("output-location", obj.outputLocation.toJson),
           ("backgrounds", obj.backgrounds.toJson),
           ("rendering-methods", obj.renderingMethods.toJson),
@@ -273,6 +279,7 @@ object ControlledFacesSettingsJsonFormatV1 {
       if (fileVersion != FacesSettingsJsonFormatV1.version)
         throw DeserializationException(s"V1 json reader expects ${FacesSettingsJsonFormatV1.version} json file, got: $fileVersion")
 
+      val general = fields("general").convertTo[General]
       val outputLocation = fields("output-location").convertTo[OutputLocation]
       val backgrounds = fields("backgrounds").convertTo[Backgrounds]
       val renderingMethods = fields("rendering-methods").convertTo[RenderingMethods]
@@ -287,6 +294,7 @@ object ControlledFacesSettingsJsonFormatV1 {
 
 
       new ControlledFacesSettings(
+        general,
         outputLocation,
         backgrounds,
         renderingMethods,
@@ -303,6 +311,7 @@ object ControlledFacesSettingsJsonFormatV1 {
   }
 
 }
+
 
 object RenderingMethodsJsonFormatV1 {
   import scalismo.faces.io.renderparameters.RenderParameterJSONFormatV4._
@@ -345,6 +354,25 @@ object FacesSettingsJsonFormatV1 {
   // version of the format and field name it is stored
   val version = "V1.0"
   val versionFieldName = "format-version"
+
+  implicit val GeneralFormat: RootJsonFormat[General] = new RootJsonFormat[General] {
+    override def write(obj: General): JsValue = {
+      new JsObjectOrdered(ListMap(
+        ("random-seed", obj.seed.toJson)
+      ))
+    }
+
+    override def read(json: JsValue):General = {
+      val fields = json.asJsObject(s"expected General object, got: $json").fields
+
+      val seed = fields("random-seed").convertTo[Int]
+
+      General(
+        seed = seed
+      )
+    }
+  }
+
 
   implicit val OutputLocationFormat: RootJsonFormat[OutputLocation] = new RootJsonFormat[OutputLocation] {
     override def write(obj: OutputLocation): JsValue = {
@@ -412,6 +440,9 @@ object FacesSettingsJsonFormatV1 {
         ("dimension-of-shape-space", obj.nShape.toJson),
         ("dimension-of-color-space", obj.nColor.toJson),
         ("dimension-of-expression-space", obj.nExpression.toJson),
+        ("color-distribution", obj.colorDistribution.toJson),
+        ("shape-distribution", obj.shapeDistribution.toJson),
+        ("expression-distribution", obj.expressionDistribution.toJson),
         ("add-expressions", obj.expressions.toJson)
       ))
     }
@@ -425,6 +456,9 @@ object FacesSettingsJsonFormatV1 {
       val nColor = fields("dimension-of-color-space").convertTo[Int]
       val nExpression = fields("dimension-of-expression-space").convertTo[Int]
       val expressions = fields("add-expressions").convertTo[Boolean]
+      val colorDistribution = fields("color-distribution").convertTo[Distribution]
+      val shapeDistribution = fields("shape-distribution").convertTo[Distribution]
+      val expressionDistribution = fields("expression-distribution").convertTo[Distribution]
       val modelFn = fields("model-filename").convertTo[String]
 
       MorphableModelParameters(
@@ -434,6 +468,9 @@ object FacesSettingsJsonFormatV1 {
         nColor = nColor,
         nExpression = nExpression,
         expressions = expressions,
+        colorDistribution = colorDistribution,
+        shapeDistribution = shapeDistribution,
+        expressionDistribution = expressionDistribution,
         modelFn = modelFn
       )
     }
