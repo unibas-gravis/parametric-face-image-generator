@@ -94,7 +94,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         "right.nose.wing.tip"
       ),
       IndexedSeq[TextureMappedPropertyDescription](
-        TextureMappedPropertyDescription("default","data/regions/face12.json","data/regions/default.png")
+        TextureMappedPropertyDescription("default","data/regions/face12_2017.json","data/regions/semantic_parts_2017.png")
       ),
       IlluminationParameters(illumination = "multiVariateNormal",
         illuminationPriorFn = "data/bip/parameters/",

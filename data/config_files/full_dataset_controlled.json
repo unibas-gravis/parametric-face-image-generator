@@ -22,7 +22,7 @@
   "morphable-model-parameters": {
     "number-of-ids-to-create": 1,
     "number-of-samples-per-id": 1,
-    "model-filename": "data/bfm2017/model2017-1_bfm_nomouth.h5",
+    "model-filename": "data/bfm2019/model2019_bfm.h5",
     "dimension-of-shape-space": 199,
     "dimension-of-color-space": 199,
     "dimension-of-expression-space": 100,
@@ -115,8 +115,8 @@
   "region-maps": [
     {
       "name": "default",
-      "mapping": "data/regions/default.json",
-      "region-map": "data/regions/default.png"
+      "mapping": "data/regions/bfm_2019.json",
+      "region-map": "data/regions/semantic_parts_2019.png"
     }
   ],
   "format-version": "V1.0"

@@ -39,7 +39,7 @@
     "__comment-2" : "You need to download the Basel Face Model and cite the paper in your publication.",
     "number-of-ids-to-create": 5,
     "number-of-samples-per-id": 10,
-    "model-filename": "data/bfm2017/model2017-1_bfm_nomouth.h5",
+    "model-filename": "data/bfm2019/model2019_bfm.h5",
     "__comment-1" : "A value of 0 for any dimension will return always the mean for this dimension",
     "dimension-of-shape-space": 199,
     "dimension-of-color-space": 199,
@@ -173,8 +173,8 @@
   "region-maps": [
     {
       "name": "default",
-      "mapping": "data/regions/bfm.json",
-      "region-map": "data/regions/default.png"
+      "mapping": "data/regions/bfm_2019.json",
+      "region-map": "data/regions/semantic_parts_2019.png"
     }
   ],
   "__comment-format-version" : "The version flag is for reproducability in case the software and file-format changes.",
