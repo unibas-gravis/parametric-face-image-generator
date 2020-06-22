@@ -54,6 +54,7 @@ object RandomFaces extends App {
   // RANDOM GENERATOR
   //****************************************************************************
 
+  val bip = illuminationPrior
   (0 until nIds).par.foreach( id =>{
     try {
       // generate random model instance (shape and color)
@@ -77,7 +78,7 @@ object RandomFaces extends App {
         val rndCamera = camera.copy(focalLength = camera.focalLength * scalingDistribution())
 
         // random illumination
-        val rndIll = illuminationPrior.rnd(illumination)
+        val rndIll = bip.rnd(illumination)
 
         // put RenderParameters together of all its randomized parts
         val uncentered = RenderParameter(rndPose, view, rndCamera, rndIll, directionalLight, momoInstance, ImageSize(imageWidth, imageHeight), colorTransform)
