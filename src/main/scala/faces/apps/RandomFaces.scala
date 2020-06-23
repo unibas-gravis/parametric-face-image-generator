@@ -116,9 +116,9 @@ object RandomFaces extends App {
 
         // write images and their parameters
         println(s"Generating \t ID:$id \t Sample:$n")
-        for ((img, postifx) <- imageData) {
+        for ((img, postfix) <- imageData) {
           helpers.writeRenderParametersAndLandmarks(rps, id, n)
-          helpers.writeImg(img, id, n, postifx)
+          helpers.writeImg(img, id, n, postfix)
         }
       }
     }
