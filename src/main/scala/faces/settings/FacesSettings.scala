@@ -16,10 +16,10 @@
 package faces.settings
 
 import faces.utils.{BaselIlluminationPrior, Distribution}
-import scalismo.faces.color.RGBA
+import scalismo.color.RGBA
 import scalismo.faces.mesh.TextureMappedProperty
 import scalismo.faces.parameters._
-import scalismo.geometry.{Vector, _3D}
+import scalismo.geometry.{EuclideanVector, _3D}
 
 abstract class FacesSettings{
   val general : General

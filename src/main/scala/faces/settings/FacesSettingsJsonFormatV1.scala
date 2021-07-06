@@ -17,7 +17,7 @@ package faces.settings
 
 import faces.utils._
 import scalismo.faces.parameters._
-import scalismo.geometry.{Vector, _3D}
+import scalismo.geometry.{EuclideanVector, _3D}
 import spray.json._
 
 import scala.collection.immutable.ListMap

@@ -1,6 +1,6 @@
 package faces.utils
 
-import scalismo.faces.color.RGBA
+import scalismo.color.RGBA
 import scalismo.faces.image.PixelImage
 import scalismo.faces.parameters.RenderParameter
 import scalismo.faces.sampling.face.ModalityRenderers.{DepthMapRenderer, NormalsRenderer}

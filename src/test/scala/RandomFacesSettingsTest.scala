@@ -4,7 +4,7 @@ import faces.settings._
 import faces.utils.{ConstantDistribution, GaussianDistribution, MixtureDistribution, UniformDistribution}
 import org.scalatest.{FunSpec, Matchers}
 import scalismo.faces.parameters._
-import scalismo.geometry.{Point2D, Vector, Vector3D}
+import scalismo.geometry.{Point2D, EuclideanVector, EuclideanVector3D}
 import scalismo.utils.Random
 
 import scala.io.Source
@@ -67,7 +67,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         camera = Camera(
           focalLength = 50,
           principalPoint = Point2D.origin,
-          sensorSize = Vector(15.0, 15.0),
+          sensorSize = EuclideanVector(15.0, 15.0),
           near = 10,
           far = 1000e3,
           orthographic = false),
@@ -283,7 +283,7 @@ class RandomFacesSettingsTest extends FunSpec with Matchers {
         camera = Camera(
           focalLength = 50,
           principalPoint = Point2D.origin,
-          sensorSize = Vector(15.0, 15.0),
+          sensorSize = EuclideanVector(15.0, 15.0),
           near = 10,
           far = 1000e3,
           orthographic = false),

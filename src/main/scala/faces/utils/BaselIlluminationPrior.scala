@@ -20,7 +20,7 @@ import java.io.File
 import breeze.numerics.sqrt
 import scalismo.faces.io.RenderParameterIO
 import scalismo.faces.parameters.SphericalHarmonicsLight
-import scalismo.geometry.Vector3D
+import scalismo.geometry.EuclideanVector3D
 import scalismo.statisticalmodel.MultivariateNormalDistribution
 import scalismo.utils.Random
 
@@ -79,7 +79,7 @@ case class BaselIlluminationPrior(dir: String, nocolor: Boolean = false, setEner
     if (nocolor){
       val intensities = colored.coefficients.map(f => {
         val mean = f.toArray.sum / 3.0
-        Vector3D(mean, mean, mean)
+        EuclideanVector3D(mean, mean, mean)
       })
       SphericalHarmonicsLight(intensities)
     }

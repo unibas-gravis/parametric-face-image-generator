@@ -22,7 +22,7 @@ import java.net.URI
 import breeze.linalg.DenseVector
 import faces.renderer.ColorMapRenderer
 import faces.settings.FacesSettings
-import scalismo.faces.color.RGBA
+import scalismo.color.RGBA
 import scalismo.faces.image.PixelImage
 import scalismo.faces.io.{MoMoIO, PixelImageIO, RenderParameterIO, TLMSLandmarksIO}
 import scalismo.faces.landmarks.TLMSLandmark2D
@@ -30,7 +30,7 @@ import scalismo.faces.momo.MoMo
 import scalismo.faces.parameters._
 import scalismo.faces.sampling.face.ModalityRenderers.{AlbedoRenderer, IlluminationVisualizationRenderer}
 import scalismo.faces.sampling.face.{CorrespondenceColorImageRenderer, CorrespondenceMoMoRenderer}
-import scalismo.geometry.{Point, Point2D, Vector2D, Vector3D}
+import scalismo.geometry.{EuclideanVector2D, EuclideanVector3D, Point, Point2D}
 import scalismo.utils.Random
 
 import scala.reflect.io.Path
@@ -251,7 +251,7 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
     rps.copy(camera = rps.camera.copy(principalPoint = Point2D(
       (rps.camera.principalPoint.x - 2 * shift.x / rps.imageSize.width)/f,
       (rps.camera.principalPoint.y + 2 * shift.y / rps.imageSize.height)/g),
-      sensorSize = Vector2D(rps.camera.sensorSize.x * f, rps.camera.sensorSize.y * g))
+      sensorSize = EuclideanVector2D(rps.camera.sensorSize.x * f, rps.camera.sensorSize.y * g))
     )
 
   }
@@ -285,8 +285,8 @@ case class Helpers(cfg: FacesSettings)(implicit rnd: Random) {
   def readCSV(file: File): RenderParameter = {
     val vec = breeze.linalg.csvread(file).toDenseVector
     val init = RenderParameter.default.fitToImageSize(imageWidth, imageHeight)
-    val withPose = init.withPose(pose = init.pose.copy(yaw = vec(0), pitch = vec(1), roll = vec(2), translation = Vector3D(vec(3), vec(4), vec(5))))
-    val withCam = withPose.withCamera(camera = init.camera.copy(principalPoint = Point2D(vec(6), vec(7)), focalLength = vec(8), sensorSize = Vector2D(vec(9), vec(10))))
+    val withPose = init.withPose(pose = init.pose.copy(yaw = vec(0), pitch = vec(1), roll = vec(2), translation = EuclideanVector3D(vec(3), vec(4), vec(5))))
+    val withCam = withPose.withCamera(camera = init.camera.copy(principalPoint = Point2D(vec(6), vec(7)), focalLength = vec(8), sensorSize = EuclideanVector2D(vec(9), vec(10))))
     val withMoMo = withCam.withMoMo(momo = MoMoInstance(vec(11 until 11 + nShape).toArray.toIndexedSeq,
       vec(11 + nShape until 11 + nShape + nColor).toArray.toIndexedSeq,
       vec(11 + nShape + nColor until 11 + nShape + nColor + nExpression).toArray.toIndexedSeq,

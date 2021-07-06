@@ -20,10 +20,10 @@ import java.io.File
 
 import faces.settings.ControlledFacesSettings
 import faces.utils.{Helpers, ParametricFaceImageGeneratorOptions}
-import scalismo.faces.color.{RGB, RGBA}
+import scalismo.color.{RGB, RGBA}
 import scalismo.faces.io.PixelImageIO
 import scalismo.faces.parameters._
-import scalismo.geometry.Vector
+import scalismo.geometry.EuclideanVector
 import scalismo.utils.Random
 
 object ControlledFaces extends App {
@@ -75,7 +75,7 @@ object ControlledFaces extends App {
                   scala.math.toRadians(y),
                   scala.math.toRadians(p))
 
-                val controlledIll = SphericalHarmonicsLight.fromAmbientDiffuse(RGB(0.5), RGB(0.5), Vector.fromSpherical(1.0, math.Pi/3.0, (i*math.Pi/180.0)+(math.Pi/2.0)))
+                val controlledIll = SphericalHarmonicsLight.fromAmbientDiffuse(RGB(0.5), RGB(0.5), EuclideanVector.fromSpherical(1.0, math.Pi/3.0, (i*math.Pi/180.0)+(math.Pi/2.0)))
 
                 // put RenderParameters together of all its randomized parts
                 val uncentered = RenderParameter(controlledPose, view, camera, controlledIll, DirectionalLight.off, rndId, ImageSize(imageWidth, imageHeight), colorTransform)

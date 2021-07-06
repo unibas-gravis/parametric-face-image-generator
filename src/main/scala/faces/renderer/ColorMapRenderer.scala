@@ -15,7 +15,7 @@
  */
 package faces.renderer
 
-import scalismo.faces.color.RGBA
+import scalismo.color.RGBA
 import scalismo.faces.image.PixelImage
 import scalismo.faces.mesh.TextureMappedProperty
 import scalismo.faces.parameters.{ParametricRenderer, RenderParameter}
