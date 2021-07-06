@@ -17,7 +17,7 @@ package faces.utils
 
 import java.io.{File, FileInputStream, FileOutputStream}
 
-import scalismo.faces.color.{ColorSpaceOperations, RGBA}
+import scalismo.color.{ColorSpaceOperations, RGBA}
 import scalismo.faces.image.BufferedImageConverter
 import scalismo.faces.io.{MeshIO, PixelImageIO}
 import scalismo.faces.mesh.{ColorNormalMesh3D, TextureMappedProperty}

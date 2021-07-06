@@ -20,7 +20,7 @@ import java.io.File
 
 import faces.settings.RandomFacesSettings
 import faces.utils.{Helpers, ParametricFaceImageGeneratorOptions}
-import scalismo.faces.color.RGBA
+import scalismo.color.RGBA
 import scalismo.faces.io.PixelImageIO
 import scalismo.faces.parameters._
 import scalismo.geometry.Point2D

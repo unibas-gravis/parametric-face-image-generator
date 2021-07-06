@@ -9,9 +9,9 @@ resolvers += Resolver.jcenterRepo
 
 resolvers += Resolver.bintrayRepo("unibas-gravis", "maven")
 
-libraryDependencies += "ch.unibas.cs.gravis" %% "scalismo-faces" % "0.9.0"
+libraryDependencies += "ch.unibas.cs.gravis" %% "scalismo-faces" % "0.90.0"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 
 libraryDependencies += "org.rogach" %% "scallop" % "2.1.3"
 
